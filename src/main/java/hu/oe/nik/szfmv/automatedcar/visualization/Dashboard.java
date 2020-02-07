@@ -17,7 +17,7 @@ public class Dashboard extends JPanel {
     private final int height = 700;
     private final int backgroundColor = 0x888888;
 
-    Gui parent;
+    private Gui parent;
 
     private Thread timer = new Thread() {
         int difference;
