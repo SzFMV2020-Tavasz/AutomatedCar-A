@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<!--
+    Author: Gergő Pintér
+ -->
+
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+
+    <module name="FileTabCharacter"/>
+
+    <module name="TreeWalker">
+        <module name="EmptyBlock">
+            <property name="tokens" value="LITERAL_DEFAULT"/>
+        </module>
+
+        <module name="EmptyCatchBlock"/>
+
+        <module name="AvoidStarImport">
+            <property name="excludes" value="javax.swing.*,java.awt.*"/>
+        </module>
+
+        <module name="RedundantImport"/>
+
+        <module name="UnusedImports"/>
+
+        <module name="ConstantName">
+            <property name="format"
+                      value="^log(ger)?|[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
+        </module>
+
+        <module name="LeftCurly">
+            <property name="option" value="eol"/>
+            <property name="ignoreEnums" value="false"/>
+        </module>
+
+        <module name="NeedBraces"/>
+
+        <module name="RightCurly">
+            <property name="option" value="same"/>
+        </module>
+
+        <module name="DeclarationOrder"/>
+
+        <module name="EmptyStatement"/>
+
+        <module name="EqualsAvoidNull"/>
+
+        <module name="StringLiteralEquality"/>
+
+        <module name="MissingSwitchDefault"/>
+
+        <module name="MultipleVariableDeclarations"/>
+
+        <module name="OneStatementPerLine"/>
+
+        <!--Checks that a token is surrounded by whitespace.-->
+        <module name="WhitespaceAround">
+            <property name="allowEmptyLambdas" value="true"/>
+        </module>
+
+        <module name="WhitespaceAfter">
+            <property name="tokens" value="COMMA, SEMI"/>
+        </module>
+
+        <!--Checks that the whitespace around the Generic tokens (angle brackets) "<" and ">" are correct to the typical convention.-->
+        <module name="GenericWhitespace"/>
+
+        <module name="ArrayTypeStyle"/>
+
+        <module name="Indentation">
+            <property name="basicOffset" value="4"/>
+        </module>
+
+        <module name="OuterTypeFilename"/>
+
+        <module name="UpperEll"/>
+
+        <module name="LocalVariableName"/>
+
+        <module name="MemberName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
+
+        <module name="MethodName"/>
+
+        <module name="MethodTypeParameterName"/>
+
+        <module name="PackageName">
+            <property name="format"
+                      value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+        </module>
+
+        <module name="ParameterName"/>
+
+        <module name="TypeName"/>
+
+        <module name="LineLength">
+            <property name="max" value="120"/>
+        </module>
+
+        <module name="ParenPad">
+            <property name="option" value="nospace"/>
+        </module>
+
+
+
+
+
+
+    <!--The followings are only warnings-->
+    <module name="MethodLength">
+        <property name="tokens" value="METHOD_DEF"/>
+        <property name="max" value="20"/>
+        <property name="countEmpty" value="false"/>
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <module name="MagicNumber">
+        <property name="ignoreFieldDeclaration" value="true"/>
+        <property name="ignoreAnnotation" value="true"/>
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <module name="MultipleStringLiterals">
+        <property name="allowedDuplicates" value="2"/>
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <module name="NestedForDepth">
+        <property name="max" value="5"/>
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <module name="NestedIfDepth">
+        <property name="max" value="3"/>
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <!--doesn't allow any return statements in constructors, more than one return statement in all lambda expressions and more than two return statements in methods-->
+    <module name="ReturnCount">
+        <property name="max" value="0"/>
+        <property name="tokens" value="CTOR_DEF"/>
+        <property name="severity" value="warning"/>
+    </module>
+    <module name="ReturnCount">
+        <property name="max" value="1"/>
+        <property name="tokens" value="LAMBDA"/>
+        <property name="severity" value="warning"/>
+    </module>
+    <module name="ReturnCount">
+        <property name="max" value="2"/>
+        <property name="tokens" value="METHOD_DEF"/>
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <module name="CyclomaticComplexity">
+        <property name="max" value="15"/>
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <module name="NPathComplexity">
+        <property name="max" value="1000"/>
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <!--warn if there is TODO or FIXME in code-->
+    <module name="TodoComment">
+        <property name="format" value="(TODO)|(FIXME)"/>
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <module name="ModifierOrder">
+        <property name="severity" value="warning"/>
+    </module>
+
+
+    <module name="ParameterNumber">
+        <property name="max" value="5"/>
+        <property name="tokens" value="METHOD_DEF"/>
+        <property name="severity" value="warning"/>
+    </module>
+    </module>
+
+    <module name="NewlineAtEndOfFile">
+        <property name="severity" value="warning"/>
+    </module>
+</module>

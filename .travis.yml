@@ -1,0 +1,20 @@
+# define language and JDK version, JAVA 11 is used
+language: java
+jdk:
+  - openjdk11
+
+# Define OS image for TravisCI to use: Ubuntu 16.04 LTS (Xenial Xerus)
+dist: xenial
+
+# for speeding up the CI cache the dependencies
+cache:
+  directories:
+  - .autoconf
+  - $HOME/.m2
+
+script:
+  - mvn clean test jacoco:report
+
+after_success:
+  # codecov reporting
+  - bash <(curl -s https://codecov.io/bash)
