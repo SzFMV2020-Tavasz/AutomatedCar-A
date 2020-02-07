@@ -13,8 +13,13 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+    - name: Test with Maven
+      id: test
+      #run: mvn -B package --file pom.xml
+      run: mvn clean test jacoco:report
+    - name: Codecov report
+      if: success()
+      run: bash <(curl -s https://codecov.io/bash)
     - uses: actions/cache@v1
       name: Cache maven
       with:
