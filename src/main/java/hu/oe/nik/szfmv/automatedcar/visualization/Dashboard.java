@@ -1,5 +1,8 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,6 +10,8 @@ import java.awt.*;
  * Dashboard shows the state of the ego car, thus helps in debugging.
  */
 public class Dashboard extends JPanel {
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private final int width = 250;
     private final int height = 700;
@@ -23,6 +28,7 @@ public class Dashboard extends JPanel {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ex) {
+                    LOGGER.error(ex.getMessage());
                 }
 
             }
