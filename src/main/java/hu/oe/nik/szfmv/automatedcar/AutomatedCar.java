@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 public class AutomatedCar extends WorldObject {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(AutomatedCar.class);
 
     private final VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 

@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public class Dashboard extends JPanel {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(Dashboard.class);
 
     private final int width = 250;
     private final int height = 700;

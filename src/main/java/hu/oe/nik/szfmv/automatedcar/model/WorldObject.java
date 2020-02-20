@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class WorldObject {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(WorldObject.class);
     protected int x;
     protected int y;
     protected int width;
