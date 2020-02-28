@@ -4,10 +4,15 @@ import hu.oe.nik.szfmv.automatedcar.math.IVector;
 
 public interface CarPositionPacket {
 
+    /**Gets the X coordinate of the car.*/
     double getX();
 
+    /**Gets the Y coordinate of the car.*/
     double getY();
 
+    /**Gets moving direction and speed of the car.
+     * Magnitude is in km/s.
+     * Direction is in degrees.*/
     IVector getMoveVector();
 
 }
