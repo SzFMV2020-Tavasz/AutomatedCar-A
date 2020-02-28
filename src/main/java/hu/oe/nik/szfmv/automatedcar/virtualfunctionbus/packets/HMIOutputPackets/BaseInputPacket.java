@@ -1,4 +1,4 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
 
 public interface BaseInputPacket {
 

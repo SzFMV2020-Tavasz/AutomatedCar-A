@@ -1,4 +1,6 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
+
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.BaseInputPacket;
 
 public class InputPacket implements BaseInputPacket {
 
