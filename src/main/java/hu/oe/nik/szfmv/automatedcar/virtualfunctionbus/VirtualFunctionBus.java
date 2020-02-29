@@ -2,6 +2,8 @@ package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus;
 
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.ToPowerTrainPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 
 import java.util.ArrayList;
@@ -14,6 +16,9 @@ import java.util.List;
  * getters respectively.
  */
 public class VirtualFunctionBus {
+
+    public InputPacket inputPacket;
+    public ToPowerTrainPacket toPowerTrainPacket;
 
     public ReadOnlySamplePacket samplePacket;
 

@@ -24,6 +24,7 @@ public class InputPacket implements BaseInputPacket {
     }
 
 
+    //kormányzást át lehetne adni 2 változoként bal kormányzás illetve jobb kormányzásként 1 változó helyett.
     private int steeringWheelValue;
     public void setSteeringWheelValue(int steeringWheelValue){
         this.steeringWheelValue=steeringWheelValue;
@@ -122,4 +123,26 @@ public class InputPacket implements BaseInputPacket {
     public boolean getTrackingDistanceSwitch() {
         return trackingDistanceSwitch;
     }
+
+
+    private boolean accState = false;
+
+    public boolean getAccState() {return accState;}
+    public void setAccState(boolean value) {accState = value; }
+
+
+    private int accSpeed = 50;
+    public void setAccSpeed(int value) {
+        accSpeed = value;
+    }
+    public int getAccSpeed() {
+        return accSpeed;
+    }
+
+
+    private double AccFollowerGap = 0.8;
+
+
+
+
 }
