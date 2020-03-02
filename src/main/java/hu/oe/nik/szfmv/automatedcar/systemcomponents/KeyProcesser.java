@@ -1,4 +1,4 @@
-package hu.oe.nik.szfmv.automatedcar.HMI;
+package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
 public class KeyProcesser {
 

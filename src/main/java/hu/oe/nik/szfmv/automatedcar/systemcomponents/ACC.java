@@ -34,6 +34,17 @@ public class ACC extends SystemComponent {
             avarageSpeed -= step;
     }
 
+    void turnOn() {
+        virtualFunctionBus.inputPacket.setAccState(true);
+        virtualFunctionBus.inputPacket.setAccSpeed(ChangeNewAccSpeed());
+    }
+
+
+    void  turnOff()
+    {
+        virtualFunctionBus.inputPacket.setAccState(false);
+    }
+
     public int getReferenceSpeed()
     {
         return avarageSpeed;
@@ -54,23 +65,14 @@ public class ACC extends SystemComponent {
 
     }
 
-    public double ReturnTimeGap()
+    public double ReturnFollowerGap()
     {
         return followerGap[index];
     }
 
-    public void turnOn() {
-        virtualFunctionBus.inputPacket.setAccState(true);
-        virtualFunctionBus.inputPacket.setAccSpeed(changeNewAccSpeed());
-    }
 
 
-    public void  turnOff()
-    {
-        virtualFunctionBus.inputPacket.setAccState(false);
-    }
-
-    private int changeNewAccSpeed() {
+    private int ChangeNewAccSpeed() {
         var currentVelocity = virtualFunctionBus.toPowerTrainPacket.getGasPedalValue();
         if (currentVelocity >= 40 && currentVelocity <= 160) {
             return currentVelocity;
@@ -83,6 +85,7 @@ public class ACC extends SystemComponent {
     @Override
     public void loop() {
 
+        //to do this is not ready
         turnOff();
     }
 }
