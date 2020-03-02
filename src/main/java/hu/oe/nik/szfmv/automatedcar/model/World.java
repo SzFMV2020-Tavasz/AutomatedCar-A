@@ -1,16 +1,21 @@
 package hu.oe.nik.szfmv.automatedcar.model;
 
+import hu.oe.nik.szfmv.automatedcar.model.deserializer.Deserializer;
+import hu.oe.nik.szfmv.automatedcar.model.deserializer.WorldObjectDes;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class World {
-    private int width = 0;
-    private int height = 0;
-    private List<WorldObject> worldObjects = new ArrayList<>();
+    private int width;
+    private int height;
+    private List<WorldObjectDes> worldObjects;
 
     public World(int width, int height) {
         this.width = width;
         this.height = height;
+        this.worldObjects = Deserializer.DeserializeJson("filename");
     }
 
     public int getWidth() {
@@ -29,16 +34,35 @@ public class World {
         this.height = height;
     }
 
-    public List<WorldObject> getWorldObjects() {
+    public List<WorldObjectDes> getWorld() {
         return worldObjects;
     }
 
-    /**
-     * Add an object to the virtual world.
-     *
-     * @param o {@link WorldObject} to be added to the virtual world
-     */
-    public void addObjectToWorld(WorldObject o) {
-        worldObjects.add(o);
+    public List<WorldObjectDes> getDynamics() {
+        List<WorldObjectDes> dynamicObjectList = new ArrayList<>();
+        for (WorldObjectDes item : worldObjects) {
+            if (!item.isStatic)
+                dynamicObjectList.add(item);
+        }
+        return dynamicObjectList;
+    }
+
+    public WorldObjectDes getObject(String id) {
+        for (WorldObjectDes item : worldObjects) {
+            if (item.id.equals(id))
+                return item;
+        }
+        return null;
+    }
+
+    public void setObject(int x, int y, float[][] rotationMatrix) {
+        for (WorldObjectDes item : worldObjects
+        ) {
+            if (item.type.contains("car")) {
+                item.x = x;
+                item.y = y;
+                item.rotationMatrix = rotationMatrix;
+            }
+        }
     }
 }
