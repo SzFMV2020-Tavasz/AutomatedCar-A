@@ -6,7 +6,7 @@ public enum CarTransmissionMode {
     R_REVERSE,
 
     /**Üres állás.*/
-    NATURAL,
+    N_NEUTRAL,
 
     /**Parkoló mód.*/
     P_PARKING,
