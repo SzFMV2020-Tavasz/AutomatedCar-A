@@ -12,9 +12,6 @@ public enum CarTransmissionMode {
     P_PARKING,
 
     /**Autómata állás.*/
-    D_DRIVE,
-
-    /**Manuális állás.*/
-    F_FORWARD
+    D_DRIVE
 
 }
