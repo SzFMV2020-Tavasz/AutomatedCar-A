@@ -11,8 +11,7 @@ public interface CarPositionPacket {
     double getY();
 
     /**Gets moving direction and speed of the car.
-     * Magnitude is in km/s.
-     * Direction is in degrees.*/
+     * Magnitude is in km/s.*/
     IVector getMoveVector();
 
 }

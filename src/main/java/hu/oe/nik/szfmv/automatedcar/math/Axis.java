@@ -3,24 +3,43 @@ package hu.oe.nik.szfmv.automatedcar.math;
 import static java.lang.Math.*;
 import static java.lang.Math.PI;
 
-public enum Axis { X, Y;
+/**A mathematical 2-dimensional axis; either {@link Axis#X} or {@link Axis#Y}.
+ *
+ * @author Dávid Magyar - davidson996@gmail.com*/
+public enum Axis {
+
+    /**The X axis out of the two 2-dimensional axes.
+     * Usually interpreted as the horizontal axis.
+     * @see Axis#Y*/
+    X,
+
+    /**The Y axis out of the two 2-dimensional axes.
+     * Usually interpreted as the vertical axis.
+     * @see Axis#X*/
+    Y;
 
     private final AxisVector dirPos = new AxisVector(this, true);
     private final AxisVector dirNeg = new AxisVector(this, false);
 
+    /**Gets the unit vector of the axis towards its positive direction.*/
     public AxisVector positiveDirection() {
         return this.dirPos;
     }
 
+    /**Gets the unit vector of the axis towards its negative direction.*/
     public AxisVector negativeDirection() {
         return this.dirNeg;
     }
 
+    /**A vector implementation specific to the axes.
+     * @see Axis#positiveDirection()
+     * @see Axis#negativeDirection() */
     public static final class AxisVector implements IVector {
+
         private final Axis axis;
         private final boolean positive;
 
-        public AxisVector(Axis axis, boolean positive) {
+        private AxisVector(Axis axis, boolean positive) {
             this.axis = axis;
             this.positive = positive;
         }
@@ -62,10 +81,12 @@ public enum Axis { X, Y;
                     : +(PI + toPositive);
         }
 
+        /**Rotation is mathematical, positive is towards the left.*/
         private static double getRadiansRelativeToAxisX(IVector direction) {
             return atan2(direction.getYDiff(), direction.getXDiff());
         }
 
+        /**Rotation is mathematical, positive is towards the left.*/
         private static double getRadiansRelativeToAxisY(IVector direction) {
             double x = direction.getXDiff();
             double y = direction.getYDiff();
@@ -92,16 +113,18 @@ public enum Axis { X, Y;
             }
         }
 
+        /**Gets the axis which this axis vector is associated with.*/
         public Axis getAxis() {
             return axis;
         }
 
+        /**Whether this vector points to the positive direction of its associated axis or not.*/
         public boolean isPositive() {
             return positive;
         }
 
         @Override public String toString() {
-            return "AxisVector{ " + axis + (positive ? " (+)": " (-)") + " }";
+            return "AxisVector{ " + axis + (positive ? "+": "-") + " }";
         }
     }
 }
