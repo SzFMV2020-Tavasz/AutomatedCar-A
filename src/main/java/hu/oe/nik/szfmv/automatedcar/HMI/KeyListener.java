@@ -1,12 +1,19 @@
 package hu.oe.nik.szfmv.automatedcar.HMI;
 
+
+
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.ACC;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.SamplePacket;
 
 import java.awt.event.KeyEvent;
+import java.lang.reflect.AccessibleObject;
+
 
 public class KeyListener {
 
     KeyProcesser Processer = new KeyProcesser();
+    private ACC accmanager;
+
 
     java.awt.event.KeyListener listen = new java.awt.event.KeyListener() {
 
@@ -21,6 +28,7 @@ public class KeyListener {
             {
                 case KeyEvent.VK_W:
                     Processer.KeyReleased(keyCode);
+
                     break;
 
                 case KeyEvent.VK_S:
@@ -130,8 +138,19 @@ public class KeyListener {
                     Processer.KeyPressed(keyCode);
                     break;
 
+
+                    // ITS here
                 case KeyEvent.VK_T:
-                    Processer.KeyPressed(keyCode);
+                   // Processer.KeyPressed(keyCode);
+                    if (accmanager.ison)
+                    {
+                        accmanager.turnOff();
+                    }
+                    else
+                    {
+                        accmanager.turnOn();
+                    }
+                    accmanager.turnOn();
                     break;
 
                 case KeyEvent.VK_CONTROL:

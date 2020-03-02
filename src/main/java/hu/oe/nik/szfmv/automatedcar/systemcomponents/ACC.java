@@ -7,6 +7,7 @@ public class ACC extends SystemComponent {
 
     protected int avarageSpeed = 55;
 
+    //why can i ref this in keylistenet??
     protected boolean isOn = false;
 
     private static final int minSpeed = 30;
@@ -58,13 +59,13 @@ public class ACC extends SystemComponent {
         return followerGap[index];
     }
 
-    void TurnOn()
-    {
+    public void turnOn() {
         virtualFunctionBus.inputPacket.setAccState(true);
-       virtualFunctionBus.inputPacket.setAccSpeed(changeNewAccSpeed());
+        virtualFunctionBus.inputPacket.setAccSpeed(changeNewAccSpeed());
     }
 
-    void  turnOff()
+
+    public void  turnOff()
     {
         virtualFunctionBus.inputPacket.setAccState(false);
     }
