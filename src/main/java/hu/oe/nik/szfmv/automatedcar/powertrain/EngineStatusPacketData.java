@@ -1,6 +1,8 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
-class EngineStatusPacket implements hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.EngineStatusPacket {
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.EngineStatusPacket;
+
+class EngineStatusPacketData implements EngineStatusPacket {
 
     private final double rpm;
 
@@ -8,7 +10,7 @@ class EngineStatusPacket implements hu.oe.nik.szfmv.automatedcar.virtualfunction
 
     private final CarTransmissionMode mode;
 
-    public EngineStatusPacket(double rpm, int forwardLevel, CarTransmissionMode mode) {
+    public EngineStatusPacketData(double rpm, int forwardLevel, CarTransmissionMode mode) {
         this.rpm = rpm;
         this.forwardLevel = forwardLevel;
         this.mode = mode;
