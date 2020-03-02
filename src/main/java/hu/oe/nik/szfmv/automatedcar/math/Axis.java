@@ -123,8 +123,21 @@ public enum Axis {
             return positive;
         }
 
+        @Override public IVector rotateByRadians(double rad) {
+            double alpha2 = (PI / 2) - rad;
+            switch (this.axis) {
+                case X:
+                    return IVector.vectorFromXY(sin(alpha2), cos(alpha2));
+                case Y:
+                    return IVector.vectorFromXY(-cos(alpha2), sin(alpha2));
+                default:
+                    throw new IllegalStateException();
+            }
+        }
+
         @Override public String toString() {
             return "AxisVector{ " + axis + (positive ? "+": "-") + " }";
         }
+
     }
 }

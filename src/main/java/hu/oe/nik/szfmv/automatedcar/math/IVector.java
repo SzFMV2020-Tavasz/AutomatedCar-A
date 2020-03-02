@@ -89,7 +89,7 @@ public interface IVector {
     /**Creates a new vector with the given X and Y differences, which also define the length and angle of the vector.
      * @see Axis#positiveDirection()
      * @see Axis#negativeDirection() */
-    static IVector fromXY(double x, double y) {
+    static IVector vectorFromXY(double x, double y) {
         return new IVector() {
 
             @Override
@@ -131,20 +131,20 @@ public interface IVector {
     /**Flips the vector around, keeping its length, but changing its direction to its opposite.
      * @return A new vector with the same length but opposite direction.*/
     default IVector reverse() {
-        return IVector.fromXY(-getXDiff(), -getYDiff());
+        return vectorFromXY(-getXDiff(), -getYDiff());
     }
 
     /**Creates the unit vector of this vector.
      * @return A new vector with the same direction, but 1 as length.*/
     default IVector unit() {
         double length = getLength();
-        return IVector.fromXY(getXDiff() / length, getYDiff() / length);
+        return vectorFromXY(getXDiff() / length, getYDiff() / length);
     }
 
     /**Multiplies the length of the vector with the given scalar number.
      * @return A new vector with the same direction, but length multiplied by the given scalar.*/
     default IVector multiplyBy(double scalar) {
-        return IVector.fromXY(getXDiff() * scalar, getYDiff() * scalar);
+        return vectorFromXY(getXDiff() * scalar, getYDiff() * scalar);
     }
 
     /**Divides the length of the vector with the given scalar number.
@@ -158,7 +158,7 @@ public interface IVector {
      * @param y A value to add to the Y difference of this vector.
      * @return A new vector moved with the given values.*/
     default IVector moveBy(double x, double y) {
-        return IVector.fromXY(getXDiff() + x, getYDiff() + y);
+        return vectorFromXY(getXDiff() + x, getYDiff() + y);
     }
 
     /**Clones this vector, rotates it by the given degrees and returns it.
