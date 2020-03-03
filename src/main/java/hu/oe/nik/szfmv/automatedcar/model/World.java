@@ -4,7 +4,9 @@ import hu.oe.nik.szfmv.automatedcar.model.deserializer.WorldObjectDes;
 
 import hu.oe.nik.szfmv.automatedcar.model.deserializer.Deserializer;
 import hu.oe.nik.szfmv.automatedcar.model.deserializer.WorldObjectDes;
+import jdk.jshell.spi.ExecutionControl;
 
+import javax.naming.NotContextException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,5 +67,14 @@ public class World {
                 item.rotationMatrix = rotationMatrix;
             }
         }
+    }
+
+    /**
+     * Add an object to the virtual world.
+     *
+     * @param o {@link WorldObject} to be added to the virtual world
+     */
+    public void addObjectToWorld(WorldObject o) throws NotContextException {
+        throw new NotContextException("This method is out of use due to new world object class is in use.");
     }
 }
