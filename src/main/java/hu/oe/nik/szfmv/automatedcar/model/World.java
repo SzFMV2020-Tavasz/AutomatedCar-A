@@ -1,11 +1,12 @@
 package hu.oe.nik.szfmv.automatedcar.model;
 
+import hu.oe.nik.szfmv.automatedcar.model.deserializer.WorldObjectDes;
+
 import hu.oe.nik.szfmv.automatedcar.model.deserializer.Deserializer;
 import hu.oe.nik.szfmv.automatedcar.model.deserializer.WorldObjectDes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class World {
     private int width;
@@ -15,7 +16,7 @@ public class World {
     public World(int width, int height) {
         this.width = width;
         this.height = height;
-        this.worldObjects = Deserializer.DeserializeJson("test:world.json");
+        this.worldObjects = Deserializer.DeserializeJson("test_world.json");
     }
 
     public int getWidth() {
