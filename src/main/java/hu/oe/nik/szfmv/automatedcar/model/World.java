@@ -15,7 +15,7 @@ public class World {
     public World(int width, int height) {
         this.width = width;
         this.height = height;
-        this.worldObjects = Deserializer.DeserializeJson("filename");
+        this.worldObjects = Deserializer.DeserializeJson("test:world.json");
     }
 
     public int getWidth() {
