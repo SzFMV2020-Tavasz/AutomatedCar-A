@@ -5,8 +5,6 @@ import hu.oe.nik.szfmv.automatedcar.visualization.Gui;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.naming.NotContextException;
-
 public class Main {
 
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
@@ -33,11 +31,7 @@ public class Main {
         world = new World(5000, 3000);
         // create an automated car
         car = new AutomatedCar(20, 20, "car_2_white.png");
-        try {
-            world.addObjectToWorld(car);
-        } catch (NotContextException e) {
-            e.printStackTrace();
-        }
+        world.addObjectToWorld(car);
 
         window = new Gui();
         window.setVirtualFunctionBus(car.getVirtualFunctionBus());

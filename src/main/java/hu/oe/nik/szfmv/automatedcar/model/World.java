@@ -1,24 +1,22 @@
 package hu.oe.nik.szfmv.automatedcar.model;
 
-import hu.oe.nik.szfmv.automatedcar.model.deserializer.WorldObjectDes;
+import hu.oe.nik.szfmv.automatedcar.model.deserializer.*;
 
-import hu.oe.nik.szfmv.automatedcar.model.deserializer.Deserializer;
-import hu.oe.nik.szfmv.automatedcar.model.deserializer.WorldObjectDes;
-import jdk.jshell.spi.ExecutionControl;
-
-import javax.naming.NotContextException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class World {
     private int width;
     private int height;
-    private List<WorldObjectDes> worldObjects;
+    private List<WorldObject> worldObjects;
+    private List<WorldObjectDes> worldObjectsDes;
 
     public World(int width, int height) {
         this.width = width;
         this.height = height;
-        this.worldObjects = Deserializer.DeserializeJson("test_world.json");
+        this.worldObjectsDes = Deserializer.DeserializeJson("test_world.json");
+
+        ParseToWorldObject();
     }
 
     public int getWidth() {
@@ -37,13 +35,13 @@ public class World {
         this.height = height;
     }
 
-    public List<WorldObjectDes> getWorld() {
+    public List<WorldObject> getWorldObjects() {
         return worldObjects;
     }
 
     public List<WorldObjectDes> getDynamics() {
         List<WorldObjectDes> dynamicObjectList = new ArrayList<>();
-        for (WorldObjectDes item : worldObjects) {
+        for (WorldObjectDes item : worldObjectsDes) {
             if (!item.isStatic)
                 dynamicObjectList.add(item);
         }
@@ -51,7 +49,7 @@ public class World {
     }
 
     public WorldObjectDes getObject(String id) {
-        for (WorldObjectDes item : worldObjects) {
+        for (WorldObjectDes item : worldObjectsDes) {
             if (item.id.equals(id))
                 return item;
         }
@@ -59,7 +57,7 @@ public class World {
     }
 
     public void setObject(int x, int y, float[][] rotationMatrix) {
-        for (WorldObjectDes item : worldObjects
+        for (WorldObjectDes item : worldObjectsDes
         ) {
             if (item.type.contains("car")) {
                 item.x = x;
@@ -74,7 +72,17 @@ public class World {
      *
      * @param o {@link WorldObject} to be added to the virtual world
      */
-    public void addObjectToWorld(WorldObject o) throws NotContextException {
-        throw new NotContextException("This method is out of use due to new world object class is in use.");
+    public void addObjectToWorld(WorldObject o) {
+        worldObjects.add(o);
+    }
+
+    private void ParseToWorldObject() {
+        for (WorldObjectDes objectDes : this.worldObjectsDes) {
+            var obj = new WorldObject(objectDes.x, objectDes.y, objectDes.type + ".png");
+            /**
+             * Bullshit number for now*/
+            obj.rotation = 0f;
+            this.worldObjects.add(obj);
+        }
     }
 }
