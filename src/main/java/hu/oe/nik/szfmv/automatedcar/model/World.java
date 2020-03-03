@@ -79,8 +79,6 @@ public class World {
     private void ParseToWorldObject() {
         for (WorldObjectDes objectDes : this.worldObjectsDes) {
             var obj = new WorldObject(objectDes.x, objectDes.y, objectDes.type + ".png");
-            /**
-             * Bullshit number for now*/
             obj.rotation = 0f;
             this.worldObjects.add(obj);
         }
