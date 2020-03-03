@@ -29,6 +29,40 @@ public class Deserializer {
         }
     }
 
+    private static WorldObjectDes ReadRotationMatrixFromFileToObject (WorldObjectDes object, String file) {
+        object.rotationMatrix = new float[2][2];
+        var currentData = file.substring(file.indexOf("\"type\": \"" + object.type)).split("},")[0].split(",");
+        object.rotationMatrix[0][0] = Float.parseFloat(currentData[3].split("m11\":")[1]);
+        object.rotationMatrix[0][1] = Float.parseFloat(currentData[4].split("m12\":")[1]);
+        object.rotationMatrix[1][0] = Float.parseFloat(currentData[5].split("m21\":")[1]);
+        object.rotationMatrix[1][1] = Float.parseFloat(currentData[6].split("m22\":")[1]);
+
+        return object;
+    }
+
+    private static WorldObjectDes AddLayeringWithStaticInfo(WorldObjectDes object) {
+        if ((object.type.contains("road") && !object.type.contains("roadsign"))
+                || object.type.contains("garage")
+                || (object.type.contains("parking") && !object.type.contains("roadsign"))) {
+            object.isStatic = true;
+        }
+
+        if (object.type.contains("man")
+                || object.type.contains("car")
+                || object.type.contains("bicycle")
+                || object.type.contains("bollard")
+                || object.type.contains("boundary")
+                || object.type.contains("tree")
+                || object.type.contains("roadsign")){
+            object.z = 1;
+
+            if (!object.type.contains("man")) {
+                object.isStatic = true;
+            }
+        }
+        return object;
+    }
+
     public static List<WorldObjectDes> DeserializeJson(String fileName) throws IllegalArgumentException {
         try {
             TestFile(fileName);
@@ -48,34 +82,8 @@ public class Deserializer {
         var completeData = new ArrayList<WorldObjectDes>();
         for (WorldObjectDes completeObject:
              unCompleteData) {
-            completeObject.rotationMatrix = new float[2][2];
-            var currentData = raw.substring(raw.indexOf("\"type\": \"" + completeObject.type)).split("},")[0].split(",");
-            completeObject.rotationMatrix[0][0] = Float.parseFloat(currentData[3].split("m11\":")[1]);
-            completeObject.rotationMatrix[0][1] = Float.parseFloat(currentData[4].split("m12\":")[1]);
-            completeObject.rotationMatrix[1][0] = Float.parseFloat(currentData[5].split("m21\":")[1]);
-            completeObject.rotationMatrix[1][1] = Float.parseFloat(currentData[6].split("m22\":")[1]);
 
-            if ((completeObject.type.contains("road") && !completeObject.type.contains("roadsign"))
-                    || completeObject.type.contains("garage")
-                    || (completeObject.type.contains("parking") && !completeObject.type.contains("roadsign"))) {
-                completeObject.isStatic = true;
-            }
-
-            if (completeObject.type.contains("man")
-                    || completeObject.type.contains("car")
-                    || completeObject.type.contains("bicycle")
-                    || completeObject.type.contains("bollard")
-                    || completeObject.type.contains("boundary")
-                    || completeObject.type.contains("tree")
-                    || completeObject.type.contains("roadsign")){
-                completeObject.z = 1;
-
-                if (!completeObject.type.contains("man")) {
-                    completeObject.isStatic = true;
-                }
-            }
-
-            completeData.add(completeObject);
+            completeData.add(AddLayeringWithStaticInfo(ReadRotationMatrixFromFileToObject(completeObject, raw)));
         }
 
         return completeData;
