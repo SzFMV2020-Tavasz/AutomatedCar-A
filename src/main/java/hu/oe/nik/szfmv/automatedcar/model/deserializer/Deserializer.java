@@ -8,9 +8,17 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class Deserializer {
-    public static List<WorldObjectDes> DeserializeJson(String fileName) throws IllegalArgumentException {
+    private static  void TestFile(String fileName) throws IllegalArgumentException {
         if (!fileName.contains("json")) {
             throw new IllegalArgumentException("Provided file's extension is not .json! \n File:" + fileName);
+        }
+    }
+
+    public static List<WorldObjectDes> DeserializeJson(String fileName) throws IllegalArgumentException {
+        try {
+            TestFile(fileName);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
         }
 
         var content = new StringBuilder();
