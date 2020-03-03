@@ -14,13 +14,7 @@ public class Deserializer {
         }
     }
 
-    public static List<WorldObjectDes> DeserializeJson(String fileName) throws IllegalArgumentException {
-        try {
-            TestFile(fileName);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-
+    private static String ReadFile(String fileName) {
         var content = new StringBuilder();
         try {
             var reader = new BufferedReader(new FileReader(ClassLoader.getSystemResource(fileName).getFile()));
@@ -28,12 +22,25 @@ public class Deserializer {
             while((line = reader.readLine() )!= null) {
                 content.append(line);
             }
+
+            return content.toString();
         } catch (Exception e) {
             return null;
         }
+    }
 
-        var json = content.toString();
-        var raw = json.substring(json.indexOf("["), json.indexOf("]") + 1);
+    public static List<WorldObjectDes> DeserializeJson(String fileName) throws IllegalArgumentException {
+        try {
+            TestFile(fileName);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        var file = ReadFile(fileName);
+        if (file == null)
+            return null;
+
+        var raw = file.substring(file.indexOf("["), file.indexOf("]") + 1);
 
         Type listType = new TypeToken<ArrayList<WorldObjectDes>>(){}.getType();
         List<WorldObjectDes> unCompleteData = new Gson().fromJson(raw, listType);
