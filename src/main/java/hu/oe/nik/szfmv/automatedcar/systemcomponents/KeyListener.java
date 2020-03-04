@@ -26,7 +26,7 @@ public class KeyListener {
             switch(keyCode)
             {
                 case KeyEvent.VK_W:
-                    Processer.KeyReleased(keyCode);
+                    Processer.gasPedalReleased();
 
                     break;
 
@@ -50,7 +50,7 @@ public class KeyListener {
             switch(keyCode)
             {
                 case KeyEvent.VK_W:
-                    Processer.KeyPressed(keyCode);
+                    Processer.gasPedalPressed();
                     break;
 
                 case KeyEvent.VK_S:

@@ -15,7 +15,12 @@ public class PedalPosition {
             while(gasPedalSwitch && gasPedalValue<=100.0)
             {
                 counter++;
-                gasPedalValue+=increaseNunber(counter);
+                if(validRange(gasPedalValue+increaseNumber(counter))) {
+                    gasPedalValue += increaseNumber(counter);
+                }
+                else{
+                    gasPedalValue=100;
+                }
                 Sleep();
 
             }
@@ -31,17 +36,22 @@ public class PedalPosition {
     private void gasPedalValueDecrease(){
         Thread decreaseValueThread = new Thread(()->{
             int counter = 0;
-            while(gasPedalSwitch && gasPedalValue>=100.0)
+            while(gasPedalSwitch && gasPedalValue>=0.0)
             {
                 counter++;
-                gasPedalValue-=increaseNunber(counter);
+                if(validRange(gasPedalValue-increaseNumber(counter))) {
+                    gasPedalValue -= increaseNumber(counter);
+                }
+                else{
+                    gasPedalValue=0;
+                }
                 Sleep();
             }
         });
         decreaseValueThread.start();
     }
 
-    private int increaseNunber(int counter){
+    private int increaseNumber(int counter){
         if(counter <5){
             return 5;
         }
@@ -58,6 +68,15 @@ public class PedalPosition {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    private boolean validRange(double value){
+        if(value>=0.0 && value <=100.0){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 };
