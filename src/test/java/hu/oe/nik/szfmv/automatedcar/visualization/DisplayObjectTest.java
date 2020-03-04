@@ -30,8 +30,8 @@ public class DisplayObjectTest {
      */
     @Test
     public void relativePosition() {
-        assertEquals(400, displayObject.getX());
-        assertEquals(300, displayObject.getY());
+        assertEquals(613, displayObject.getX());
+        assertEquals(247, displayObject.getY());
     }
 
     /**
@@ -40,7 +40,7 @@ public class DisplayObjectTest {
      */
     @Test
     public void rotation() {
-        assertEquals((float) -Math.PI / 4, displayObject.getRotation());
+        assertEquals((float) Math.PI / 4, displayObject.getRotation());
     }
 }
 
