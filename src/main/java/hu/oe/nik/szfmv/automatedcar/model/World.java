@@ -15,8 +15,16 @@ public class World {
         this.width = width;
         this.height = height;
         this.worldObjectsDes = Deserializer.DeserializeJson("test_world.json");
+        this.worldObjects = new ArrayList<>();
 
         ParseToWorldObject();
+    }
+
+    public World(int width, int height, List<WorldObjectDes> instanceList) {
+        this.width = width;
+        this.height = height;
+        this.worldObjectsDes = instanceList;
+
     }
 
     public int getWidth() {
@@ -37,6 +45,10 @@ public class World {
 
     public List<WorldObject> getWorldObjects() {
         return worldObjects;
+    }
+
+    public List<WorldObjectDes> getWorld() {
+        return worldObjectsDes;
     }
 
     public List<WorldObjectDes> getDynamics() {
