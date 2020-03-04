@@ -24,6 +24,7 @@ public class InputPacket implements BaseInputPacket {
     }
 
 
+
     private int steeringWheelValue;
     public void setSteeringWheelValue(int steeringWheelValue){
         this.steeringWheelValue=steeringWheelValue;
@@ -122,4 +123,45 @@ public class InputPacket implements BaseInputPacket {
     public boolean getTrackingDistanceSwitch() {
         return trackingDistanceSwitch;
     }
+
+
+    private boolean accState = false;
+    public boolean getAccState() {return accState;}
+    public void setAccState(boolean value) {accState = value; }
+
+
+    private int accSpeed = 50;
+    public void setAccSpeed(int value) {
+        accSpeed = value;
+    }
+    public int getAccSpeed() {
+        return accSpeed;
+    }
+
+
+    private double accFollowerGap = 0.8;
+    public double getAccFollowerGap() {
+        return accFollowerGap;
+    }
+    public void setAccFollowerGap(double value) { accFollowerGap = value;}
+
+
+
+    private boolean signalLeftValue = false;
+    public boolean getSignalLeftValue() {
+        return signalLeftValue;
+    }
+    public void setSignalLeftValue(boolean value) {
+        signalLeftValue = value;
+    }
+
+
+    private boolean signalRightValue = false;
+    public boolean getSignalRightValue() {
+        return signalRightValue;
+    }
+    public void setSignalRightValue(boolean value) {
+        signalRightValue = value;
+    }
+
 }

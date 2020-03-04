@@ -1,12 +1,18 @@
-package hu.oe.nik.szfmv.automatedcar.HMI;
+package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.SamplePacket;
+
+
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 
 import java.awt.event.KeyEvent;
+
 
 public class KeyListener {
 
     KeyProcesser Processer = new KeyProcesser();
+    private ACC accmanager;
+    private InputPacket inputPacket;
+
 
     java.awt.event.KeyListener listen = new java.awt.event.KeyListener() {
 
@@ -21,6 +27,7 @@ public class KeyListener {
             {
                 case KeyEvent.VK_W:
                     Processer.KeyReleased(keyCode);
+
                     break;
 
                 case KeyEvent.VK_S:
@@ -32,54 +39,6 @@ public class KeyListener {
                     break;
 
                 case KeyEvent.VK_A:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_Q:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_E:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_K:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_L:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_I:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_O:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_T:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_CONTROL:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_0:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_J:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_P:
-                    Processer.KeyReleased(keyCode);
-                    break;
-
-                case KeyEvent.VK_U:
                     Processer.KeyReleased(keyCode);
                     break;
             }
@@ -122,17 +81,27 @@ public class KeyListener {
                     Processer.KeyPressed(keyCode);
                     break;
 
+
                 case KeyEvent.VK_I:
-                    Processer.KeyPressed(keyCode);
+                    accmanager.Minus();
                     break;
+
 
                 case KeyEvent.VK_O:
-                    Processer.KeyPressed(keyCode);
+                    accmanager.Plus();
                     break;
 
+
+
                 case KeyEvent.VK_T:
-                    Processer.KeyPressed(keyCode);
+                    if (accmanager.isOn = true)
+                    {
+                        accmanager.turnOff();
+                    }
+                    accmanager.turnOn();
                     break;
+
+
 
                 case KeyEvent.VK_CONTROL:
                     Processer.KeyPressed(keyCode);
@@ -151,7 +120,8 @@ public class KeyListener {
                     break;
 
                 case KeyEvent.VK_U:
-                    Processer.KeyPressed(keyCode);
+                    accmanager.FollowerGapSetter();
+                    inputPacket.setAccFollowerGap(accmanager.ReturnFollowerGap());
                     break;
             }
 
