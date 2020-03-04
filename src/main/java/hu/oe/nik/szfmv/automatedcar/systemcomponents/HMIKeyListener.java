@@ -7,7 +7,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.
 import java.awt.event.KeyEvent;
 
 
-public class KeyListener {
+public class HMIKeyListener {
 
     KeyProcesser Processer = new KeyProcesser();
     private ACC accmanager;
