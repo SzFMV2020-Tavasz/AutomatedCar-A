@@ -22,4 +22,7 @@ public class KeyProcesser {
         pedalPos.gasPedalUp();
     }
 
+    public void breakPedalPressed(){pedalPos.breakPedalDown();}
+
+    public void breakPedalReleased(){pedalPos.breakPedalUp();}
 }

@@ -31,7 +31,7 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_S:
-                    Processer.KeyReleased(keyCode);
+                    Processer.breakPedalReleased();
                     break;
 
                 case KeyEvent.VK_D:
@@ -54,7 +54,7 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_S:
-                    Processer.KeyPressed(keyCode);
+                    Processer.breakPedalPressed();
                     break;
 
                 case KeyEvent.VK_D:

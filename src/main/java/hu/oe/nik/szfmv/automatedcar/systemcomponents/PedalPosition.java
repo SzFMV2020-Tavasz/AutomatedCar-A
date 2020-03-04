@@ -4,15 +4,18 @@ public class PedalPosition {
 
     private double gasPedalValue;
     private boolean gasPedalSwitch;//true -> down, false -> up
+    private double breakPedalValue;
+    private boolean breakPedalSwitch;
 
     public void gasPedalDown(){
         gasPedalSwitch=true;
         gasPedalValueIncrease();
     }
+
     private void gasPedalValueIncrease(){
-        Thread increaseValueThread = new Thread(()->{
+        Thread valueChangeThread = new Thread(()->{
             int counter = 0;
-            while(gasPedalSwitch && gasPedalValue<=100.0)
+            while(gasPedalSwitch && gasPedalValue<100.0)
             {
                 counter++;
                 if(validRange(gasPedalValue+increaseNumber(counter))) {
@@ -22,10 +25,9 @@ public class PedalPosition {
                     gasPedalValue=100;
                 }
                 Sleep();
-
             }
         });
-        increaseValueThread.start();
+        valueChangeThread.start();
     }
 
     public void gasPedalUp(){
@@ -34,7 +36,7 @@ public class PedalPosition {
     }
 
     private void gasPedalValueDecrease(){
-        Thread decreaseValueThread = new Thread(()->{
+        Thread valueChangeThread = new Thread(()->{
             int counter = 0;
             while(gasPedalSwitch && gasPedalValue>=0.0)
             {
@@ -48,7 +50,53 @@ public class PedalPosition {
                 Sleep();
             }
         });
-        decreaseValueThread.start();
+        valueChangeThread.start();
+    }
+
+    public void breakPedalDown(){
+        breakPedalSwitch=true;
+        breakPedalValueIncrease();
+    }
+
+    private void breakPedalValueIncrease(){
+        Thread valueChangeThread = new Thread(()->{
+            int counter = 0;
+            while(breakPedalSwitch && breakPedalValue<100.0)
+            {
+                counter++;
+                if(validRange(breakPedalValue+increaseNumber(counter))) {
+                    breakPedalValue += increaseNumber(counter);
+                }
+                else{
+                    breakPedalValue=100;
+                }
+                Sleep();
+            }
+        });
+        valueChangeThread.start();
+    }
+
+    public void breakPedalUp(){
+        breakPedalSwitch = false;
+        breakPedalValueDecrease();
+    }
+
+    private void breakPedalValueDecrease(){
+        Thread valueChangeThread = new Thread(()->{
+            int counter = 0;
+            while(!breakPedalSwitch && breakPedalValue>0.0)
+            {
+                counter++;
+                if(validRange(breakPedalValue+increaseNumber(counter))) {
+                    breakPedalValue += increaseNumber(counter);
+                }
+                else{
+                    breakPedalValue=100;
+                }
+                Sleep();
+            }
+        });
+        valueChangeThread.start();
     }
 
     private int increaseNumber(int counter){
