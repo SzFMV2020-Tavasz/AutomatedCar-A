@@ -2,6 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus;
 
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.Debugging.DebugMode;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class VirtualFunctionBus {
 
     private List<SystemComponent> components = new ArrayList<>();
 
+    private DebugMode DebugMode = new DebugMode();
 
     /**
      * Registers the provided {@link SystemComponent}
