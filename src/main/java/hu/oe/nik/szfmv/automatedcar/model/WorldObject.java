@@ -10,7 +10,10 @@ import java.io.IOException;
 
 public class WorldObject {
 
+    private static int uid = 1;
+
     private static final Logger LOGGER = LogManager.getLogger(WorldObject.class);
+
     protected String id;
     protected String type;
     protected int x;
@@ -82,6 +85,7 @@ public class WorldObject {
     }
 
     public void setType(String type) {
+
         this.type = type;
     }
 
@@ -140,4 +144,8 @@ public class WorldObject {
         }
     }
 
+    public void initId() {
+        if (id == null)
+            setId(type + "_" + (uid++));
+    }
 }

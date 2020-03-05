@@ -87,7 +87,7 @@ public class Deserializer {
         var completeData = new ArrayList<WorldObject>();
         for (WorldObject completeObject :
                 unCompleteData) {
-
+            completeObject.initId();
             completeData.add(AddLayeringWithStaticInfo(ReadRotationMatrixFromFileToObject(completeObject, raw)));
         }
 

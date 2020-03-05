@@ -17,6 +17,19 @@ public class DeserializerTest {
             e.printStackTrace();
         }
         assertNotNull(content);
+        assertNotEquals(0, content.size());
+
+        var entry = content.get(0);
+
+        assertEquals("road_2lane_straight", entry.getType());
+        assertEquals(1700, entry.getX());
+        assertEquals(144, entry.getY());
+        assertEquals(0, entry.getZ());
+        assertEquals("road_2lane_straight_1", entry.getId());
+
+        var entry2 = content.get(1);
+
+        assertEquals("road_2lane_90right_2", entry2.getId());
     }
 
     @Test
