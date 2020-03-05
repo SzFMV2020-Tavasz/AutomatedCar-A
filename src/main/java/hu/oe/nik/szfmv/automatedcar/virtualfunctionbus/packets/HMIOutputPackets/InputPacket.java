@@ -1,6 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
 
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.BaseInputPacket;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer.ShiftPos;
 
 public class InputPacket implements BaseInputPacket {
 
@@ -45,12 +45,12 @@ public class InputPacket implements BaseInputPacket {
     }
 
 
-    private char shiftValue;
-    public void setShiftValue(char shiftValue){
-        this.shiftValue=shiftValue;
+    private ShiftPos shiftValue;
+    public void setShiftValue(ShiftPos value){
+        shiftValue=shiftValue;
     }
     @Override
-    public char getShiftValue() {
+    public ShiftPos getShiftValue() {
         return shiftValue;
     }
 
@@ -164,4 +164,7 @@ public class InputPacket implements BaseInputPacket {
         signalRightValue = value;
     }
 
+
+
 }
+

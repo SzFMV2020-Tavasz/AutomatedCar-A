@@ -12,6 +12,7 @@ public class HMIKeyListener {
     KeyProcesser Processer = new KeyProcesser();
     private ACC accmanager;
     private InputPacket inputPacket;
+    private Shitfer shitferManager;
 
 
     java.awt.event.KeyListener listen = new java.awt.event.KeyListener() {
@@ -74,11 +75,13 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_K:
-                    Processer.KeyPressed(keyCode);
+                    shitferManager.Decrement();
+                    inputPacket.setShiftValue(shitferManager.GetCurrentState());
                     break;
 
                 case KeyEvent.VK_L:
-                    Processer.KeyPressed(keyCode);
+                    shitferManager.Increment();
+                    inputPacket.setShiftValue(shitferManager.GetCurrentState());
                     break;
 
 
