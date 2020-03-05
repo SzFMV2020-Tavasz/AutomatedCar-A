@@ -17,7 +17,7 @@ public class WorldTest {
     void init() {
         WorldObjectDes instance = new WorldObjectDes();
         instance.isStatic = true;
-        instance.type = "car";
+        instance.type = "car_1_blue";
         instance.x = 5;
         instance.y = 4;
         instance.rotationMatrix = new float[][]{{1, 2}, {1, 2}};
@@ -25,7 +25,7 @@ public class WorldTest {
 
         WorldObjectDes instance1 = new WorldObjectDes();
         instance1.isStatic = true;
-        instance1.type = "road";
+        instance1.type = "road_2lane_straight";
 
         WorldObjectDes instance2 = new WorldObjectDes();
         instance2.isStatic = true;
@@ -33,7 +33,7 @@ public class WorldTest {
 
         WorldObjectDes instance3 = new WorldObjectDes();
         instance3.isStatic = false;
-        instance3.type = "pedestrian";
+        instance3.type = "man";
 
         testList.add(instance);
         testList.add(instance1);
