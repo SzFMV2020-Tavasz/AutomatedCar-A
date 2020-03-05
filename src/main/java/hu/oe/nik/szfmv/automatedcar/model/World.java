@@ -1,16 +1,25 @@
 package hu.oe.nik.szfmv.automatedcar.model;
 
+import hu.oe.nik.szfmv.automatedcar.model.deserializer.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class World {
-    private int width = 0;
-    private int height = 0;
-    private List<WorldObject> worldObjects = new ArrayList<>();
+    private int width;
+    private int height;
+    private List<WorldObject> worldObjects;
 
     public World(int width, int height) {
         this.width = width;
         this.height = height;
+        this.worldObjects = Deserializer.DeserializeJson("test_world.json");
+    }
+
+    public World(int width, int height, List<WorldObject> instanceList) {
+        this.width = width;
+        this.height = height;
+        this.worldObjects = instanceList;
     }
 
     public int getWidth() {
@@ -31,6 +40,34 @@ public class World {
 
     public List<WorldObject> getWorldObjects() {
         return worldObjects;
+    }
+
+    public List<WorldObject> getDynamics() {
+        List<WorldObject> dynamicObjectList = new ArrayList<>();
+        for (WorldObject item : worldObjects) {
+            if (!item.isStatic)
+                dynamicObjectList.add(item);
+        }
+        return dynamicObjectList;
+    }
+
+    public WorldObject getObject(String id) {
+        for (WorldObject item : worldObjects) {
+            if (item.id.equals(id))
+                return item;
+        }
+        return null;
+    }
+
+    public void setObject(String id, int x, int y, float[][] rotationMatrix) {
+        for (WorldObject item : worldObjects
+        ) {
+            if (item.getId().equals(id)) {
+                item.setX(x);
+                item.setY(y);
+                item.setRotationMatrix(rotationMatrix);
+            }
+        }
     }
 
     /**
