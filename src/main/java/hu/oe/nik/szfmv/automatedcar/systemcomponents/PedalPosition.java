@@ -22,14 +22,52 @@ public class PedalPosition {
             int counter = 0;
             while(steeringWheelRight && steeringWheelValue<180.0)
             {
-                counter++;
-                if(PedalValueValidRange(gasPedalValue+increaseNumber(counter))) {
-                    gasPedalValue += increaseNumber(counter);
+
+                if(steeringWheelValueValidRange(steeringWheelValue+increaseNumber(counter))) {
+                    steeringWheelValue += increaseNumber(counter);
                 }
                 else{
-                    gasPedalValue=100;
+                    steeringWheelValue=180;
                 }
+                counter++;
                 Sleep();
+            }
+        });
+        valueChangeThread.start();
+    }
+
+    public void startSteeringLeft(){
+        if(!steeringWheelLeft){
+            steeringWheelLeft=true;
+            steeringLeft();
+        }
+    }
+
+    private void steeringLeft(){
+        Thread valueChangeThread = new Thread(()->{
+            int counter = 0;
+            while(steeringWheelRight && steeringWheelValue> -180.0)
+            {
+
+                if(steeringWheelValueValidRange(steeringWheelValue+increaseNumber(counter))) {
+                    steeringWheelValue -= increaseNumber(counter);
+                }
+                else{
+                    steeringWheelValue= -180;
+                }
+                counter++;
+                Sleep();
+            }
+        });
+        valueChangeThread.start();
+    }
+
+    public void steeringWheelReleased(){
+        Thread valueChangeThread = new Thread(()->{
+            int counter = 0;
+            while(!steeringWheelRight && !steeringWheelLeft && !(steeringWheelValue==0.0)) {
+                counter++;
+                steeringWheelValue+=steeringWheelToZero(steeringWheelValue,counter);
             }
         });
         valueChangeThread.start();
@@ -47,13 +85,14 @@ public class PedalPosition {
             int counter = 0;
             while(gasPedalSwitch && gasPedalValue<100.0)
             {
-                counter++;
+
                 if(PedalValueValidRange(gasPedalValue+increaseNumber(counter))) {
                     gasPedalValue += increaseNumber(counter);
                 }
                 else{
                     gasPedalValue=100;
                 }
+                counter++;
                 Sleep();
             }
         });
@@ -70,13 +109,14 @@ public class PedalPosition {
             int counter = 0;
             while(gasPedalSwitch && gasPedalValue>=0.0)
             {
-                counter++;
+
                 if(PedalValueValidRange(gasPedalValue-increaseNumber(counter))) {
                     gasPedalValue -= increaseNumber(counter);
                 }
                 else{
                     gasPedalValue=0;
                 }
+                counter++;
                 Sleep();
             }
         });
@@ -95,13 +135,14 @@ public class PedalPosition {
             int counter = 0;
             while(breakPedalSwitch && breakPedalValue<100.0)
             {
-                counter++;
+
                 if(PedalValueValidRange(breakPedalValue+increaseNumber(counter))) {
                     breakPedalValue += increaseNumber(counter);
                 }
                 else{
                     breakPedalValue=100;
                 }
+                counter++;
                 Sleep();
             }
         });
@@ -118,13 +159,14 @@ public class PedalPosition {
             int counter = 0;
             while(!breakPedalSwitch && breakPedalValue>0.0)
             {
-                counter++;
+
                 if(PedalValueValidRange(breakPedalValue+increaseNumber(counter))) {
                     breakPedalValue += increaseNumber(counter);
                 }
                 else{
                     breakPedalValue=100;
                 }
+                counter++;
                 Sleep();
             }
         });
@@ -157,6 +199,47 @@ public class PedalPosition {
         }
         else{
             return false;
+        }
+    }
+
+    private boolean steeringWheelValueValidRange(double value){
+        if(value>=-180.0 && value<=180.0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private int steeringWheelToZero(double value,int counter){
+
+        int outputValue;
+
+        if(counter <5){
+            outputValue= 5;
+        }
+        else if(counter < 10){
+            outputValue= 10;
+        }
+        else{
+            outputValue= 15;
+        }
+
+        if(value<0){
+            if(value+outputValue>0){
+            return (int)-value;
+            }
+            else{
+                return outputValue;
+            }
+        }
+        else{
+            if(value-outputValue<0){
+                return (int)-value;
+            }
+            else {
+                return -outputValue;
+            }
         }
     }
 };

@@ -25,4 +25,10 @@ public class KeyProcesser {
     public void breakPedalPressed(){pedalPos.breakPedalDown();}
 
     public void breakPedalReleased(){pedalPos.breakPedalUp();}
+
+    public void steeringLeftPressed(){pedalPos.startSteeringLeft();}
+
+    public void steeringRightPressed(){pedalPos.startSteeringRight();}
+
+    public void steeringReleased(){pedalPos.steeringWheelReleased();}
 }
