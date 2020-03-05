@@ -6,10 +6,40 @@ public class PedalPosition {
     private boolean gasPedalSwitch;//true -> down, false -> up
     private double breakPedalValue;
     private boolean breakPedalSwitch;
+    private double steeringWheelValue;//-180 - 180
+    private boolean steeringWheelRight;
+    private boolean steeringWheelLeft;
+
+    public void startSteeringRight(){
+        if(!steeringWheelRight) {
+            steeringWheelRight = true;
+            steeringRight();
+        }
+    }
+
+    private void steeringRight(){
+        Thread valueChangeThread = new Thread(()->{
+            int counter = 0;
+            while(steeringWheelRight && steeringWheelValue<180.0)
+            {
+                counter++;
+                if(PedalValueValidRange(gasPedalValue+increaseNumber(counter))) {
+                    gasPedalValue += increaseNumber(counter);
+                }
+                else{
+                    gasPedalValue=100;
+                }
+                Sleep();
+            }
+        });
+        valueChangeThread.start();
+    }
 
     public void gasPedalDown(){
+        if(!gasPedalSwitch) {
         gasPedalSwitch=true;
         gasPedalValueIncrease();
+        }
     }
 
     private void gasPedalValueIncrease(){
@@ -18,7 +48,7 @@ public class PedalPosition {
             while(gasPedalSwitch && gasPedalValue<100.0)
             {
                 counter++;
-                if(validRange(gasPedalValue+increaseNumber(counter))) {
+                if(PedalValueValidRange(gasPedalValue+increaseNumber(counter))) {
                     gasPedalValue += increaseNumber(counter);
                 }
                 else{
@@ -41,7 +71,7 @@ public class PedalPosition {
             while(gasPedalSwitch && gasPedalValue>=0.0)
             {
                 counter++;
-                if(validRange(gasPedalValue-increaseNumber(counter))) {
+                if(PedalValueValidRange(gasPedalValue-increaseNumber(counter))) {
                     gasPedalValue -= increaseNumber(counter);
                 }
                 else{
@@ -53,9 +83,11 @@ public class PedalPosition {
         valueChangeThread.start();
     }
 
-    public void breakPedalDown(){
-        breakPedalSwitch=true;
-        breakPedalValueIncrease();
+    public void breakPedalDown() {
+        if (!breakPedalSwitch) {
+            breakPedalSwitch = true;
+            breakPedalValueIncrease();
+        }
     }
 
     private void breakPedalValueIncrease(){
@@ -64,7 +96,7 @@ public class PedalPosition {
             while(breakPedalSwitch && breakPedalValue<100.0)
             {
                 counter++;
-                if(validRange(breakPedalValue+increaseNumber(counter))) {
+                if(PedalValueValidRange(breakPedalValue+increaseNumber(counter))) {
                     breakPedalValue += increaseNumber(counter);
                 }
                 else{
@@ -87,7 +119,7 @@ public class PedalPosition {
             while(!breakPedalSwitch && breakPedalValue>0.0)
             {
                 counter++;
-                if(validRange(breakPedalValue+increaseNumber(counter))) {
+                if(PedalValueValidRange(breakPedalValue+increaseNumber(counter))) {
                     breakPedalValue += increaseNumber(counter);
                 }
                 else{
@@ -119,7 +151,7 @@ public class PedalPosition {
         }
     }
 
-    private boolean validRange(double value){
+    private boolean PedalValueValidRange(double value){
         if(value>=0.0 && value <=100.0){
             return true;
         }
