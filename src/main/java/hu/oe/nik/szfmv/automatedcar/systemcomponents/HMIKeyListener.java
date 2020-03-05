@@ -7,7 +7,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.
 import java.awt.event.KeyEvent;
 
 
-public class KeyListener {
+public class HMIKeyListener {
 
     KeyProcesser Processer = new KeyProcesser();
     private ACC accmanager;
@@ -26,12 +26,12 @@ public class KeyListener {
             switch(keyCode)
             {
                 case KeyEvent.VK_W:
-                    Processer.KeyReleased(keyCode);
+                    Processer.gasPedalReleased();
 
                     break;
 
                 case KeyEvent.VK_S:
-                    Processer.KeyReleased(keyCode);
+                    Processer.breakPedalReleased();
                     break;
 
                 case KeyEvent.VK_D:
@@ -50,11 +50,11 @@ public class KeyListener {
             switch(keyCode)
             {
                 case KeyEvent.VK_W:
-                    Processer.KeyPressed(keyCode);
+                    Processer.gasPedalPressed();
                     break;
 
                 case KeyEvent.VK_S:
-                    Processer.KeyPressed(keyCode);
+                    Processer.breakPedalPressed();
                     break;
 
                 case KeyEvent.VK_D:
