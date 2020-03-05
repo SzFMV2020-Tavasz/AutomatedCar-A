@@ -5,12 +5,11 @@ import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 public class WorldObject {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(WorldObject.class);
     protected int x;
     protected int y;
     protected int width;
@@ -80,7 +79,8 @@ public class WorldObject {
 
     public void initImage() {
         try {
-            image = ImageIO.read(new File(ClassLoader.getSystemResource(imageFileName).getFile()));
+            ClassLoader classLoader = getClass().getClassLoader();
+            image = ImageIO.read(classLoader.getResourceAsStream(imageFileName));
             this.width = image.getWidth();
             this.height = image.getHeight();
         } catch (IOException e) {

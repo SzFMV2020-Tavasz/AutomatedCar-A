@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class Gui extends JFrame {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(Gui.class);
     private final int windowWidth = 1020;
     private final int windowHeight = 700;
     private ArrayList<Integer> keysPressed;
