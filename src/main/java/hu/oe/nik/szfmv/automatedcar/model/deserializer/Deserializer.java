@@ -2,6 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.model.deserializer;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -29,41 +30,44 @@ public class Deserializer {
         }
     }
 
-    private static WorldObjectDes ReadRotationMatrixFromFileToObject(WorldObjectDes object, String file) {
-        object.rotationMatrix = new float[2][2];
-        var currentData = file.substring(file.indexOf("\"type\": \"" + object.type)).split("},")[0].split(",");
-        object.rotationMatrix[0][0] = Float.parseFloat(currentData[3].split("m11\":")[1]);
-        object.rotationMatrix[0][1] = Float.parseFloat(currentData[4].split("m12\":")[1]);
-        object.rotationMatrix[1][0] = Float.parseFloat(currentData[5].split("m21\":")[1]);
-        object.rotationMatrix[1][1] = Float.parseFloat(currentData[6].split("m22\":")[1]);
+    private static WorldObject ReadRotationMatrixFromFileToObject(WorldObject object, String file) {
+        var currentData = file.substring(file.indexOf("\"type\": \"" + object.getType())).split("},")[0].split(",");
+
+        var matrix = new float[2][2];
+        matrix[0][0] = Float.parseFloat(currentData[3].split("m11\":")[1]);
+        matrix[0][1] = Float.parseFloat(currentData[4].split("m12\":")[1]);
+        matrix[1][0] = Float.parseFloat(currentData[5].split("m21\":")[1]);
+        matrix[1][1] = Float.parseFloat(currentData[6].split("m22\":")[1]);
+
+        object.setRotationMatrix(matrix);
 
         return object;
     }
 
-    private static WorldObjectDes AddLayeringWithStaticInfo(WorldObjectDes object) {
-        if ((object.type.contains("road") && !object.type.contains("roadsign"))
-                || object.type.contains("garage")
-                || (object.type.contains("parking") && !object.type.contains("roadsign"))) {
-            object.isStatic = true;
+    private static WorldObject AddLayeringWithStaticInfo(WorldObject object) {
+        if ((object.getType().contains("road") && !object.getType().contains("roadsign"))
+                || object.getType().contains("garage")
+                || (object.getType().contains("parking") && !object.getType().contains("roadsign"))) {
+            object.setIsStatic(true);
         }
 
-        if (object.type.contains("man")
-                || object.type.contains("car")
-                || object.type.contains("bicycle")
-                || object.type.contains("bollard")
-                || object.type.contains("boundary")
-                || object.type.contains("tree")
-                || object.type.contains("roadsign")) {
-            object.z = 1;
+        if (object.getType().contains("man")
+                || object.getType().contains("car")
+                || object.getType().contains("bicycle")
+                || object.getType().contains("bollard")
+                || object.getType().contains("boundary")
+                || object.getType().contains("tree")
+                || object.getType().contains("roadsign")) {
+            object.setZ(1);
 
-            if (!object.type.contains("man")) {
-                object.isStatic = true;
+            if (!object.getType().contains("man")) {
+                object.setIsStatic(true);
             }
         }
         return object;
     }
 
-    public static List<WorldObjectDes> DeserializeJson(String fileName) throws IllegalArgumentException {
+    public static List<WorldObject> DeserializeJson(String fileName) throws IllegalArgumentException {
         try {
             TestFile(fileName);
         } catch (Exception e) {
@@ -76,12 +80,12 @@ public class Deserializer {
 
         var raw = file.substring(file.indexOf("["), file.indexOf("]") + 1);
 
-        Type listType = new TypeToken<ArrayList<WorldObjectDes>>() {
+        Type listType = new TypeToken<ArrayList<WorldObject>>() {
         }.getType();
-        List<WorldObjectDes> unCompleteData = new Gson().fromJson(raw, listType);
+        List<WorldObject> unCompleteData = new Gson().fromJson(raw, listType);
 
-        var completeData = new ArrayList<WorldObjectDes>();
-        for (WorldObjectDes completeObject :
+        var completeData = new ArrayList<WorldObject>();
+        for (WorldObject completeObject :
                 unCompleteData) {
 
             completeData.add(AddLayeringWithStaticInfo(ReadRotationMatrixFromFileToObject(completeObject, raw)));

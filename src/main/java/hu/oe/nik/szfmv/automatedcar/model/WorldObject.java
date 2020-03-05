@@ -4,25 +4,37 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class WorldObject {
 
     private static final Logger LOGGER = LogManager.getLogger(WorldObject.class);
+    protected String id;
+    protected String type;
     protected int x;
     protected int y;
+    protected int z;
     protected int width;
     protected int height;
     protected float rotation = 0f;
+    protected float[][] rotationMatrix;
     protected String imageFileName;
     protected BufferedImage image;
+    protected Polygon polygon;
+    protected boolean isStatic;
 
     public WorldObject(int x, int y, String imageFileName) {
         this.x = x;
         this.y = y;
         this.imageFileName = imageFileName;
         initImage();
+    }
+
+    public WorldObject(String id) {
+        setId(id);
+        this.rotationMatrix = new float[2][2];
     }
 
     public int getX() {
@@ -39,6 +51,38 @@ public class WorldObject {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public float[][] getRotationMatrix() {
+        return rotationMatrix;
+    }
+
+    public void setRotationMatrix(float[][] matrix) {
+        this.rotationMatrix = matrix;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getWidth() {
@@ -71,6 +115,14 @@ public class WorldObject {
 
     public void setImageFileName(String imageFileName) {
         this.imageFileName = imageFileName;
+    }
+
+    public boolean getIsStatic() {
+        return isStatic;
+    }
+
+    public void setIsStatic(boolean isStatic) {
+        this.isStatic = isStatic;
     }
 
     public BufferedImage getImage() {

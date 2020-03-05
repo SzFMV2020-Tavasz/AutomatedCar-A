@@ -9,22 +9,17 @@ public class World {
     private int width;
     private int height;
     private List<WorldObject> worldObjects;
-    private List<WorldObjectDes> worldObjectsDes;
 
     public World(int width, int height) {
         this.width = width;
         this.height = height;
-        this.worldObjectsDes = Deserializer.DeserializeJson("test_world.json");
-        this.worldObjects = new ArrayList<>();
-
-        ParseToWorldObject();
+        this.worldObjects = Deserializer.DeserializeJson("test_world.json");
     }
 
-    public World(int width, int height, List<WorldObjectDes> instanceList) {
+    public World(int width, int height, List<WorldObject> instanceList) {
         this.width = width;
         this.height = height;
-        this.worldObjectsDes = instanceList;
-
+        this.worldObjects = instanceList;
     }
 
     public int getWidth() {
@@ -47,34 +42,30 @@ public class World {
         return worldObjects;
     }
 
-    public List<WorldObjectDes> getWorld() {
-        return worldObjectsDes;
-    }
-
-    public List<WorldObjectDes> getDynamics() {
-        List<WorldObjectDes> dynamicObjectList = new ArrayList<>();
-        for (WorldObjectDes item : worldObjectsDes) {
+    public List<WorldObject> getDynamics() {
+        List<WorldObject> dynamicObjectList = new ArrayList<>();
+        for (WorldObject item : worldObjects) {
             if (!item.isStatic)
                 dynamicObjectList.add(item);
         }
         return dynamicObjectList;
     }
 
-    public WorldObjectDes getObject(String id) {
-        for (WorldObjectDes item : worldObjectsDes) {
+    public WorldObject getObject(String id) {
+        for (WorldObject item : worldObjects) {
             if (item.id.equals(id))
                 return item;
         }
         return null;
     }
 
-    public void setObject(int x, int y, float[][] rotationMatrix) {
-        for (WorldObjectDes item : worldObjectsDes
+    public void setObject(String id, int x, int y, float[][] rotationMatrix) {
+        for (WorldObject item : worldObjects
         ) {
-            if (item.type.contains("car")) {
-                item.x = x;
-                item.y = y;
-                item.rotationMatrix = rotationMatrix;
+            if (item.getId().equals(id)) {
+                item.setX(x);
+                item.setY(y);
+                item.setRotationMatrix(rotationMatrix);
             }
         }
     }
@@ -86,13 +77,5 @@ public class World {
      */
     public void addObjectToWorld(WorldObject o) {
         worldObjects.add(o);
-    }
-
-    private void ParseToWorldObject() {
-        for (WorldObjectDes objectDes : this.worldObjectsDes) {
-            var obj = new WorldObject(objectDes.x, objectDes.y, objectDes.type + ".png");
-            obj.rotation = 0f;
-            this.worldObjects.add(obj);
-        }
     }
 }

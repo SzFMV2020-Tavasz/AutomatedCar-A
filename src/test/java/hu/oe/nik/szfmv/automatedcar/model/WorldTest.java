@@ -1,6 +1,5 @@
 package hu.oe.nik.szfmv.automatedcar.model;
 
-import hu.oe.nik.szfmv.automatedcar.model.deserializer.WorldObjectDes;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,44 +9,41 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WorldTest {
-    List<WorldObjectDes> testList = new ArrayList<>();
+    List<WorldObject> testList = new ArrayList<>();
     World worldInstance;
 
     @BeforeEach
     void init() {
-        WorldObjectDes instance = new WorldObjectDes();
-        instance.isStatic = true;
-        instance.type = "car_1_blue";
-        instance.x = 5;
-        instance.y = 4;
-        instance.rotationMatrix = new float[][]{{1, 2}, {1, 2}};
-        instance.id = "4";
+        WorldObject instance = new WorldObject("4");
+        instance.setIsStatic(true);
+        instance.setType("car_1_blue");
+        instance.setX(5);
+        instance.setY(4);
+        instance.setRotationMatrix(new float[][]{{1, 2}, {1, 2}});
 
-        WorldObjectDes instance1 = new WorldObjectDes();
-        instance1.isStatic = true;
-        instance1.type = "road_2lane_straight";
+        WorldObject instance1 = new WorldObject("3");
+        instance1.setIsStatic(true);
+        instance1.setType("road_2lane_straight");
 
-        WorldObjectDes instance2 = new WorldObjectDes();
-        instance2.isStatic = true;
-        instance2.type = "tree";
+        WorldObject instance2 = new WorldObject("2");
+        instance2.setIsStatic(true);
+        instance2.setType("tree");
 
-        WorldObjectDes instance3 = new WorldObjectDes();
-        instance3.isStatic = false;
-        instance3.type = "man";
+        WorldObject instance3 = new WorldObject("1");
+        instance3.setIsStatic(false);
+        instance3.setType("man");
 
         testList.add(instance);
         testList.add(instance1);
         testList.add(instance2);
         testList.add(instance3);
         worldInstance = new World(10, 10, testList);
-
-
     }
 
     @Test
     void testGetWorld() {
         int expectedValue = 4;
-        int getValue = worldInstance.getWorld().size();
+        int getValue = worldInstance.getWorldObjects().size();
         assertEquals(expectedValue, getValue);
     }
 
@@ -60,30 +56,23 @@ public class WorldTest {
 
     @Test
     void testSetObject() {
+        String id = "4";
         int expectedX = 5;
         int expectedY = 4;
         float[][] expectedRotation = new float[][]{{1, 2}, {1, 2}};
-        worldInstance.setObject(expectedX, expectedY, expectedRotation);
-        for (WorldObjectDes item : worldInstance.getWorld()
-        ) {
-            if (item.type.contains("car")) {
-                assertEquals(expectedX, item.x);
-                assertEquals(expectedY, item.y);
-                assertEquals(expectedRotation, item.rotationMatrix);
-            }
-
+        worldInstance.setObject(id, expectedX, expectedY, expectedRotation);
+        var edited = worldInstance.getObject(id);
+        if (edited.getId().equals(id)) {
+            assertEquals(expectedX, edited.getX());
+            assertEquals(expectedY, edited.getY());
+            assertEquals(expectedRotation, edited.getRotationMatrix());
         }
-
     }
 
     @Test
     void testGetObjectById() {
         String expectedId = "4";
-        WorldObjectDes instance = worldInstance.getObject(expectedId);
-        assertEquals(expectedId, instance.id);
-
-
+        WorldObject instance = worldInstance.getObject(expectedId);
+        assertEquals(expectedId, instance.getId());
     }
-
-
 }
