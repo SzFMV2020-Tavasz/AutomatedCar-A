@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class Deserializer {
-    private static  void TestFile(String fileName) throws IllegalArgumentException {
+    private static void TestFile(String fileName) throws IllegalArgumentException {
         if (!fileName.contains("json")) {
             throw new IllegalArgumentException("Provided file's extension is not .json! \n File:" + fileName);
         }
@@ -19,7 +19,7 @@ public class Deserializer {
         try {
             var reader = new BufferedReader(new FileReader(ClassLoader.getSystemResource(fileName).getFile()));
             String line;
-            while((line = reader.readLine() )!= null) {
+            while ((line = reader.readLine()) != null) {
                 content.append(line);
             }
 
@@ -29,7 +29,7 @@ public class Deserializer {
         }
     }
 
-    private static WorldObjectDes ReadRotationMatrixFromFileToObject (WorldObjectDes object, String file) {
+    private static WorldObjectDes ReadRotationMatrixFromFileToObject(WorldObjectDes object, String file) {
         object.rotationMatrix = new float[2][2];
         var currentData = file.substring(file.indexOf("\"type\": \"" + object.type)).split("},")[0].split(",");
         object.rotationMatrix[0][0] = Float.parseFloat(currentData[3].split("m11\":")[1]);
@@ -53,7 +53,7 @@ public class Deserializer {
                 || object.type.contains("bollard")
                 || object.type.contains("boundary")
                 || object.type.contains("tree")
-                || object.type.contains("roadsign")){
+                || object.type.contains("roadsign")) {
             object.z = 1;
 
             if (!object.type.contains("man")) {
@@ -76,12 +76,13 @@ public class Deserializer {
 
         var raw = file.substring(file.indexOf("["), file.indexOf("]") + 1);
 
-        Type listType = new TypeToken<ArrayList<WorldObjectDes>>(){}.getType();
+        Type listType = new TypeToken<ArrayList<WorldObjectDes>>() {
+        }.getType();
         List<WorldObjectDes> unCompleteData = new Gson().fromJson(raw, listType);
 
         var completeData = new ArrayList<WorldObjectDes>();
-        for (WorldObjectDes completeObject:
-             unCompleteData) {
+        for (WorldObjectDes completeObject :
+                unCompleteData) {
 
             completeData.add(AddLayeringWithStaticInfo(ReadRotationMatrixFromFileToObject(completeObject, raw)));
         }
