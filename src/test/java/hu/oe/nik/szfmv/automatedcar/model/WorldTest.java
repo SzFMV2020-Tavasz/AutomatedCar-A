@@ -3,6 +3,7 @@ package hu.oe.nik.szfmv.automatedcar.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,4 +76,17 @@ public class WorldTest {
         WorldObject instance = worldInstance.getObject(expectedId);
         assertEquals(expectedId, instance.getId());
     }
+
+    @Test
+    void testObjectInsideTriangle(){
+        String expectedId = "4";
+        Point a = new Point(5,8);
+        Point b = new Point(0,2);
+        Point c = new Point(10,2);
+        List<WorldObject> objectInsideTriangle = worldInstance.getObjectsInsideTriangle(a,b,c);
+        int size = objectInsideTriangle.size();
+        assertEquals(1, size);
+        assertEquals(expectedId, objectInsideTriangle.get(0).getId());
+    }
 }
+
