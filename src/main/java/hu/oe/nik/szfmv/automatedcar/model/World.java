@@ -2,6 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.model;
 
 import hu.oe.nik.szfmv.automatedcar.model.deserializer.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,40 @@ public class World {
                 dynamicObjectList.add(item);
         }
         return dynamicObjectList;
+    }
+
+    public List<WorldObject> getObjectsInsideTriangle(Point a, Point b, Point c) {
+        List<WorldObject> objectInsideTriangle = new ArrayList<>();
+        for (WorldObject item : worldObjects) {
+            if (isInside(a,b,c,item))
+                objectInsideTriangle.add(item);
+        }
+        return objectInsideTriangle;
+    }
+
+    private boolean isInside(Point a, Point b, Point c, WorldObject item){
+        Point itemsPosition = new Point(item.getX(),item.getY());
+
+        double A = area (a, b, c);
+        double A1 = area (itemsPosition, b, c);
+        double A2 = area (a, itemsPosition, c);
+        double A3 = area (a, b, itemsPosition);
+        return (A == A1 + A2 + A3);
+    }
+
+    private double area(Point a, Point b, Point c){
+        return round((Math.abs((a.getX()*(b.getY()-c.getY()) + b.getX()*(c.getY()-a.getY())+ c.getX()*(a.getY()-b.getY()))/2.0)), 2);
+    }
+
+    private static double round(double value, int places) {
+        if (places < 0){
+            throw new IllegalArgumentException();
+        }
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
     public WorldObject getObject(String id) {
