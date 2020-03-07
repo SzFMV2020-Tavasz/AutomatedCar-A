@@ -31,7 +31,7 @@ public class Deserializer {
     }
 
     private static WorldObject ReadRotationMatrixFromFileToObject(WorldObject object, String file) {
-        var currentData = file.substring(file.indexOf("\"x\": " + object.getX() + ",      \"y\": " + object.getY())).split("},")[0];
+        var currentData = file.substring(file.indexOf("\"x\": " + object.getX() + ",      \"y\": " + object.getY())).split("}")[0];
 
         var matrix = new float[2][2];
         matrix[0][0] = Float.parseFloat(currentData.split("m11\":")[1].split(",")[0]);
