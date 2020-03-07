@@ -3,21 +3,17 @@ package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.core.config.composite.DefaultMergeStrategy;
 
-public class ACC extends SystemComponent {
+public class ACC {
 
-    protected int avarageSpeed = 55;
+    private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
-    //why can i ref this in keylistenet??
+    protected int avarageSpeed = 50;
+
     protected boolean isOn = false;
 
     private static final int minSpeed = 30;
     private static final int maxSpeed = 160;
     private static final int step = 10;
-
-    public ACC(VirtualFunctionBus virtualFunctionBus)
-    {
-        super(virtualFunctionBus);
-    }
 
     public void Set(int setSpeed) {
         avarageSpeed = setSpeed;
@@ -62,7 +58,6 @@ public class ACC extends SystemComponent {
         } else {
             index = 0;
         }
-
     }
 
     public double ReturnFollowerGap()
@@ -81,11 +76,16 @@ public class ACC extends SystemComponent {
         }
     }
 
-
-    @Override
-    public void loop() {
-
-        //to do this is not ready
-        turnOff();
+    public void IsOnPressedCheck()
+    {
+        if (isOn = true)
+        {
+            turnOff();
+        }
+        else
+        {
+            turnOn();
+        }
     }
+
 }

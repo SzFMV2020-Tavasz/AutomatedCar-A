@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 public class HMIKeyListener {
 
     KeyProcesser Processer = new KeyProcesser();
-    private ACC accmanager;
+
     private InputPacket inputPacket;
     private Shitfer shitferManager;
 
@@ -75,35 +75,27 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_K:
-                    shitferManager.Decrement();
-                    inputPacket.setShiftValue(shitferManager.GetCurrentState());
+                    Processer.LowerShift();
+                    Processer.inputPacket.setShiftValue(Processer.shiftManager.GetCurrentState());
                     break;
 
                 case KeyEvent.VK_L:
-                    shitferManager.Increment();
-                    inputPacket.setShiftValue(shitferManager.GetCurrentState());
+                    Processer.GrowShift();
+                    Processer.inputPacket.setShiftValue(Processer.shiftManager.GetCurrentState());
                     break;
-
 
                 case KeyEvent.VK_I:
-                    accmanager.Minus();
+                    Processer.MinusSpeedValue();
                     break;
-
 
                 case KeyEvent.VK_O:
-                    accmanager.Plus();
+                    Processer.PlusSpeedValue();
                     break;
-
 
 
                 case KeyEvent.VK_T:
-                    if (accmanager.isOn = true)
-                    {
-                        accmanager.turnOff();
-                    }
-                    accmanager.turnOn();
+                   Processer.IsOnPressed();
                     break;
-
 
 
                 case KeyEvent.VK_CONTROL:
@@ -123,8 +115,8 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_U:
-                    accmanager.FollowerGapSetter();
-                    inputPacket.setAccFollowerGap(accmanager.ReturnFollowerGap());
+                    Processer.FollowerGapSetter();
+                    Processer.inputPacket.setAccFollowerGap(Processer.ChangeReturnFollowerGapSetter());
                     break;
             }
 

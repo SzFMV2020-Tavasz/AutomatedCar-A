@@ -27,6 +27,4 @@ public class Shitfer {
         ShiftPos[] curr = ShiftPos.values();
         return curr[acttuallyValue];
     }
-
-
 }
