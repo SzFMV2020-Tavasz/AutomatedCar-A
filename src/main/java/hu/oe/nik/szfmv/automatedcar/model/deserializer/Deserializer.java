@@ -31,13 +31,13 @@ public class Deserializer {
     }
 
     private static WorldObject ReadRotationMatrixFromFileToObject(WorldObject object, String file) {
-        var currentData = file.substring(file.indexOf("\"type\": \"" + object.getType())).split("},")[0].split(",");
+        var currentData = file.substring(file.indexOf("\"x\": " + object.getX() + ",      \"y\": " + object.getY())).split("},")[0];
 
         var matrix = new float[2][2];
-        matrix[0][0] = Float.parseFloat(currentData[3].split("m11\":")[1]);
-        matrix[0][1] = Float.parseFloat(currentData[4].split("m12\":")[1]);
-        matrix[1][0] = Float.parseFloat(currentData[5].split("m21\":")[1]);
-        matrix[1][1] = Float.parseFloat(currentData[6].split("m22\":")[1]);
+        matrix[0][0] = Float.parseFloat(currentData.split("m11\":")[1].split(",")[0]);
+        matrix[0][1] = Float.parseFloat(currentData.split("m12\":")[1].split(",")[0]);
+        matrix[1][0] = Float.parseFloat(currentData.split("m21\":")[1].split(",")[0]);
+        matrix[1][1] = Float.parseFloat(currentData.split("m22\":")[1].split(",")[0]);
 
         object.setRotationMatrix(matrix);
 
