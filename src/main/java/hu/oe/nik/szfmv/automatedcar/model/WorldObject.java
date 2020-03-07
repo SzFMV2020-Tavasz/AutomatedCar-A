@@ -144,8 +144,10 @@ public class WorldObject {
         }
     }
 
-    public void initId() {
+    public void initObject() {
         if (id == null)
             setId(type + "_" + (uid++));
+        setImageFileName(this.type + ".png");
+        initImage();
     }
 }
