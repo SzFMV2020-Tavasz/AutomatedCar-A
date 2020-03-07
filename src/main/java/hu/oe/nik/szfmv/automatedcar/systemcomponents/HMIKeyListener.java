@@ -5,6 +5,7 @@ package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 
 public class HMIKeyListener {
@@ -12,8 +13,11 @@ public class HMIKeyListener {
     KeyProcesser Processer = new KeyProcesser();
 
     private InputPacket inputPacket;
-    private Shitfer shitferManager;
 
+    public KeyListener getHMIListener()
+    {
+        return listen;
+    }
 
     java.awt.event.KeyListener listen = new java.awt.event.KeyListener() {
 
