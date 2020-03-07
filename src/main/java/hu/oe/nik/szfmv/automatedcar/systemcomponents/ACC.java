@@ -31,6 +31,7 @@ public class ACC {
     }
 
     void turnOn() {
+        isOn = true;
         virtualFunctionBus.inputPacket.setAccState(true);
         virtualFunctionBus.inputPacket.setAccSpeed(ChangeNewAccSpeed());
     }
@@ -38,6 +39,7 @@ public class ACC {
 
     void  turnOff()
     {
+        isOn = false;
         virtualFunctionBus.inputPacket.setAccState(false);
     }
 
@@ -78,7 +80,7 @@ public class ACC {
 
     public void IsOnPressedCheck()
     {
-        if (isOn = true)
+        if (isOn == true)
         {
             turnOff();
         }

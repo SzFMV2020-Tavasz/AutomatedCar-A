@@ -17,8 +17,8 @@ import java.util.List;
  */
 public class VirtualFunctionBus {
 
-    public InputPacket inputPacket;
-    public ToPowerTrainPacket toPowerTrainPacket;
+    public InputPacket inputPacket = new InputPacket();
+    public ToPowerTrainPacket toPowerTrainPacket = new ToPowerTrainPacket();
 
     public ReadOnlySamplePacket samplePacket;
 
