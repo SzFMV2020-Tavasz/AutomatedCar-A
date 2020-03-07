@@ -25,5 +25,5 @@ public interface ITransmission {
      * Calculates the actual state of the transmission when it is called.
      * (I strongly recommend, to call it in the SystemComponent's loop method.)
      */
-    void Loop();
+    void Loop(int RPM);
 }
