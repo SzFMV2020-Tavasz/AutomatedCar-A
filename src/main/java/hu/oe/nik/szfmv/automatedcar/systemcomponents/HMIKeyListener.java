@@ -36,11 +36,11 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_D:
-                    Processer.KeyReleased(keyCode);
+                    Processer.steeringReleased();
                     break;
 
                 case KeyEvent.VK_A:
-                    Processer.KeyReleased(keyCode);
+                    Processer.steeringReleased();
                     break;
             }
         }
@@ -59,19 +59,19 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_D:
-                    Processer.KeyPressed(keyCode);
+                    Processer.steeringRightPressed();
                     break;
 
                 case KeyEvent.VK_A:
-                    Processer.KeyPressed(keyCode);
+                    Processer.steeringLeftPressed();
                     break;
 
                 case KeyEvent.VK_Q:
-                    Processer.KeyPressed(keyCode);
+                    Processer.indexLeft();
                     break;
 
                 case KeyEvent.VK_E:
-                    Processer.KeyPressed(keyCode);
+                    Processer.indexRight();
                     break;
 
                 case KeyEvent.VK_K:
