@@ -4,12 +4,9 @@ public class KeyProcesser {
 
     private PedalPosition pedalPos = new PedalPosition();
 
-    public int KeyPressed(int keyCode)
-    {
-        return keyCode;
-    }
+    private Index index = new Index();
 
-    public int KeyReleased(int keyCode)
+    public int KeyPressed(int keyCode)
     {
         return keyCode;
     }
@@ -31,4 +28,8 @@ public class KeyProcesser {
     public void steeringRightPressed(){pedalPos.startSteeringRight();}
 
     public void steeringReleased(){pedalPos.steeringWheelReleased();}
+
+    public void indexRight(){index.setStatusRight();}
+
+    public void indexLeft(){index.setStatsLeft();}
 }

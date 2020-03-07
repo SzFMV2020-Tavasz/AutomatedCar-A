@@ -66,11 +66,11 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_Q:
-                    Processer.KeyPressed(keyCode);
+                    Processer.indexLeft();
                     break;
 
                 case KeyEvent.VK_E:
-                    Processer.KeyPressed(keyCode);
+                    Processer.indexRight();
                     break;
 
                 case KeyEvent.VK_K:
