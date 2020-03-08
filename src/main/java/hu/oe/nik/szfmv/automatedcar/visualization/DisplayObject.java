@@ -22,6 +22,12 @@ public class DisplayObject extends WorldObject {
     protected int rotationDisplacementY;
 
     /**
+     * The translation needed to move from the image upper left corner to the image reference point
+     */
+    protected int refDifferenceX;
+    protected int refDifferenceY;
+
+    /**
      * Original worldObject stored for accessing its values
      */
     private WorldObject worldObject;
@@ -36,18 +42,30 @@ public class DisplayObject extends WorldObject {
      * @param automatedCar The AutomatedCar (egocar) that the DisplayObject should keep its relative position to.
      */
     public DisplayObject(final WorldObject worldObject, final AutomatedCar automatedCar) {
-        super(worldObject.getX(), worldObject.getY(), worldObject.getImageFileName());
+        super(worldObject.getX(), worldObject.getY(),
+            worldObject.getImageFileName() == null ? worldObject.getType() + ".png" : worldObject.getImageFileName());
         this.worldObject = worldObject;
         this.automatedCar = automatedCar;
-        this.rotation = worldObject.getRotation();
+        if (worldObject.getRotationMatrix() != null) {
+            worldObject.setRotation(getAngleFromRotationMatrix(worldObject.getRotationMatrix()));
+        }
+        this.z = worldObject.getZ();
         calculatePosition();
     }
 
     public int getRotationDisplacementX() {
-        return rotationDisplacementX;
+        return this.rotationDisplacementX;
     }
     public int getRotationDisplacementY() {
-        return rotationDisplacementY;
+        return this.rotationDisplacementY;
+    }
+
+    public int getRefDifferenceX() {
+        return this.refDifferenceX;
+    }
+
+    public int getRefDifferenceY() {
+        return this.refDifferenceY;
     }
 
     /**
@@ -75,22 +93,39 @@ public class DisplayObject extends WorldObject {
                 automatedCar.getY() - worldObject.getY());
 
         // Calculate the displayObject's referenrence point's rotation around the automatedCar's reference point
-        AffineTransform  translateRefPoints = AffineTransform.getRotateInstance(rotationAngle,
+        AffineTransform  translateRefPoints = AffineTransform.getRotateInstance(rotationAngle ,
                 refPointDistance.getX(), refPointDistance.getY());
 
         // Calculate the displayObject's reference point's displacement due to the difference between
         // the displayObject's reference point and the displayObject's image's rotation origo.
-        AffineTransform fixRefPoint = AffineTransform.getRotateInstance(rotationAngle,
-                VisualizationConfig.DISPLAY_RIGHT90_REF_POINT_X,
-                VisualizationConfig.DISPLAY_RIGHT90_REF_POINT_Y);
+        Point2D refPoint = VisualizationConfig.getReferencePoint (this.imageFileName);
+        AffineTransform fixRefPoint = AffineTransform.getRotateInstance(+ worldObject.getRotation()
+                       + rotationAngle, refPoint.getX(), refPoint.getY());
 
         // set the class values according to the calculations
         this.x += (int)Math.round(translateRefPoints.getTranslateX() + carMovement.getX());
         this.y += (int)Math.round(translateRefPoints.getTranslateY() + carMovement.getY());
 
-        this.rotation = (float)rotationAngle;
+        this.rotation = (float)rotationAngle + worldObject.getRotation();
 
         this.rotationDisplacementX = (int)Math.round(fixRefPoint.getTranslateX());
         this.rotationDisplacementY = (int)Math.round(fixRefPoint.getTranslateY());
+
+        this.refDifferenceX = (int)refPoint.getX();
+        this.refDifferenceY = (int)refPoint.getY();
+
+    }
+
+    private float getAngleFromRotationMatrix(float[][] matrix) {
+        double angle1 = Math.acos(matrix[0][0]);
+        float sinValue = matrix[1][0];
+        double angleFinal;
+
+        if (sinValue >= 0) {
+            angleFinal = angle1;
+        } else {
+            angleFinal = Math.PI * 2 - angle1;
+        }
+        return (float) -angleFinal;
     }
 }
