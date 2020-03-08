@@ -58,6 +58,10 @@ public class DisplayWorld {
         dynamicWorldObjects = world.getDynamics();
     }
 
+    /**
+     * Gets all objects that needs to be drawn
+     * @return List of DisplayObjects rotated and moved according to the egocar's position
+     */
     public List<DisplayObject> getDisplayObjects() {
 
         List<DisplayObject> returnList = new ArrayList<DisplayObject>();
