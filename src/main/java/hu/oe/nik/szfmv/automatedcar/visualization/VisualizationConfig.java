@@ -1,9 +1,5 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
-import hu.oe.nik.szfmv.automatedcar.Main;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -21,9 +17,7 @@ import java.util.Hashtable;
  * Can be changed later here in one place or even read from a config text file.
  */
 public final class VisualizationConfig {
-
-
-
+    
     // The height and width of the CourseDisplay JPanel
     public static final int DISPLAY_WIDTH = 770;
     public static final int DISPLAY_HEIGHT = 700;
@@ -32,23 +26,10 @@ public final class VisualizationConfig {
     // with 0 degrees rotation relative to the x axis
     public static final int DISPLAY_EGOCAR_CENTER_POSITION_X = DISPLAY_WIDTH / 2;
     public static final int DISPLAY_EGOCAR_CENTER_POSITION_Y = DISPLAY_HEIGHT / 2;
-    public static final double DISPLAY_EGOCAR_ROTATION = Math.PI / 2;
+    public static final float DISPLAY_EGOCAR_ROTATION = 0;
 
-    // Needed for testing; will be removed later with actual passed/read data
-    public static final int DISPLAY_EGOCAR_REFERENCE_X = 104;
-    public static final int DISPLAY_EGOCAR_REFERENCE_Y = 51;
-    public static final int DISPLAY_EGOCAR_ROTATION_ORIGO_X =
-            DISPLAY_EGOCAR_CENTER_POSITION_X + DISPLAY_EGOCAR_REFERENCE_X;
-    public static final int DISPLAY_EGOCAR_ROTATION_ORIGO_Y =
-            DISPLAY_EGOCAR_CENTER_POSITION_Y - DISPLAY_EGOCAR_REFERENCE_Y;
-    public static final double DISPLAY_EGOCAR_ROTATION_OF_IMG = Math.PI / 2;
-
-    public static int DISPLAY_RIGHT90_REF_POINT_X = 349;
-    public static int DISPLAY_RIGHT90_REF_POINT_Y = 525;
-
+    // Dictionary for image reference points
     private static Hashtable<String, Point2D> my_dict;
-
-    private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     /**
      * Constructor for static class
@@ -104,13 +85,15 @@ public final class VisualizationConfig {
      * @return The reference point of the image. The type is float, my needs to be casted to integer.
      */
     public static Point2D getReferencePoint(String filename) {
-        if (my_dict == null || my_dict.isEmpty())
-        {
+        if (my_dict == null || my_dict.isEmpty()) {
             loadReferencePoints();
         }
 
         Point2D refPoint = null;
         refPoint = my_dict.get(filename);
+        if (refPoint == null) {
+            refPoint = new Point2D.Float(0, 0);
+        }
         return refPoint;
     }
 }
