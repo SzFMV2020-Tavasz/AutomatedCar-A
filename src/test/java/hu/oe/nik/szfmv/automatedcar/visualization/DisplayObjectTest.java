@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DisplayObjectTest {
 
@@ -21,9 +22,17 @@ public class DisplayObjectTest {
     @BeforeEach
     public void init() {
         automatedCar = new AutomatedCar(292, 230, "car_2_red.png");
-        automatedCar.setRotation((float) Math.PI / 4);  // 45
+        automatedCar.setRotation(-(float) Math.PI / 4) ;  // 45 +
         worldObject = new WorldObject(399, 540, "road_2lane_90right.png");
         displayObject = new DisplayObject(worldObject, automatedCar);
+    }
+
+    /**
+     * Check whether the class gets instatniatied when new DispLayobjct() called.
+     */
+    @Test
+    public void classInstantiated() {
+        assertNotNull(displayObject);
     }
 
     /**
