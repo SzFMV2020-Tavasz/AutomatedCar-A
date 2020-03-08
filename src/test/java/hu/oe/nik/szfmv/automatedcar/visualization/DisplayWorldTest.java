@@ -11,44 +11,46 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class MockWorld extends World {
 
-    MockWorld() {
-        super(100, 100);
-    }
-
-    @Override
-    public List<WorldObject> getWorldObjects() {
-        WorldObject fixWorldObject1 = new WorldObject(10, 20, "boundary.png");
-        fixWorldObject1.setZ(5);
-        WorldObject fixWorldObject2 = new WorldObject(30, 40, "road_2lane_90right.png");
-        fixWorldObject2.setZ(2);
-        List<WorldObject> fixObjects = List.of (
-                fixWorldObject1,
-                fixWorldObject2);
-        return  fixObjects;
-    }
-
-    @Override
-    public List<WorldObject> getDynamics() {
-        WorldObject dynamicWorldObject1 = new WorldObject(50, 60, "roadsign_priority_stop.png");
-        dynamicWorldObject1.setZ(1);
-        WorldObject dynamicWorldObject2 = new WorldObject(50, 60, "2_crossroad_1.png");
-        dynamicWorldObject2.setZ(4);
-
-        List<WorldObject>  dynamicObjects = List.of(
-                dynamicWorldObject1,
-                dynamicWorldObject2);
-
-        return dynamicObjects;
-    }
-}
 
 public class DisplayWorldTest {
 
     private DisplayWorld displayWorld;
     private MockWorld mockWorld;
     private AutomatedCar automatedCar;
+
+    class MockWorld extends World {
+
+        MockWorld() {
+            super(100, 100);
+        }
+
+        @Override
+        public List<WorldObject> getWorldObjects() {
+            WorldObject fixWorldObject1 = new WorldObject(10, 20, "boundary.png");
+            fixWorldObject1.setZ(5);
+            WorldObject fixWorldObject2 = new WorldObject(30, 40, "road_2lane_90right.png");
+            fixWorldObject2.setZ(2);
+            List<WorldObject> fixObjects = List.of (
+                    fixWorldObject1,
+                    fixWorldObject2);
+            return  fixObjects;
+        }
+
+        @Override
+        public List<WorldObject> getDynamics() {
+            WorldObject dynamicWorldObject1 = new WorldObject(50, 60, "roadsign_priority_stop.png");
+            dynamicWorldObject1.setZ(1);
+            WorldObject dynamicWorldObject2 = new WorldObject(50, 60, "2_crossroad_1.png");
+            dynamicWorldObject2.setZ(4);
+
+            List<WorldObject>  dynamicObjects = List.of(
+                    dynamicWorldObject1,
+                    dynamicWorldObject2);
+
+            return dynamicObjects;
+        }
+    }
 
     /**
      * Setting up the test
