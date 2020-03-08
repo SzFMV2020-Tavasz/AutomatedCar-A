@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Class for storing and refreshing the objects to be displayed.
- *
+ * <p>
  * The class gets the constantly changing data, listens to changevents,
  * provides interface for
  */
@@ -27,9 +27,14 @@ public class DisplayWorld {
     private World world;
     private AutomatedCar automatedCar;
 
+    private boolean showCamera;
+    private boolean showRadar;
+    private boolean showUltrasound;
+
     /**
      * The constructor for the DisplayWorld class
-     * @param world the {@link World} object the fix and dynamic elements come from
+     *
+     * @param world        the {@link World} object the fix and dynamic elements come from
      * @param automatedCar the {@link AutomatedCar} that has to be in the middle of the screen
      */
     public DisplayWorld(World world, AutomatedCar automatedCar) {
@@ -40,6 +45,10 @@ public class DisplayWorld {
         getFixWorldObjectsFromWorld();
         getDynamicWorldObjectsFromWorld();
         VisualizationConfig.loadReferencePoints();
+        VisualizationConfig.calculateSensorPolygons();
+        showCamera = false;
+        showRadar = false;
+        showUltrasound = false;
     }
 
     /**
@@ -60,6 +69,7 @@ public class DisplayWorld {
 
     /**
      * Gets all objects that needs to be drawn
+     *
      * @return List of DisplayObjects rotated and moved according to the egocar's position
      */
     public List<DisplayObject> getDisplayObjects() {
@@ -68,8 +78,10 @@ public class DisplayWorld {
 
         // loop through the fix objects and create their DisplayObjects
         for (WorldObject obj : fixWorldObjects) {
-            DisplayObject dispObj = new DisplayObject(obj, automatedCar);
-            returnList.add(dispObj);
+            if (obj.getX() - automatedCar.getX() < 1000) {
+                DisplayObject dispObj = new DisplayObject(obj, automatedCar);
+                returnList.add(dispObj);
+            }
         }
 
         // refresh dynamic objects
@@ -88,5 +100,29 @@ public class DisplayWorld {
         returnList.add(egoCar);
 
         return returnList;
+    }
+
+    public void setShowCamera(boolean showCamera) {
+        this.showCamera = showCamera;
+    }
+
+    public void setShowRadar(boolean showRadar) {
+        this.showRadar = showRadar;
+    }
+
+    public void setShowUltrasound(boolean showUltrasound) {
+        this.showUltrasound = showUltrasound;
+    }
+
+    public boolean isCameraShown() {
+        return showCamera;
+    }
+
+    public boolean isRadarShown() {
+        return showRadar;
+    }
+
+    public boolean isUltrasoundShown() {
+        return showUltrasound;
     }
 }
