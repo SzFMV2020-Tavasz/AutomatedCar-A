@@ -17,7 +17,6 @@ public class CourseDisplay extends JPanel {
     private final int backgroundColor = 0xEEEEEE;
     private Gui parent;
 
-
     /**
      * Initialize the course display
      *
@@ -28,6 +27,7 @@ public class CourseDisplay extends JPanel {
         setDoubleBuffered(true);
         setLayout(null);
         setBounds(0, 0, width, height);
+        setBackground(new Color(backgroundColor));
         parent = pt;
     }
 
@@ -76,6 +76,55 @@ public class CourseDisplay extends JPanel {
             g2d.drawImage(object.getImage(), t, this);
             i++;
         }
+
+        if (displayWorld.isCameraShown()) {
+            drawCameraSensor(g2d);
+        }
+
+        if (displayWorld.isRadarShown()) {
+            drawRadarSensor(g2d);
+        }
+
+        if (displayWorld.isUltrasoundShown()) {
+            drawUltraSoundSensor(g2d);
+        }
     }
 
+    private void drawCameraSensor(Graphics2D g2d) {
+
+        g2d.setColor(VisualizationConfig.CAMERA_SENSOR_BG_COLOUR);
+        g2d.fillPolygon(VisualizationConfig.camera_sensor_polygon);
+        g2d.setStroke(new BasicStroke(2));
+        g2d.setColor(Color.black);
+        g2d.drawPolygon(VisualizationConfig.camera_sensor_polygon);
+
+        g2d.setStroke(VisualizationConfig.SENZOR_CENTER_LINE);
+        g2d.draw(VisualizationConfig.camera_sensor_centerline);
+    }
+
+    private void drawRadarSensor(Graphics2D g2d) {
+        g2d.setColor(VisualizationConfig.RADAR_SENSOR_BG_COLOUR);
+        g2d.fillPolygon(VisualizationConfig.radar_sensor_polygon);
+        g2d.setStroke(new BasicStroke(2));
+        g2d.setColor(Color.black);
+        g2d.drawPolygon(VisualizationConfig.radar_sensor_polygon);
+
+        g2d.setStroke(VisualizationConfig.SENZOR_CENTER_LINE);
+        g2d.draw(VisualizationConfig.radar_sensor_centerline);
+    }
+
+    private void drawUltraSoundSensor(Graphics2D g2d) {
+        for (Polygon poly : VisualizationConfig.ultrasound_sensor_polygons) {
+            if (poly != null) {
+                g2d.setColor(VisualizationConfig.ULTRASOUND_SENSOR_BG_COLOUR);
+                g2d.fillPolygon(poly);
+                g2d.setStroke(new BasicStroke(2));
+                g2d.setColor(Color.black);
+                g2d.drawPolygon(poly);
+                g2d.setStroke(new BasicStroke(2));
+                g2d.setColor(Color.black);
+                g2d.drawPolygon(poly);
+            }
+        }
+    }
 }
