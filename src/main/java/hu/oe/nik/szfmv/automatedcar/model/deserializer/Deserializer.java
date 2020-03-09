@@ -9,6 +9,32 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class Deserializer {
+    private class WorldObjectHelper {
+        public String type;
+        public int x;
+        public int y;
+        public float m11;
+        public float m12;
+        public float m21;
+        public float m22;
+
+        public WorldObject ParseToWorldObject() {
+            var object = new WorldObject();
+            object.setType(type);
+            object.setX(x);
+            object.setY(y);
+            var rotMatrix = new float[2][2];
+            rotMatrix[0][0] = m11;
+            rotMatrix[0][1] = m12;
+            rotMatrix[1][0] = m21;
+            rotMatrix[1][1] = m22;
+            object.setRotationMatrix(rotMatrix);
+            object.initObject();
+
+            return object;
+        }
+    }
+
     private static void TestFile(String fileName) throws IllegalArgumentException {
         if (!fileName.contains("json")) {
             throw new IllegalArgumentException("Provided file's extension is not .json! \n File:" + fileName);
@@ -30,25 +56,13 @@ public class Deserializer {
         }
     }
 
-    private static WorldObject ReadRotationMatrixFromFileToObject(WorldObject object, String file) {
-        var currentData = file.substring(file.indexOf("\"x\": " + object.getX() + ",      \"y\": " + object.getY())).split("}")[0];
-
-        var matrix = new float[2][2];
-        matrix[0][0] = Float.parseFloat(currentData.split("m11\":")[1].split(",")[0]);
-        matrix[0][1] = Float.parseFloat(currentData.split("m12\":")[1].split(",")[0]);
-        matrix[1][0] = Float.parseFloat(currentData.split("m21\":")[1].split(",")[0]);
-        matrix[1][1] = Float.parseFloat(currentData.split("m22\":")[1].split(",")[0]);
-
-        object.setRotationMatrix(matrix);
-
-        return object;
-    }
 
     private static WorldObject AddLayeringWithStaticInfo(WorldObject object) {
         if ((object.getType().contains("road") && !object.getType().contains("roadsign"))
                 || object.getType().contains("garage")
                 || (object.getType().contains("parking") && !object.getType().contains("roadsign"))) {
             object.setIsStatic(true);
+            object.setZ(0);
         }
 
         if (object.getType().contains("man")
@@ -80,15 +94,14 @@ public class Deserializer {
 
         var raw = file.substring(file.indexOf("["), file.indexOf("]") + 1);
 
-        Type listType = new TypeToken<ArrayList<WorldObject>>() {
+        Type listType = new TypeToken<ArrayList<WorldObjectHelper>>() {
         }.getType();
-        List<WorldObject> unCompleteData = new Gson().fromJson(raw, listType);
+        List<WorldObjectHelper> unCompleteData = new Gson().fromJson(raw, listType);
 
         var completeData = new ArrayList<WorldObject>();
-        for (WorldObject completeObject :
+        for (WorldObjectHelper unCompleteObject :
                 unCompleteData) {
-            completeObject.initObject();
-            completeData.add(AddLayeringWithStaticInfo(ReadRotationMatrixFromFileToObject(completeObject, raw)));
+            completeData.add(AddLayeringWithStaticInfo(unCompleteObject.ParseToWorldObject()));
         }
 
         return completeData;

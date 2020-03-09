@@ -40,6 +40,10 @@ public class WorldObject {
         this.rotationMatrix = new float[2][2];
     }
 
+    public WorldObject() {
+
+    }
+
     public int getX() {
         return x;
     }
@@ -85,7 +89,6 @@ public class WorldObject {
     }
 
     public void setType(String type) {
-
         this.type = type;
     }
 
