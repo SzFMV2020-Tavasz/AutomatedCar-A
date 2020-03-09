@@ -2,6 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.model.deserializer;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import hu.oe.nik.szfmv.automatedcar.model.ReferencePoint;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 
 import java.io.*;
@@ -56,7 +57,6 @@ public class Deserializer {
         }
     }
 
-
     private static WorldObject AddLayeringWithStaticInfo(WorldObject object) {
         if ((object.getType().contains("road") && !object.getType().contains("roadsign"))
                 || object.getType().contains("garage")
@@ -81,7 +81,7 @@ public class Deserializer {
         return object;
     }
 
-    public static List<WorldObject> DeserializeJson(String fileName) throws IllegalArgumentException {
+    public static List<WorldObject> DeserializeWorldJson(String fileName) throws IllegalArgumentException {
         try {
             TestFile(fileName);
         } catch (Exception e) {
@@ -103,6 +103,26 @@ public class Deserializer {
                 unCompleteData) {
             completeData.add(AddLayeringWithStaticInfo(unCompleteObject.ParseToWorldObject()));
         }
+
+        return completeData;
+    }
+
+    public static List<ReferencePoint> DeserializeReferenccePointJson(String fileName) throws IllegalArgumentException {
+        try {
+            TestFile(fileName);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        var file = ReadFile(fileName);
+        if (file == null)
+            return null;
+
+        var raw = file.substring(file.indexOf("["), file.indexOf("]") + 1);
+
+        Type listType = new TypeToken<ArrayList<ReferencePoint>>() {
+        }.getType();
+        List<ReferencePoint> completeData = new Gson().fromJson(raw, listType);
 
         return completeData;
     }

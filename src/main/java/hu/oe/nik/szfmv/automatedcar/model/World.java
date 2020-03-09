@@ -14,7 +14,7 @@ public class World {
     public World(int width, int height) {
         this.width = width;
         this.height = height;
-        this.worldObjects = Deserializer.DeserializeJson("test_world.json");
+        this.worldObjects = Deserializer.DeserializeWorldJson("test_world.json");
     }
 
     public World(int width, int height, List<WorldObject> instanceList) {

@@ -9,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DeserializerTest {
     @Test
-    public void DeserializeJsonTestSuccess() {
+    public void DeserializeWorldJsonTestSuccess() {
         List<WorldObject> content = null;
         try {
-            content = Deserializer.DeserializeJson("test_world.json");
+            content = Deserializer.DeserializeWorldJson("test_world.json");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -28,7 +28,6 @@ public class DeserializerTest {
         assertEquals("road_2lane_straight_1", entry.getId());
         assertEquals(0.0f, entry.getRotationMatrix()[0][0]);
 
-
         var entry2 = content.get(6);
 
         assertEquals("road_2lane_45right_7", entry2.getId());
@@ -36,10 +35,10 @@ public class DeserializerTest {
     }
 
     @Test
-    public void DeserializeJsonTestNoFile() {
+    public void DeserializeWorldJsonTestNoFile() {
         List<WorldObject> content = null;
         try {
-            content = Deserializer.DeserializeJson("test_worlds.json");
+            content = Deserializer.DeserializeWorldJson("test_worlds.json");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -47,7 +46,29 @@ public class DeserializerTest {
     }
 
     @Test
-    public void DeserializeJsonTestWrongFileExtension() {
-        assertThrows(IllegalArgumentException.class, () -> Deserializer.DeserializeJson("test_world.xml"));
+    public void DeserializeWorldJsonTestWrongFileExtension() {
+        assertThrows(IllegalArgumentException.class, () -> Deserializer.DeserializeWorldJson("test_world.xml"));
+    }
+
+    @Test
+    public void DeserializeReferencePointsJsonTestSuccess() {
+        List<ReferencePoint> content = null;
+        try {
+            content = Deserializer.DeserializeReferenccePointJson("reference_points.json");
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        assertNotNull(content);
+        assertNotEquals(0, content.size());
+
+        var entry = content.get(0);
+        assertEquals("road_2lane_rotary.png", entry.getName());
+        assertEquals(0, entry.getX());
+        assertEquals(875, entry.getY());
+
+        var entry2 = content.get(6);
+        assertEquals("road_2lane_45left.png", entry2.getName());
+        assertEquals(51, entry2.getX());
+        assertEquals(371, entry2.getY());
     }
 }
