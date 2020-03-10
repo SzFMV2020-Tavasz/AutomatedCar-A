@@ -10,6 +10,8 @@ public class KeyProcesser {
 
     private Index index = new Index();
 
+    private ToPowerTrainPacket PTPacket = new ToPowerTrainPacket();
+
     public int KeyPressed(int keyCode)
     {
         return keyCode;
