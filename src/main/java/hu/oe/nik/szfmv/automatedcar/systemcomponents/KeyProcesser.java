@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.ToPowerTrainPacket;
 
 import java.awt.event.KeyEvent;
 
@@ -19,6 +20,7 @@ public class KeyProcesser {
 
     public void gasPedalPressed(){
         pedalPos.gasPedalDown();
+
     }
 
     public void gasPedalReleased(){

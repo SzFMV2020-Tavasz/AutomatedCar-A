@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.HMIKeyListener;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.SamplePacket;
 import org.apache.logging.log4j.LogManager;
@@ -53,58 +54,8 @@ public class Gui extends JFrame {
 
         keysPressed = new ArrayList<>();
 
-        KeyListener listen = new KeyListener() {
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                int keyCode = e.getKeyCode();
-
-                // Release turning and pedal pressing so the back positioning can run.
-                if (keyCode == KeyEvent.VK_RIGHT) {
-                    LOGGER.info(">");
-                    SamplePacket p = new SamplePacket();
-                    p.setKey(1);
-                    virtualFunctionBus.samplePacket = p;
-                }
-                if (keyCode == KeyEvent.VK_LEFT) {
-                    LOGGER.info("<");
-                    SamplePacket p = new SamplePacket();
-                    p.setKey(3);
-                    virtualFunctionBus.samplePacket = p;
-                }
-                if (keyCode == KeyEvent.VK_UP) {
-                    LOGGER.info("^");
-                    SamplePacket p = new SamplePacket();
-                    p.setKey(0);
-                    virtualFunctionBus.samplePacket = p;
-                }
-                if (keyCode == KeyEvent.VK_DOWN) {
-                    LOGGER.info("v");
-                    SamplePacket p = new SamplePacket();
-                    p.setKey(2);
-                    virtualFunctionBus.samplePacket = p;
-                }
-
-                if (keysPressed.contains(keyCode)) {
-                    keysPressed.remove(keysPressed.indexOf(keyCode));
-                }
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-                if (!keysPressed.contains(e.getKeyCode())) {
-                    keysPressed.add(e.getKeyCode());
-                }
-
-            }
-        };
+        HMIKeyListener listener = new HMIKeyListener();
+        KeyListener listen = listener.getHMIListener();
 
         this.addKeyListener(listen);
 
