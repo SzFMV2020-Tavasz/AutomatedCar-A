@@ -29,7 +29,7 @@ public final class VisualizationConfig {
     // with 0 degrees rotation relative to the x axis
     public static final int DISPLAY_EGOCAR_CENTER_POSITION_X = DISPLAY_WIDTH / 2;
     public static final int DISPLAY_EGOCAR_CENTER_POSITION_Y = DISPLAY_HEIGHT / 2;
-    public static final float DISPLAY_EGOCAR_ROTATION = 0;
+    public static final float DISPLAY_EGOCAR_ROTATION = 0; //(float) Math.PI / 6;
 
     // set senzor polygons
 
@@ -62,6 +62,13 @@ public final class VisualizationConfig {
     public static final int ULTRASOUND_AXIS_DIFF_S1_Y = 95;
     public static final int ULTRASOUND_AXIS_DIFF_S2_X = 45;
     public static final int ULTRASOUND_AXIS_DIFF_S2_Y = 75;
+
+    // debug mode color
+    public static final Color RUN_OF_THE_MILL_DEBUG_COLOR = new Color(255, 0, 255);
+    // selected element color
+    public static final Color SELECTED_DEBUG_COLOR = new Color(255, 0, 0);
+    // debug linetype
+    public static final Stroke DEBUG_LINETYPE = new BasicStroke(3);
 
     public static Polygon camera_sensor_polygon;
     public static Shape camera_sensor_centerline;
@@ -157,8 +164,8 @@ public final class VisualizationConfig {
             AffineTransform.getRotateInstance(DISPLAY_EGOCAR_ROTATION, -RADAR_SENSOR_DX, -RADAR_SENSOR_DY);
 
         radar_sensor_centerline = new Line2D.Float(
-            RADAR_SENSOR_X + (int)sT.getTranslateX(),
-            RADAR_SENSOR_Y + (int)sT.getTranslateY(),
+            RADAR_SENSOR_X + (int) sT.getTranslateX(),
+            RADAR_SENSOR_Y + (int) sT.getTranslateY(),
             (float) (RADAR_SENSOR_X + sensorTX + tT.getTranslateX()),
             (float) (RADAR_SENSOR_Y + sensorTY + tT.getTranslateY()));
     }
@@ -230,16 +237,16 @@ public final class VisualizationConfig {
 
     private static Polygon createForwardBackwardSensorPolygon(int signumY, int sensorSourceX, int sensorSourceY) {
         // sensor triangle A corner
-        double sensorAX =  -ULTRASOUND_SENSOR_RANGE * Math.tan(ULTRASOUND_SENSOR_ANGLE);
+        double sensorAX = -ULTRASOUND_SENSOR_RANGE * Math.tan(ULTRASOUND_SENSOR_ANGLE);
         double sensorAY = signumY * ULTRASOUND_SENSOR_RANGE;
         // sensor triangle B corner
-        double sensorBX =  ULTRASOUND_SENSOR_RANGE * Math.tan(ULTRASOUND_SENSOR_ANGLE);
+        double sensorBX = ULTRASOUND_SENSOR_RANGE * Math.tan(ULTRASOUND_SENSOR_ANGLE);
         double sensorBY = signumY * ULTRASOUND_SENSOR_RANGE;
 
         AffineTransform aT = AffineTransform.getRotateInstance(DISPLAY_EGOCAR_ROTATION, -sensorAX, -sensorAY);
         AffineTransform bT = AffineTransform.getRotateInstance(DISPLAY_EGOCAR_ROTATION, -sensorBX, -sensorBY);
-        AffineTransform sT =
-            AffineTransform.getRotateInstance(DISPLAY_EGOCAR_ROTATION, -ULTRASOUND_AXIS_DIFF_S1_X, ULTRASOUND_AXIS_DIFF_S1_Y);
+        AffineTransform sT = AffineTransform.getRotateInstance(DISPLAY_EGOCAR_ROTATION,
+                -ULTRASOUND_AXIS_DIFF_S1_X, ULTRASOUND_AXIS_DIFF_S1_Y);
 
         int[] xPoly = {(int) (sensorSourceX + sT.getTranslateX()),
             (int) (sensorSourceX + sT.getTranslateX() + sensorAX + aT.getTranslateX()),
@@ -255,12 +262,12 @@ public final class VisualizationConfig {
     /**
      * Parse the xml file containing the reference points (rotation origos) of the image files
      */
-    public static void loadReferencePoints() {
+    public static void loadReferencePoints(String fileName) {
         try {
             // initialize the dictionary
             my_dict = new Hashtable<String, Point2D>();
 
-            File xmlFile = new File(ClassLoader.getSystemResource("reference_points.xml").getFile());
+            File xmlFile = new File(ClassLoader.getSystemResource(fileName).getFile());
             DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document xmlDoc = docBuilder.parse(xmlFile);
 
@@ -270,6 +277,7 @@ public final class VisualizationConfig {
                 storeRefPoints(imageNode);
             }
         } catch (Exception e) {
+
             e.printStackTrace();
         }
     }
@@ -300,12 +308,11 @@ public final class VisualizationConfig {
      * @return The reference point of the image. The type is float, my needs to be casted to integer.
      */
     public static Point2D getReferencePoint(String filename) {
-        if (my_dict == null || my_dict.isEmpty()) {
-            loadReferencePoints();
+        Point2D refPoint = null;
+        if (my_dict != null && !my_dict.isEmpty()) {
+            refPoint = my_dict.get(filename);
         }
 
-        Point2D refPoint = null;
-        refPoint = my_dict.get(filename);
         if (refPoint == null) {
             refPoint = new Point2D.Float(0, 0);
         }
