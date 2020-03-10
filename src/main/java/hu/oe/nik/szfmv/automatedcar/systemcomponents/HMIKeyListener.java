@@ -2,6 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
 
 
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 
 import java.awt.event.KeyEvent;
@@ -10,7 +11,13 @@ import java.awt.event.KeyListener;
 
 public class HMIKeyListener {
 
+
+
     KeyProcesser Processer = new KeyProcesser();
+
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
+        Processer.setVirtualFunctionBus(virtualFunctionBus);
+    }
 
     private InputPacket inputPacket;
 

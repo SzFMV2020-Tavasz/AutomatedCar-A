@@ -1,5 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
 
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
+
 public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
     private int gasPedalValue;//0-100
@@ -32,12 +34,12 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
     }
 
 
-    private char shiftChangeRequest;//P-R-N-D
-    public void setShiftChangeRequest(char shiftChangeRequest) {
+    private Shitfer.ShiftPos shiftChangeRequest;//P-R-N-D
+    public void setShiftChangeRequest(Shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
     @Override
-    public char getShiftChangeRequest() {
+    public Shitfer.ShiftPos getShiftChangeRequest() {
         return shiftChangeRequest;
     }
 

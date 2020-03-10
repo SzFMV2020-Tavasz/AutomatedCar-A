@@ -10,6 +10,18 @@ public class PedalPosition {
     private boolean steeringWheelRight;
     private boolean steeringWheelLeft;
 
+    public double getGasPedalValue(){
+        return gasPedalValue;
+    }
+
+    public double getBreakPedalValue(){
+        return breakPedalValue;
+    }
+
+    public double getSteeringWheelValue(){
+        return steeringWheelValue;
+    }
+
     public void startSteeringRight(){
         if(!steeringWheelRight) {
             steeringWheelRight = true;
@@ -185,7 +197,7 @@ public class PedalPosition {
         }
     }
 
-    private void Sleep(){
+    public void Sleep(){
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {

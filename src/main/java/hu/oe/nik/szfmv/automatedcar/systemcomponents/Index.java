@@ -1,10 +1,11 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
-enum IndexStatus{
-    RIGHT,
-    LEFT,
-    NONE
-}
 public class Index {
+    public enum IndexStatus{
+        RIGHT,
+        LEFT,
+        NONE
+    }
+
     private IndexStatus status;
 
     public void setStatusRight(){

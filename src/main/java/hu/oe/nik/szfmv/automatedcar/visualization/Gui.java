@@ -56,6 +56,7 @@ public class Gui extends JFrame {
 
         HMIKeyListener listener = new HMIKeyListener();
         KeyListener listen = listener.getHMIListener();
+        listener.setVirtualFunctionBus(virtualFunctionBus);
 
         this.addKeyListener(listen);
 
