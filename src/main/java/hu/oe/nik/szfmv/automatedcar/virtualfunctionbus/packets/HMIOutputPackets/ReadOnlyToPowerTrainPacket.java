@@ -4,9 +4,9 @@ import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 public interface ReadOnlyToPowerTrainPacket {
 
-    int getGasPedalValue();
-    int getBreakPedalValue();
-    int getSteeringWheelValue();
+    double getGasPedalValue();
+    double getBreakPedalValue();
+    double getSteeringWheelValue();
     Shitfer.ShiftPos getShiftChangeRequest();
     int getTempomatValue();
     boolean getTempomatSwitch();

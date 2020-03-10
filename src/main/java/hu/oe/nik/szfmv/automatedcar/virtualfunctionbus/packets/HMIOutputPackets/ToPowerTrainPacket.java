@@ -4,32 +4,32 @@ import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
-    private int gasPedalValue;//0-100
-    public void setGasPedalValue(int gasPedalValue){
+    private double gasPedalValue;//0-100
+    public void setGasPedalValue(double gasPedalValue){
         this.gasPedalValue=gasPedalValue;
     }
     @Override
-    public int getGasPedalValue() {
+    public double getGasPedalValue() {
         return gasPedalValue;
     }
 
 
-    private int breakPedalValue;//0-100
-    public void setBreakPedalValue(int breakPedalValue){
+    private double breakPedalValue;//0-100
+    public void setBreakPedalValue(double breakPedalValue){
         this.breakPedalValue=breakPedalValue;
     }
     @Override
-    public int getBreakPedalValue() {
+    public double getBreakPedalValue() {
         return breakPedalValue;
     }
 
 
-    private int steeringWheelValue;//not determined yet, probably -180-180
-    public void setSteeringWheelValue(int steeringWheelValue){
+    private double steeringWheelValue;//not determined yet, probably -180-180
+    public void setSteeringWheelValue(double steeringWheelValue){
         this.steeringWheelValue=steeringWheelValue;
     }
     @Override
-    public int getSteeringWheelValue() {
+    public double getSteeringWheelValue() {
         return steeringWheelValue;
     }
 

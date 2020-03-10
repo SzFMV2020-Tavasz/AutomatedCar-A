@@ -72,7 +72,7 @@ public class ACC {
     private int ChangeNewAccSpeed() {
         var currentVelocity = virtualFunctionBus.toPowerTrainPacket.getGasPedalValue();
         if (currentVelocity >= 40 && currentVelocity <= 160) {
-            return currentVelocity;
+            return (int)currentVelocity;
         } else {
             return virtualFunctionBus.inputPacket.getAccSpeed();
         }
