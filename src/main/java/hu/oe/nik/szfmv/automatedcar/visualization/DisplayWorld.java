@@ -7,6 +7,7 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +32,9 @@ public class DisplayWorld {
     private boolean showRadar;
     private boolean showUltrasound;
 
+    private boolean debugOn;
+    private List<String> debugObjects;
+
     /**
      * The constructor for the DisplayWorld class
      *
@@ -38,17 +42,19 @@ public class DisplayWorld {
      * @param automatedCar the {@link AutomatedCar} that has to be in the middle of the screen
      */
     public DisplayWorld(World world, AutomatedCar automatedCar) {
-        fixWorldObjects = new ArrayList<WorldObject>();
-        dynamicWorldObjects = new ArrayList<WorldObject>();
+        fixWorldObjects = new ArrayList<>();
+        dynamicWorldObjects = new ArrayList<>();
         this.world = world;
         this.automatedCar = automatedCar;
         getFixWorldObjectsFromWorld();
         getDynamicWorldObjectsFromWorld();
-        VisualizationConfig.loadReferencePoints();
+        VisualizationConfig.loadReferencePoints("reference_points.xml");
         VisualizationConfig.calculateSensorPolygons();
         showCamera = false;
         showRadar = false;
         showUltrasound = false;
+        debugOn = false;
+        debugObjects = new ArrayList<>();
     }
 
     /**
@@ -114,6 +120,10 @@ public class DisplayWorld {
         this.showUltrasound = showUltrasound;
     }
 
+    public void setDebugOn(boolean debugOn) {
+        this.debugOn = debugOn;
+    }
+
     public boolean isCameraShown() {
         return showCamera;
     }
@@ -124,5 +134,47 @@ public class DisplayWorld {
 
     public boolean isUltrasoundShown() {
         return showUltrasound;
+    }
+
+    public boolean isDebugOn() {
+        return debugOn;
+    }
+
+    /**
+     * Adds the object names to the list of object IDs that should be shown lined with a polygon.
+     *
+     * Does not check for valid IDs - if the ID is not valid, it wont be turned on
+     *
+     * @param objIDList the object id list to add
+     */
+    public void addObjectsToDebug(List<String> objIDList) {
+        for (String id : objIDList) {
+            if (!debugObjects.contains(id)) {
+                debugObjects.add(id);
+            }
+        }
+    }
+
+    /**
+     * removes the object names to the list of object IDs of the objects that should be shown lined with a polygon
+     *
+     * Does not check for valid IDs - if the ID is not valid, it wont be turned off
+     *
+     * @param objIDList the object id list to add
+     */
+    public void remmoveObjectsToDebug(List<String> objIDList) {
+        for (String id : objIDList) {
+            if (debugObjects.contains(id)) {
+                debugObjects.remove(id);
+            }
+        }
+    }
+
+    /**
+     * Gets the list of object IDs of the objects that should be shown lined with a polygon
+     * @return
+     */
+    public List<String> getDebugObjects() {
+        return debugObjects;
     }
 }
