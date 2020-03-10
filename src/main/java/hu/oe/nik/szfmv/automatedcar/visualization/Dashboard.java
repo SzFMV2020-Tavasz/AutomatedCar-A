@@ -1,5 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,6 +44,7 @@ public class Dashboard extends JPanel {
     public Dashboard(Gui pt) {
 
 
+
         FlowLayout dashboardLayout = new FlowLayout();
         dashboardLayout.setVgap(16);
         setLayout(dashboardLayout);
@@ -50,6 +53,12 @@ public class Dashboard extends JPanel {
         setBounds(770, 0, width, height);
 
         // example
+
+        InputPacket inputPacket = new InputPacket();
+
+
+
+
 
 
         GridLayout mainGridLayout = new GridLayout(5,1, 8, 8);
@@ -137,17 +146,21 @@ public class Dashboard extends JPanel {
 
         // pedal
         JLabel gasLabel = new JLabel("gas pedal");
-        JSlider gasSlider = new JSlider();
-        gasSlider.setValue(80);
+        JProgressBar gasBar = new JProgressBar(0,100);
+        gasBar.setValue(80);
+        gasBar.setStringPainted(true);
+
+
 
         JLabel breakLabel = new JLabel("break pedal");
-        JSlider breakSlider = new JSlider();
-        breakSlider.setValue(35);
+        JProgressBar breakBar = new JProgressBar(0, 100);
+        breakBar.setStringPainted(true);
+        breakBar.setValue(35);
 
         pedalPanel.add(gasLabel);
-        pedalPanel.add(gasSlider);
+        pedalPanel.add(gasBar);
         pedalPanel.add(breakLabel);
-        pedalPanel.add(breakSlider);
+        pedalPanel.add(breakBar);
 
         // debug
         JPanel debugPanel = new JPanel();
