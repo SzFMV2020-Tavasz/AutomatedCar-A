@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.ToPowerTrainPacket;
 
 import java.awt.event.KeyEvent;
 
@@ -10,6 +11,8 @@ public class KeyProcesser {
 
     private Index index = new Index();
 
+    ToPowerTrainPacket PTPacket = new ToPowerTrainPacket();
+
     public int KeyPressed(int keyCode)
     {
         return keyCode;
@@ -17,6 +20,7 @@ public class KeyProcesser {
 
     public void gasPedalPressed(){
         pedalPos.gasPedalDown();
+
     }
 
     public void gasPedalReleased(){
@@ -30,7 +34,10 @@ public class KeyProcesser {
 
     private ACC accManager = new ACC();
 
-    public void IsOnPressed() {accManager.IsOnPressedCheck();}
+    public void IsOnPressed() {
+        accManager.IsOnPressedCheck();
+
+    }
 
     public void MinusSpeedValue() {accManager.Minus();}
 
