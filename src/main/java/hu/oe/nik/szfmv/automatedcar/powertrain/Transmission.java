@@ -7,18 +7,18 @@ public class Transmission implements ITransmission {
      * These constant values define the gear shifting thresholds in {@link CarTransmissionMode#D_DRIVE D} mode.
      * Changing these values can effect the workings of the car extremely.
      * Tweak carefully.
-     * TO-DO: calibrate !!!
+     * TODO: calibrate !!!
      */
-    private final int RPM_gear_0_upshift_threshold = 0;
-    private final int RPM_gear_1_downshift_threshold = 0;
-    private final int RPM_gear_1_upshift_threshold = 0;
-    private final int RPM_gear_2_downshift_threshold = 0;
-    private final int RPM_gear_2_upshift_threshold = 0;
-    private final int RPM_gear_3_downshift_threshold = 0;
-    private final int RPM_gear_3_upshift_threshold = 0;
-    private final int RPM_gear_4_downshift_threshold = 0;
-    private final int RPM_gear_4_upshift_threshold = 0;
-    private final int RPM_gear_5_downshift_threshold = 0;
+    private final int RPM_gear_0_upshift_threshold = 2000;
+    private final int RPM_gear_1_downshift_threshold = 1500;
+    private final int RPM_gear_1_upshift_threshold = 6000;
+    private final int RPM_gear_2_downshift_threshold = 3000;
+    private final int RPM_gear_2_upshift_threshold = 6000;
+    private final int RPM_gear_3_downshift_threshold = 3000;
+    private final int RPM_gear_3_upshift_threshold = 6000;
+    private final int RPM_gear_4_downshift_threshold = 3000;
+    private final int RPM_gear_4_upshift_threshold = 6000;
+    private final int RPM_gear_5_downshift_threshold = 3000;
 
     /**
      * Field storing the automatic transmissions internal gear state in {@link CarTransmissionMode#D_DRIVE D} mode.
@@ -34,7 +34,7 @@ public class Transmission implements ITransmission {
 
     /**
      * Getter method for the {@link Transmission#drive_internal_gear} field.
-     * @return
+     * @return Returns the actual gear. 
      */
     public int getDrive_internal_gear(){
         return drive_internal_gear;
@@ -57,10 +57,13 @@ public class Transmission implements ITransmission {
      *
      * @param gear The gear you want to switch into.
      * @return Returns true if the shifting was successful, false if it was unsuccessful.
+     *
+     * TODO: This implementation will change speeds anytime at the moment. We need to check the engine status before speed chane.
      */
     @Override
     public boolean Shift(CarTransmissionMode gear) {
-        return false;
+        gearMode = gear;
+        return true;
     }
 
     /**
