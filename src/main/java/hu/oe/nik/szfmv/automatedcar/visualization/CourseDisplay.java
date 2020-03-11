@@ -5,7 +5,9 @@ import hu.oe.nik.szfmv.automatedcar.model.World;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  * CourseDisplay is for providing a viewport to the virtual world where the simulation happens.
@@ -67,16 +69,51 @@ public class CourseDisplay extends JPanel {
 
     private void drawObjects(Graphics2D g2d, DisplayWorld displayWorld) {
 
-        int i = 1;
+        ArrayList<Path2D> runOfTheMillDebugPolygons = new ArrayList<>();
+        ArrayList<Path2D> selectedDebugPolygons = new ArrayList<>();
+
         for (DisplayObject object : displayWorld.getDisplayObjects()) {
             AffineTransform t = new AffineTransform();
             t.translate(object.getX() + object.getRotationDisplacementX() - object.getRefDifferenceX(),
                     object.getY() + object.getRotationDisplacementY() - object.getRefDifferenceY());
             t.rotate(object.getRotation());
             g2d.drawImage(object.getImage(), t, this);
-            i++;
+
+            // draw debug polygons that are not selected individually.
+            for (Path2D poly : object.getDebugPolygons()) {
+                if (displayWorld.isDebugOn() && !displayWorld.getDebugObjects().contains(object.getId())) {
+                    runOfTheMillDebugPolygons.add(poly);
+                } else {
+                    selectedDebugPolygons.add(poly);
+                }
+            }
         }
 
+        drawSensorsIfSet(g2d, displayWorld);
+
+        // needs to be drawn last so it shows above everything
+        drawPolygon(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
+    }
+
+    /**
+     * Draws the rotated Debug polygon of the displayObject
+     */
+    private void drawPolygon(Graphics2D g2d,
+                             ArrayList<Path2D> runOfTheMillDebugPolygons,  ArrayList<Path2D> selectedDebugPolygons) {
+        for (Path2D poly : runOfTheMillDebugPolygons) {
+            g2d.setStroke(VisualizationConfig.DEBUG_LINETYPE);
+            g2d.setColor(VisualizationConfig.RUN_OF_THE_MILL_DEBUG_COLOR);
+            g2d.draw(poly);
+        }
+
+        for (Path2D poly : selectedDebugPolygons) {
+            g2d.setStroke(VisualizationConfig.DEBUG_LINETYPE);
+            g2d.setColor(VisualizationConfig.SELECTED_DEBUG_COLOR);
+            g2d.draw(poly);
+        }
+    }
+
+    private void drawSensorsIfSet(Graphics2D g2d, DisplayWorld displayWorld) {
         if (displayWorld.isCameraShown()) {
             drawCameraSensor(g2d);
         }

@@ -1,8 +1,8 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VisualizationConfigTest {
@@ -19,20 +19,8 @@ public class VisualizationConfigTest {
      */
     @Test
     public void readValues() {
-
-        VisualizationConfig.loadReferencePoints();
+        VisualizationConfig.loadReferencePoints("reference_points.xml");
         assertEquals(875, VisualizationConfig.getReferencePoint(filename).getX());
         assertEquals(0, VisualizationConfig.getReferencePoint(filename).getY());
     }
-
-    /**
-     * Check whether the right reference point values are returned
-     * if the loadReferencePoints method was not called before
-     */
-    @Test
-    public void readValuesWithoutLoadingFirs() {
-        assertEquals(875, VisualizationConfig.getReferencePoint(filename).getX());
-        assertEquals(0, VisualizationConfig.getReferencePoint(filename).getY());
-    }
-
 }

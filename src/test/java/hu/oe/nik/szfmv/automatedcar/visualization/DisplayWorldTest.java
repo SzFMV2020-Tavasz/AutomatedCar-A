@@ -6,6 +6,8 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -63,6 +65,7 @@ public class DisplayWorldTest {
         automatedCar.setRotation((float)Math.PI / 2);  // No rotation
 
         displayWorld = new DisplayWorld(mockWorld, automatedCar);
+        displayWorld.addObjectsToDebug(new ArrayList<String>(Arrays.asList("id1", "id2")));
     }
 
 
@@ -80,5 +83,45 @@ public class DisplayWorldTest {
         assertEquals("road_2lane_90right.png", displayWorld.getDisplayObjects().get(1).getImageFileName());
         assertEquals("2_crossroad_1.png", displayWorld.getDisplayObjects().get(2).getImageFileName());
         assertEquals("boundary.png", displayWorld.getDisplayObjects().get(3).getImageFileName());
+    }
+
+    @Test
+    public void debugModeSet() {
+        displayWorld.setDebugOn(true);
+        assertEquals(true, displayWorld.isDebugOn());
+    }
+
+    @Test
+    public void cameraSensorDisplayOn() {
+        displayWorld.setShowCamera(true);
+        assertEquals(true, displayWorld.isCameraShown());
+    }
+
+    @Test
+    public void radarSensorDisplayOn() {
+        displayWorld.setShowRadar(true);
+        assertEquals(true, displayWorld.isRadarShown());
+    }
+
+    @Test
+    public void ultrasSoundSensorDisplayOn() {
+        displayWorld.setShowUltrasound(true);
+        assertEquals(true, displayWorld.isUltrasoundShown());
+    }
+
+    @Test
+    public void addElementsToDebugList() {
+        displayWorld.addObjectsToDebug(new ArrayList<>(Arrays.asList("id4", "id5", "id1")));
+
+        assertEquals(true, displayWorld.getDebugObjects().contains("id5"));
+        assertEquals(4, displayWorld.getDebugObjects().size());
+    }
+
+    @Test
+    public void removeElementsToDebugList() {
+        displayWorld.remmoveObjectsToDebug(new ArrayList<>(Arrays.asList("id1", "id5")));
+
+        assertEquals(false, displayWorld.getDebugObjects().contains("id1"));
+        assertEquals(1, displayWorld.getDebugObjects().size());
     }
 }
