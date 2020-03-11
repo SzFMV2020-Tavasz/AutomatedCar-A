@@ -1,9 +1,12 @@
 package hu.oe.nik.szfmv.automatedcar.model;
 
+import hu.oe.nik.szfmv.automatedcar.model.deserializer.Deserializer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.awt.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WorldObjectTest {
 
@@ -20,4 +23,17 @@ public class WorldObjectTest {
         assertEquals(100, worldObject.getX());
     }
 
+    @Test
+    void polygon() {
+        int idx = 0;
+        try {
+            worldObject = Deserializer.DeserializeWorldJson("test_world.json").get(idx);
+        } catch (Exception e) {
+            System.out.println("World Object " + worldObject.type + " does not contain any polygon at index " + idx + "!");
+            System.exit(-1);
+        }
+        var bounds = worldObject.getPolygon().getBounds2D();
+        assertTrue(bounds.contains(new Point(255, 255)));
+        assertFalse(bounds.contains(new Point(0, 351)));
+    }
 }

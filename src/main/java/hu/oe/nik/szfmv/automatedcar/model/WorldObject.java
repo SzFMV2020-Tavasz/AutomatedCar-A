@@ -92,6 +92,10 @@ public class WorldObject {
         this.type = type;
     }
 
+    public Polygon getPolygon() {
+        return polygon;
+    }
+
     public int getWidth() {
         return width;
     }
@@ -400,7 +404,7 @@ public class WorldObject {
         return road2lanerotary;
     }
 
-    private Polygon CreateRoadStraightPolygon() {
+    private Polygon Create2LaneStraightPolygon() {
         var roadStraight = new Polygon();
         roadStraight.addPoint(0, 0);
         roadStraight.addPoint(350, 0);
@@ -471,59 +475,92 @@ public class WorldObject {
         return person;
     }
 
-    public void addPolygons() {
-        if (this.imageFileName.contains("2_crossroad")) {
-            this.polygon = CreateCrossRoadPolygon();
-        } else if (this.imageFileName.equals("bicycle")) {
-            this.polygon = CreateBicyclePolygon();
-        } else if (this.imageFileName.equals("bollard")) {
-            this.polygon = CreateBollardPolygon();
-        } else if (this.imageFileName.equals("boundary")) {
-            this.polygon = CreateBoundaryPolygon();
-        } else if (this.imageFileName.contains("car_1") ||
-                this.imageFileName.contains("car_2")
-        ) {
-            this.polygon = CreateCarPolygon(false);
-        } else if (this.imageFileName.equals("car_3_black")) {
-            this.polygon = CreateCarPolygon(true);
-        } else if (this.imageFileName.equals("crosswalk")) {
-            this.polygon = CreateCrossWalkPolygon();
-        } else if (this.imageFileName.equals("garage")) {
-            this.polygon = CreateGaragePolygon();
-        } else if (this.imageFileName.contains("man")) {
-            this.polygon = CreatePersonPolygon();
-        } else if (this.imageFileName.equals("parking_90")) {
-            this.polygon = CreateParkingPolygon(false);
-        } else if (this.imageFileName.equals("parking_space_parallel")) {
-            this.polygon = CreateParkingPolygon(true);
-        } else if (this.imageFileName.equals("road_2lane_6left")) {
-            this.polygon = Create2Lane6Polygon(true);
-        } else if (this.imageFileName.equals("road_2lane_6right")) {
-            this.polygon = Create2Lane6Polygon(false);
-        } else if (this.imageFileName.equals("road_2lane_45left")) {
-            this.polygon = Create2Lane45Polygon(true);
-        } else if (this.imageFileName.equals("road_2lane_45right")) {
-            this.polygon = Create2Lane45Polygon(false);
-        } else if (this.imageFileName.equals("road_2lane_90left")) {
-            this.polygon = Create2Lane90Polygon(true);
-        } else if (this.imageFileName.equals("road_2lane_90right")) {
-            this.polygon = Create2Lane90Polygon(false);
-        } else if (this.imageFileName.equals("road_2lane_rotary")) {
-            this.polygon = Create2LaneRotaryPolygon();
-        } else if (this.imageFileName.equals("road_2lane_straight")) {
-            this.polygon = CreateRoadStraightPolygon();
-        } else if (this.imageFileName.equals("road_2lane_tjunctionleft")) {
-            this.polygon = Create2LaneTJunctionPolygon(true);
-        } else if (this.imageFileName.equals("road_2lane_tjunctionright")) {
-            this.polygon = Create2LaneTJunctionPolygon(false);
-        } else if (this.imageFileName.equals("roadsign_parking_right")) {
-            this.polygon = CreateParkingSignPolygon();
-        } else if (this.imageFileName.equals("roadsign_priority_stop")) {
-            this.polygon = CreateStopSignPolygon();
-        } else if (this.imageFileName.contains("roadsign_speed")) {
-            this.polygon = CreateSpeedSignPolygon();
-        } else if (this.imageFileName.equals("tree")) {
-            this.polygon = CreateTreePolygon();
+    private void addPolygons() {
+        switch (this.type) {
+            case "2_crossroad_1":
+            case "2_crossroad_2":
+                this.polygon = CreateCrossRoadPolygon();
+                break;
+            case "bicycle":
+                this.polygon = CreateBicyclePolygon();
+                break;
+            case "bollard":
+                this.polygon = CreateBollardPolygon();
+                break;
+            case "boundary":
+                this.polygon = CreateBoundaryPolygon();
+                break;
+            case "car_1_blue":
+            case "car_1_red":
+            case "car_1_white":
+            case "car_2_blue":
+            case "car_2_red":
+            case "car_2_white":
+                this.polygon = CreateCarPolygon(false);
+                break;
+            case "car_3_black":
+                this.polygon = CreateCarPolygon(true);
+                break;
+            case "crosswalk":
+                this.polygon = CreateCrossWalkPolygon();
+                break;
+            case "garage":
+                this.polygon = CreateGaragePolygon();
+                break;
+            case "man":
+            case "woman":
+                this.polygon = CreatePersonPolygon();
+                break;
+            case "parking_90":
+                this.polygon = CreateParkingPolygon(false);
+                break;
+            case "parking_space_parallel":
+                this.polygon = CreateParkingPolygon(true);
+                break;
+            case "road_2lane_6left":
+                this.polygon = Create2Lane6Polygon(true);
+                break;
+            case "road_2lane_6right":
+                this.polygon = Create2Lane6Polygon(false);
+                break;
+            case "road_2lane_45left":
+                this.polygon = Create2Lane45Polygon(true);
+                break;
+            case "road_2lane_45right":
+                this.polygon = Create2Lane45Polygon(true);
+                break;
+            case "road_2lane_90left":
+                this.polygon = Create2Lane90Polygon(true);
+                break;
+            case "road_2lane_90right":
+                this.polygon = Create2Lane90Polygon(true);
+                break;
+            case "road_2lane_rotary":
+                this.polygon = Create2LaneRotaryPolygon();
+                break;
+            case "road_2lane_straight":
+                this.polygon = Create2LaneStraightPolygon();
+                break;
+            case "road_2lane_tjunctionleft":
+                this.polygon = Create2LaneTJunctionPolygon(true);
+                break;
+            case "road_2lane_tjunctionright":
+                this.polygon = Create2LaneTJunctionPolygon(false);
+                break;
+            case "roadsign_parking_right":
+                this.polygon = CreateParkingSignPolygon();
+                break;
+            case "roadesign_priority_stop":
+                this.polygon = CreateStopSignPolygon();
+                break;
+            case "roadsign_speed_40":
+            case "roadsign_speed_50":
+            case "roadsign_speed_60":
+                this.polygon = CreateSpeedSignPolygon();
+                break;
+            case "tree":
+                this.polygon = CreateTreePolygon();
+                break;
         }
     }
 }
