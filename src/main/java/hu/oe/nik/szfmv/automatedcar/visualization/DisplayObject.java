@@ -3,8 +3,11 @@ package hu.oe.nik.szfmv.automatedcar.visualization;
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 
+import java.awt.*;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 /**
  * Class for handling the objects to be displayed.
@@ -30,11 +33,25 @@ public class DisplayObject extends WorldObject {
     /**
      * Original worldObject stored for accessing its values
      */
-    private WorldObject worldObject;
+    protected WorldObject worldObject;
     /**
      * original automatedCar stored for accessing its values
      */
-    private AutomatedCar automatedCar;
+    protected AutomatedCar automatedCar;
+
+    /**
+     * temporary data for testing polylines
+     */
+    protected int[] tempRoad2Lane90RightPolygonXs =
+        {176, 159, 143, 127, 111, 96, 81, 67, 54, 42, 30, 20, 11, 4, -3, -8, -11, -13, -14,
+            -13, -11, -8, -3, 4, 11, 20, 30, 42, 54, 67, 81, 96, 111, 127, 143, 159};
+    protected int[] tempRoad2Lane90RightPolygonYs =
+        {-190, -189, -187, -184, -179, -172, -165, -156, -146, -134, -122, -109, -95, -80, -65, -49, -33, -17, 0,
+            -17, -33, -49, -65, -80, -95, -109, -122, -134, -146, -156, -165, -172, -179, -184, -187, -189};
+
+    protected Polygon tempRoad2Lane90RightPolygonInner =
+        new Polygon(tempRoad2Lane90RightPolygonXs, tempRoad2Lane90RightPolygonYs, tempRoad2Lane90RightPolygonXs.length);
+    protected ArrayList<Path2D> debugPolygons;
 
     /**
      * The constructor of the DisplayObject class.
@@ -44,6 +61,7 @@ public class DisplayObject extends WorldObject {
     public DisplayObject(final WorldObject worldObject, final AutomatedCar automatedCar) {
         super(worldObject.getX(), worldObject.getY(),
             worldObject.getImageFileName() == null ? worldObject.getType() + ".png" : worldObject.getImageFileName());
+        this.id = worldObject.getId();
         this.worldObject = worldObject;
         this.automatedCar = automatedCar;
         if (worldObject.getRotationMatrix() != null) {
@@ -51,6 +69,8 @@ public class DisplayObject extends WorldObject {
         }
         this.z = worldObject.getZ();
         calculatePosition();
+        createDebugPolygonList();
+
     }
 
     public int getRotationDisplacementX() {
@@ -60,12 +80,74 @@ public class DisplayObject extends WorldObject {
         return this.rotationDisplacementY;
     }
 
+    /**
+     * Gets the x component of the segment line connecting the image's upper left corner
+     * and the refrence point
+     * @return the distance X
+     */
     public int getRefDifferenceX() {
         return this.refDifferenceX;
     }
 
+    /**
+     * Gets the y component of the segment line connecting the image's upper left corner
+     * and the refrence point
+     * @return the distance Y
+     */
     public int getRefDifferenceY() {
         return this.refDifferenceY;
+    }
+
+    public ArrayList<Path2D> getDebugPolygons() {
+        return debugPolygons;
+    }
+
+    /**
+     * Initializing the polygon list
+     *
+     * It needs to be a list, because usually there are more then one polygons to draw for a WorldObject.
+     */
+    private void createDebugPolygonList() {
+        debugPolygons = new ArrayList<>();
+        Path2D poly = getTestPolygon();
+        if (poly != null) {
+            debugPolygons.add(poly);
+        }
+    }
+
+    /**
+     * Only works for the road_2lane_90right.png
+     * @return the rotated and translated Path2D element
+     */
+    private Path2D getTestPolygon() {
+        // only draw for the element it has polygons for
+        if (this.getImageFileName().equals("road_2lane_90right.png")) {
+
+            // Calculate the translation needed to move the automatedCar's reference point
+            // to it's desired place
+            Point2D carMovement =
+                new Point2D.Double(VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_X - automatedCar.getX() ,
+                    VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_Y - automatedCar.getY());
+
+            // Calculate the translation needed to move the automatedCar's reference point
+            // to it's desired place
+            Point2D translation =
+                new Point2D.Double(this.getX() - worldObject.getX(), this.getY() - worldObject.getY());
+
+            // calculate the rotation between the image's original and target orientation
+            double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION -
+                automatedCar.getRotation() + worldObject.getRotation();
+
+            // rotate and translate the the polygon with the calculated rotation
+            AffineTransform t = new AffineTransform();
+            t.translate(this.getX(), this.getY());
+            t.rotate(rotationAngle);
+            Path2D rotated = (Path2D.Double)t.createTransformedShape(tempRoad2Lane90RightPolygonInner);
+
+            return rotated;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -103,8 +185,8 @@ public class DisplayObject extends WorldObject {
                        + rotationAngle, refPoint.getX(), refPoint.getY());
 
         // set the class values according to the calculations
-        this.x += (int)Math.round(translateRefPoints.getTranslateX() + carMovement.getX());
-        this.y += (int)Math.round(translateRefPoints.getTranslateY() + carMovement.getY());
+        this.x += (int)(Math.round(translateRefPoints.getTranslateX() + carMovement.getX()));
+        this.y += (int)(Math.round(translateRefPoints.getTranslateY() + carMovement.getY()));
 
         this.rotation = (float)rotationAngle + worldObject.getRotation();
 
@@ -113,7 +195,6 @@ public class DisplayObject extends WorldObject {
 
         this.refDifferenceX = (int)refPoint.getX();
         this.refDifferenceY = (int)refPoint.getY();
-
     }
 
     private float getAngleFromRotationMatrix(float[][] matrix) {
