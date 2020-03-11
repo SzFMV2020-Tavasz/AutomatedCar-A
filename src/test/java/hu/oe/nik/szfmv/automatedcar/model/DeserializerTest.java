@@ -54,7 +54,7 @@ public class DeserializerTest {
     public void DeserializeReferencePointsJsonTestSuccess() {
         List<ReferencePoint> content = null;
         try {
-            content = Deserializer.DeserializeReferenccePointJson("reference_points.json");
+            content = Deserializer.DeserializeReferencePointJson("reference_points.json");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

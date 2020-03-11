@@ -107,7 +107,7 @@ public class Deserializer {
         return completeData;
     }
 
-    public static List<ReferencePoint> DeserializeReferenccePointJson(String fileName) throws IllegalArgumentException {
+    public static List<ReferencePoint> DeserializeReferencePointJson(String fileName) throws IllegalArgumentException {
         try {
             TestFile(fileName);
         } catch (Exception e) {
