@@ -559,6 +559,7 @@ public class WorldObject {
                 this.polygon = CreateSpeedSignPolygon();
                 break;
             case "tree":
+            default:
                 this.polygon = CreateTreePolygon();
                 break;
         }
