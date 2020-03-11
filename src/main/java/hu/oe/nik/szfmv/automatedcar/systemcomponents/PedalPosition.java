@@ -40,6 +40,7 @@ public class PedalPosition {
                     steeringWheelValue=180;
                 }
                 virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
                 counter++;
                 Sleep();
             }
@@ -68,6 +69,7 @@ public class PedalPosition {
                     steeringWheelValue= -180;
                 }
                 virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
                 counter++;
                 Sleep();
             }
@@ -84,6 +86,7 @@ public class PedalPosition {
                 counter++;
                 steeringWheelValue+=steeringWheelToZero(steeringWheelValue,counter);
                 virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
                 Sleep();
             }
         });
@@ -110,6 +113,7 @@ public class PedalPosition {
                     gasPedalValue=100;
                 }
                 virtualFunctionBus.toPowerTrainPacket.setGasPedalValue(gasPedalValue);
+                virtualFunctionBus.guiInputPacket.setGasPedalValue(gasPedalValue);
                 counter++;
                 Sleep();
             }
@@ -135,6 +139,7 @@ public class PedalPosition {
                     gasPedalValue=0;
                 }
                 virtualFunctionBus.toPowerTrainPacket.setGasPedalValue(gasPedalValue);
+                virtualFunctionBus.guiInputPacket.setGasPedalValue(gasPedalValue);
                 counter++;
                 Sleep();
             }
@@ -162,6 +167,7 @@ public class PedalPosition {
                     breakPedalValue=100;
                 }
                 virtualFunctionBus.toPowerTrainPacket.setBreakPedalValue(breakPedalValue);
+                virtualFunctionBus.guiInputPacket.setBreakPedalValue(breakPedalValue);
                 counter++;
                 Sleep();
             }
@@ -187,6 +193,7 @@ public class PedalPosition {
                     breakPedalValue=0;
                 }
                 virtualFunctionBus.toPowerTrainPacket.setBreakPedalValue(breakPedalValue);
+                virtualFunctionBus.guiInputPacket.setBreakPedalValue(breakPedalValue);
                 counter++;
                 Sleep();
             }

@@ -20,6 +20,7 @@ public class Shitfer {
         {
             acttuallyValue++;
             virtualFunctionBus.toPowerTrainPacket.setShiftChangeRequest(pos[acttuallyValue]);
+            virtualFunctionBus.guiInputPacket.setShifterPos(pos[acttuallyValue]);
         }
     }
 
@@ -29,6 +30,7 @@ public class Shitfer {
         {
             acttuallyValue--;
             virtualFunctionBus.toPowerTrainPacket.setShiftChangeRequest(ShiftPos.values()[acttuallyValue]);
+            virtualFunctionBus.guiInputPacket.setShifterPos(ShiftPos.values()[acttuallyValue]);
         }
     }
 

@@ -24,6 +24,7 @@ public class Index {
         else{
         status=IndexStatus.RIGHT;
         }
+        virtualFunctionBus.guiInputPacket.setIndexStatus(status);
     }
 
     public void setStatsLeft(){
@@ -33,5 +34,6 @@ public class Index {
         else{
             status=IndexStatus.LEFT;
         }
+        virtualFunctionBus.guiInputPacket.setIndexStatus(status);
     }
 }
