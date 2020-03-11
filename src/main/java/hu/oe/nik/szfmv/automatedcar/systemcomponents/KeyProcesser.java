@@ -14,6 +14,8 @@ public class KeyProcesser {
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
         pedalPos.setVirtualFunctionBus(virtualFunctionBus);
+        accManager.setVirtualFunctionBus(virtualFunctionBus);
+        shiftManager.setVirtualFunctionBus(virtualFunctionBus);
     }
 
     public int KeyPressed(int keyCode)

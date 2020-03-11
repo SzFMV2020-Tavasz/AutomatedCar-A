@@ -5,7 +5,11 @@ import org.apache.logging.log4j.core.config.composite.DefaultMergeStrategy;
 
 public class ACC {
 
-    private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
+    private VirtualFunctionBus virtualFunctionBus;
+
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
+        this.virtualFunctionBus=virtualFunctionBus;
+    }
 
     protected int avarageSpeed = 50;
 

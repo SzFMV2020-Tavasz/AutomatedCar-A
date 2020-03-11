@@ -69,14 +69,10 @@ public class Gui extends JFrame {
                 System.out.println("Gas pedal value: " +virtualFunctionBus.toPowerTrainPacket.getGasPedalValue());
                 System.out.println("Break pedal value" +virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue());
                 System.out.println("Steering wheel value: " +virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue());
+                System.out.println("Shifter value: " + virtualFunctionBus.toPowerTrainPacket.getShiftChangeRequest());
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Runtime.getRuntime().exec("clear");
-                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

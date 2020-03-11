@@ -83,12 +83,10 @@ public class HMIKeyListener {
 
                 case KeyEvent.VK_K:
                     Processer.LowerShift();
-                    Processer.inputPacket.setShiftValue(Processer.shiftManager.GetCurrentState());
                     break;
 
                 case KeyEvent.VK_L:
                     Processer.GrowShift();
-                    Processer.inputPacket.setShiftValue(Processer.shiftManager.GetCurrentState());
                     break;
 
                 case KeyEvent.VK_I:
