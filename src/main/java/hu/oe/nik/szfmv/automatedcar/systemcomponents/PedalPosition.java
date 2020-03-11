@@ -1,6 +1,15 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.ToPowerTrainPacket;
+
 public class PedalPosition {
+
+    private VirtualFunctionBus virtualFunctionBus;
+
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
+        this.virtualFunctionBus=virtualFunctionBus;
+    }
 
     private double gasPedalValue;
     private boolean gasPedalSwitch;//true -> down, false -> up
@@ -10,21 +19,10 @@ public class PedalPosition {
     private boolean steeringWheelRight;
     private boolean steeringWheelLeft;
 
-    public double getGasPedalValue(){
-        return gasPedalValue;
-    }
-
-    public double getBreakPedalValue(){
-        return breakPedalValue;
-    }
-
-    public double getSteeringWheelValue(){
-        return steeringWheelValue;
-    }
-
     public void startSteeringRight(){
         if(!steeringWheelRight) {
             steeringWheelRight = true;
+            steeringWheelLeft=false;
             steeringRight();
         }
     }
@@ -41,6 +39,8 @@ public class PedalPosition {
                 else{
                     steeringWheelValue=180;
                 }
+                virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
                 counter++;
                 Sleep();
             }
@@ -51,6 +51,7 @@ public class PedalPosition {
     public void startSteeringLeft(){
         if(!steeringWheelLeft){
             steeringWheelLeft=true;
+            steeringWheelRight=false;
             steeringLeft();
         }
     }
@@ -58,7 +59,7 @@ public class PedalPosition {
     private void steeringLeft(){
         Thread valueChangeThread = new Thread(()->{
             int counter = 0;
-            while(steeringWheelRight && steeringWheelValue> -180.0)
+            while(steeringWheelLeft && steeringWheelValue> -180.0)
             {
 
                 if(steeringWheelValueValidRange(steeringWheelValue+increaseNumber(counter))) {
@@ -67,6 +68,8 @@ public class PedalPosition {
                 else{
                     steeringWheelValue= -180;
                 }
+                virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
                 counter++;
                 Sleep();
             }
@@ -75,11 +78,16 @@ public class PedalPosition {
     }
 
     public void steeringWheelReleased(){
+        steeringWheelRight=false;
+        steeringWheelLeft=false;
         Thread valueChangeThread = new Thread(()->{
             int counter = 0;
             while(!steeringWheelRight && !steeringWheelLeft && !(steeringWheelValue==0.0)) {
                 counter++;
                 steeringWheelValue+=steeringWheelToZero(steeringWheelValue,counter);
+                virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
+                Sleep();
             }
         });
         valueChangeThread.start();
@@ -104,6 +112,8 @@ public class PedalPosition {
                 else{
                     gasPedalValue=100;
                 }
+                virtualFunctionBus.toPowerTrainPacket.setGasPedalValue(gasPedalValue);
+                virtualFunctionBus.guiInputPacket.setGasPedalValue(gasPedalValue);
                 counter++;
                 Sleep();
             }
@@ -119,7 +129,7 @@ public class PedalPosition {
     private void gasPedalValueDecrease(){
         Thread valueChangeThread = new Thread(()->{
             int counter = 0;
-            while(gasPedalSwitch && gasPedalValue>=0.0)
+            while(!gasPedalSwitch && gasPedalValue>=0.0)
             {
 
                 if(PedalValueValidRange(gasPedalValue-increaseNumber(counter))) {
@@ -128,6 +138,8 @@ public class PedalPosition {
                 else{
                     gasPedalValue=0;
                 }
+                virtualFunctionBus.toPowerTrainPacket.setGasPedalValue(gasPedalValue);
+                virtualFunctionBus.guiInputPacket.setGasPedalValue(gasPedalValue);
                 counter++;
                 Sleep();
             }
@@ -154,6 +166,8 @@ public class PedalPosition {
                 else{
                     breakPedalValue=100;
                 }
+                virtualFunctionBus.toPowerTrainPacket.setBreakPedalValue(breakPedalValue);
+                virtualFunctionBus.guiInputPacket.setBreakPedalValue(breakPedalValue);
                 counter++;
                 Sleep();
             }
@@ -172,12 +186,14 @@ public class PedalPosition {
             while(!breakPedalSwitch && breakPedalValue>0.0)
             {
 
-                if(PedalValueValidRange(breakPedalValue+increaseNumber(counter))) {
-                    breakPedalValue += increaseNumber(counter);
+                if(PedalValueValidRange(breakPedalValue-increaseNumber(counter))) {
+                    breakPedalValue -= increaseNumber(counter);
                 }
                 else{
-                    breakPedalValue=100;
+                    breakPedalValue=0;
                 }
+                virtualFunctionBus.toPowerTrainPacket.setBreakPedalValue(breakPedalValue);
+                virtualFunctionBus.guiInputPacket.setBreakPedalValue(breakPedalValue);
                 counter++;
                 Sleep();
             }
@@ -197,7 +213,7 @@ public class PedalPosition {
         }
     }
 
-    public void Sleep(){
+    private void Sleep(){
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {

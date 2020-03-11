@@ -11,19 +11,15 @@ import java.awt.event.KeyListener;
 
 public class HMIKeyListener {
 
-
-
     KeyProcesser Processer = new KeyProcesser();
-
-    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
-        Processer.setVirtualFunctionBus(virtualFunctionBus);
-    }
-
-    private InputPacket inputPacket;
 
     public KeyListener getHMIListener()
     {
         return listen;
+    }
+
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
+        Processer.setVirtualFunctionBus(virtualFunctionBus);
     }
 
     java.awt.event.KeyListener listen = new java.awt.event.KeyListener() {
@@ -87,12 +83,10 @@ public class HMIKeyListener {
 
                 case KeyEvent.VK_K:
                     Processer.LowerShift();
-                    Processer.inputPacket.setShiftValue(Processer.shiftManager.GetCurrentState());
                     break;
 
                 case KeyEvent.VK_L:
                     Processer.GrowShift();
-                    Processer.inputPacket.setShiftValue(Processer.shiftManager.GetCurrentState());
                     break;
 
                 case KeyEvent.VK_I:

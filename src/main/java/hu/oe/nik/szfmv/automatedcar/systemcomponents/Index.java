@@ -1,9 +1,18 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
+
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+
 public class Index {
     public enum IndexStatus{
         RIGHT,
         LEFT,
         NONE
+    }
+
+    private VirtualFunctionBus virtualFunctionBus;
+
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
+        this.virtualFunctionBus=virtualFunctionBus;
     }
 
     private IndexStatus status;
@@ -15,6 +24,7 @@ public class Index {
         else{
         status=IndexStatus.RIGHT;
         }
+        virtualFunctionBus.guiInputPacket.setIndexStatus(status);
     }
 
     public void setStatsLeft(){
@@ -24,5 +34,6 @@ public class Index {
         else{
             status=IndexStatus.LEFT;
         }
+        virtualFunctionBus.guiInputPacket.setIndexStatus(status);
     }
 }

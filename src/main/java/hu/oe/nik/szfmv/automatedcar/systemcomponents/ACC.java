@@ -5,7 +5,11 @@ import org.apache.logging.log4j.core.config.composite.DefaultMergeStrategy;
 
 public class ACC {
 
-    private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
+    private VirtualFunctionBus virtualFunctionBus;
+
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
+        this.virtualFunctionBus=virtualFunctionBus;
+    }
 
     protected int avarageSpeed = 50;
 
@@ -72,7 +76,7 @@ public class ACC {
     private int ChangeNewAccSpeed() {
         var currentVelocity = virtualFunctionBus.toPowerTrainPacket.getGasPedalValue();
         if (currentVelocity >= 40 && currentVelocity <= 160) {
-            return currentVelocity;
+            return (int)currentVelocity;
         } else {
             return virtualFunctionBus.inputPacket.getAccSpeed();
         }

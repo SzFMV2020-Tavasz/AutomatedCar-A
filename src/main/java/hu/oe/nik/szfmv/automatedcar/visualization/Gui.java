@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Gui extends JFrame {
@@ -21,6 +22,7 @@ public class Gui extends JFrame {
     private CourseDisplay courseDisplay;
     private Dashboard dashboard;
     private VirtualFunctionBus virtualFunctionBus;
+    private HMIKeyListener listener = new HMIKeyListener();
 
 
     /**
@@ -54,12 +56,29 @@ public class Gui extends JFrame {
 
         keysPressed = new ArrayList<>();
 
-        HMIKeyListener listener = new HMIKeyListener();
         KeyListener listen = listener.getHMIListener();
-        listener.setVirtualFunctionBus(virtualFunctionBus);
 
         this.addKeyListener(listen);
+        loop();
 
+    }
+    public void loop()
+    {
+        Thread looping = new Thread(() ->{
+            while(true){
+                System.out.println("Gas pedal value: " +virtualFunctionBus.toPowerTrainPacket.getGasPedalValue());
+                System.out.println("Break pedal value" +virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue());
+                System.out.println("Steering wheel value: " +virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue());
+                System.out.println("Shifter value: " + virtualFunctionBus.toPowerTrainPacket.getShiftChangeRequest());
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+        looping.start();
     }
 
     public VirtualFunctionBus getVirtualFunctionBus() {
@@ -68,6 +87,8 @@ public class Gui extends JFrame {
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
+        listener.setVirtualFunctionBus(virtualFunctionBus);
+
     }
 
     public CourseDisplay getCourseDisplay() {
