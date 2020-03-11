@@ -27,11 +27,11 @@ public class WorldObjectTest {
     void polygon() {
         int idx = 0;
         try {
-            worldObject = Deserializer.DeserializeWorldJson("test_world.json").get(idx);
+            worldObject = Deserializer.DeserializeWorldJson("test_world.json").getWorldObjects().get(idx);
         } catch (Exception e) {
             System.out.println("World Object " + worldObject.type + " does not contain any polygon at index " + idx + "!");
-            System.exit(-1);
         }
+
         var bounds = worldObject.getPolygon().getBounds2D();
         assertTrue(bounds.contains(new Point(255, 255)));
         assertFalse(bounds.contains(new Point(0, 351)));

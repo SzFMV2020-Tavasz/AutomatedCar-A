@@ -1,9 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.model;
 
-import hu.oe.nik.szfmv.automatedcar.model.deserializer.*;
-
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class World {
@@ -14,7 +12,6 @@ public class World {
     public World(int width, int height) {
         this.width = width;
         this.height = height;
-        this.worldObjects = Deserializer.DeserializeWorldJson("test_world.json");
     }
 
     public World(int width, int height, List<WorldObject> instanceList) {
@@ -41,6 +38,10 @@ public class World {
 
     public List<WorldObject> getWorldObjects() {
         return worldObjects;
+    }
+
+    public void initList() {
+        this.worldObjects = new ArrayList<>();
     }
 
     public List<WorldObject> getDynamics() {

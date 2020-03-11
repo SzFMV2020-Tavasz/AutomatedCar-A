@@ -10,39 +10,40 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DeserializerTest {
     @Test
     public void DeserializeWorldJsonTestSuccess() {
-        List<WorldObject> content = null;
+        World world = null;
         try {
-            content = Deserializer.DeserializeWorldJson("test_world.json");
+            world = Deserializer.DeserializeWorldJson("test_world.json");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
-        assertNotNull(content);
-        assertNotEquals(0, content.size());
+        assertNotNull(world.getWorldObjects());
+        assertNotEquals(0, world.getWorldObjects().size());
+        assertEquals(3000, world.getHeight());
+        assertEquals(5120, world.getWidth());
 
-        var entry = content.get(0);
-
+        var entry = world.getWorldObjects().get(0);
         assertEquals("road_2lane_straight", entry.getType());
         assertEquals(1700, entry.getX());
         assertEquals(144, entry.getY());
         assertEquals(0, entry.getZ());
         assertEquals("road_2lane_straight_1", entry.getId());
         assertEquals(0.0f, entry.getRotationMatrix()[0][0]);
+        assertEquals(true, entry.getIsStatic());
 
-        var entry2 = content.get(6);
-
+        var entry2 = world.getWorldObjects().get(6);
         assertEquals("road_2lane_45right_7", entry2.getId());
         assertEquals(0.7071068286895752f, entry2.getRotationMatrix()[0][0]);
     }
 
     @Test
     public void DeserializeWorldJsonTestNoFile() {
-        List<WorldObject> content = null;
+        World world = null;
         try {
-            content = Deserializer.DeserializeWorldJson("test_worlds.json");
+            world = Deserializer.DeserializeWorldJson("test_worlds.json");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
-        assertNull(content);
+        assertNull(world);
     }
 
     @Test

@@ -3,11 +3,13 @@ package hu.oe.nik.szfmv.automatedcar.model.deserializer;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import hu.oe.nik.szfmv.automatedcar.model.ReferencePoint;
+import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Deserializer {
     private class WorldObjectHelper {
@@ -36,6 +38,9 @@ public class Deserializer {
         }
     }
 
+    private static String[] layerZeroElements = new String[]{"road", "roadsign", "garage", "parking"};
+    private static String[] layerOneElements = new String[]{"man", "car", "bicycle", "roadsign", "bollard", "boundary", "tree"};
+
     private static void TestFile(String fileName) throws IllegalArgumentException {
         if (!fileName.contains("json")) {
             throw new IllegalArgumentException("Provided file's extension is not .json! \n File:" + fileName);
@@ -58,30 +63,24 @@ public class Deserializer {
     }
 
     private static WorldObject AddLayeringWithStaticInfo(WorldObject object) {
-        if ((object.getType().contains("road") && !object.getType().contains("roadsign"))
-                || object.getType().contains("garage")
-                || (object.getType().contains("parking") && !object.getType().contains("roadsign"))) {
+        var objectType = object.getType();
+
+        if (Stream.of(layerZeroElements).anyMatch(objectType::contains) && Stream.of(layerOneElements).noneMatch(objectType::contains)) {
             object.setIsStatic(true);
             object.setZ(0);
-        }
-
-        if (object.getType().contains("man")
-                || object.getType().contains("car")
-                || object.getType().contains("bicycle")
-                || object.getType().contains("bollard")
-                || object.getType().contains("boundary")
-                || object.getType().contains("tree")
-                || object.getType().contains("roadsign")) {
-            object.setZ(1);
-
-            if (!object.getType().contains("man")) {
+        } else {
+            if (!objectType.contains("man")) {
                 object.setIsStatic(true);
             }
         }
+
         return object;
     }
 
-    public static List<WorldObject> DeserializeWorldJson(String fileName) throws IllegalArgumentException {
+    public static World DeserializeWorldJson(String fileName) throws IllegalArgumentException {
+        Type worldType = new TypeToken<World>() {
+        }.getType();
+
         try {
             TestFile(fileName);
         } catch (Exception e) {
@@ -92,19 +91,19 @@ public class Deserializer {
         if (file == null)
             return null;
 
+        World worldComplete = new Gson().fromJson(file,worldType);
+        worldComplete.initList();
         var raw = file.substring(file.indexOf("["), file.indexOf("]") + 1);
-
         Type listType = new TypeToken<ArrayList<WorldObjectHelper>>() {
         }.getType();
         List<WorldObjectHelper> unCompleteData = new Gson().fromJson(raw, listType);
-
         var completeData = new ArrayList<WorldObject>();
         for (WorldObjectHelper unCompleteObject :
                 unCompleteData) {
-            completeData.add(AddLayeringWithStaticInfo(unCompleteObject.ParseToWorldObject()));
+            worldComplete.addObjectToWorld(AddLayeringWithStaticInfo(unCompleteObject.ParseToWorldObject()));
         }
 
-        return completeData;
+        return worldComplete;
     }
 
     public static List<ReferencePoint> DeserializeReferencePointJson(String fileName) throws IllegalArgumentException {
@@ -119,10 +118,9 @@ public class Deserializer {
             return null;
 
         var raw = file.substring(file.indexOf("["), file.indexOf("]") + 1);
-
         Type listType = new TypeToken<ArrayList<ReferencePoint>>() {
         }.getType();
-        List<ReferencePoint> completeData = new Gson().fromJson(raw, listType);
+        List<ReferencePoint> completeData = new Gson().fromJson(file, listType);
 
         return completeData;
     }
