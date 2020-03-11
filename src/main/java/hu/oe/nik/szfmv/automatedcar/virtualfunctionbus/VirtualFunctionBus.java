@@ -5,6 +5,7 @@ import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.GuiInputPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.ToPowerTrainPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.Debugging.DebugMode;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class VirtualFunctionBus {
 
     private List<SystemComponent> components = new ArrayList<>();
 
+    private DebugMode DebugMode = new DebugMode();
 
     /**
      * Registers the provided {@link SystemComponent}

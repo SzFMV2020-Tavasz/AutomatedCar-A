@@ -30,10 +30,22 @@
     <Image name="road_2lane_6right.png">
         <Refpoint x="350" y="367"/>
     </Image>
+    <Image name="car_1_white.png">
+        <Refpoint x="51" y="104"/>
+    </Image>
+    <Image name="car_1_red.png">
+        <Refpoint x="51" y="104"/>
+    </Image>
+    <Image name="car_1_blue.png">
+        <Refpoint x="51" y="104"/>
+    </Image>
     <Image name="car_2_white.png">
         <Refpoint x="51" y="104"/>
     </Image>
     <Image name="car_2_red.png">
+        <Refpoint x="51" y="104"/>
+    </Image>
+    <Image name="car_2_blue.png">
         <Refpoint x="51" y="104"/>
     </Image>
 </Images>
