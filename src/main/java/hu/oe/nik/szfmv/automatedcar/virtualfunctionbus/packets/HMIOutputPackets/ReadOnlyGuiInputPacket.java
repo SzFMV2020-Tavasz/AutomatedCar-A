@@ -14,4 +14,5 @@ public interface ReadOnlyGuiInputPacket {
     double getAccFollowingDistanceValue();
     boolean getParkingPilotStatus();
     boolean getLaneKeepingAssistant();
+    boolean getDebugSwitch();
 }

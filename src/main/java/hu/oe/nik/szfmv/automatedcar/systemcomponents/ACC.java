@@ -31,7 +31,7 @@ public class ACC {
         virtualFunctionBus.guiInputPacket.setLaneKeepingAssistantStatus(laneKeepingAssistantSwitch);
     }
 
-    private int accSpeed;
+    private int accSpeed =30;
 
     public void increaseAccSpeed() {
         if (accSpeed <= 150) {

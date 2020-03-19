@@ -98,12 +98,12 @@ public class HMIKeyListener {
                     Processer.decreaseAccSpeed();
                     break;
 
-                case KeyEvent.VK_R:
-                   Processer.turnAccSwitch();
+                case KeyEvent.VK_O:
+                    Processer.increaseAccSpeed();
                     break;
 
-                case KeyEvent.VK_0:
-                    Processer.KeyPressed(keyCode);
+                case KeyEvent.VK_R:
+                   Processer.turnAccSwitch();
                     break;
 
                 case KeyEvent.VK_J:
@@ -118,7 +118,7 @@ public class HMIKeyListener {
                     Processer.turnAccDistance();
                     break;
 
-                case KeyEvent.VK_O:
+                case KeyEvent.VK_0:
                     Processer.zeroPressed();
                     break;
 

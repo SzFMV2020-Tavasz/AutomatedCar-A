@@ -23,6 +23,7 @@ public class KeyProcesser {
 
     public void zeroPressed(){
         zeroIsPressed=true;
+        setDebugMode();
     }
 
     public void zeroReleased(){
@@ -31,6 +32,7 @@ public class KeyProcesser {
 
     public void controlPressed(){
         controlIsPressed=true;
+        setDebugMode();
     }
 
     public void controlReleased(){
@@ -43,7 +45,7 @@ public class KeyProcesser {
         if(zeroIsPressed && controlIsPressed){
             debugMode=!debugMode;
         }
-        virtualFunctionBus.inputPacket.setDebugSwitch(debugMode);
+        virtualFunctionBus.guiInputPacket.setDebugSwitch(debugMode);
     }
 
     private PedalPosition pedalPos = new PedalPosition();

@@ -46,7 +46,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     }
 
 
-    private Shitfer.ShiftPos shiftChangeRequest;//P-R-N-D
+    private Shitfer.ShiftPos shiftChangeRequest = Shitfer.ShiftPos.P;//P-R-N-D
     public void setShifterPos(Shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
@@ -64,10 +64,10 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
     @Override
     public boolean getACCStatus() {
-        return false;
+        return accSwitch;
     }
 
-    private int accSpeedValue;
+    private int accSpeedValue=30;
 
     public void setAccSpeedValue(int accSpeedValue) {
         this.accSpeedValue = accSpeedValue;
@@ -75,7 +75,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
     @Override
     public int getAccSpeedValue() {
-        return 0;
+        return accSpeedValue;
     }
 
     private double accFollowingDistance;
@@ -86,7 +86,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
     @Override
     public double getAccFollowingDistanceValue() {
-        return 0;
+        return accFollowingDistance;
     }
 
     private boolean parkingPilotStatus;
@@ -109,5 +109,16 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     @Override
     public boolean getLaneKeepingAssistant() {
         return laneKeepingAssistantStatus;
+    }
+
+    private boolean debugSwitch;
+
+    public void setDebugSwitch(boolean debugSwitch) {
+        this.debugSwitch = debugSwitch;
+    }
+
+    @Override
+    public boolean getDebugSwitch() {
+        return debugSwitch;
     }
 }

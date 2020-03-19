@@ -17,11 +17,17 @@ public class Dashboard extends JPanel {
 
     private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
-    private  JLabel gear = new JLabel("gear: " + virtualFunctionBus.guiInputPacket.getShifterPos());
+    private  JLabel gear = new JLabel("gear: P");
     private JLabel leftIndex = new JLabel("");
     private JLabel rightIndex = new JLabel("");
     private JProgressBar gasBar = new JProgressBar(0,100);
     private JProgressBar breakBar = new JProgressBar(0, 100);
+    private JLabel steeringWheel = new JLabel("steering wheel: " + virtualFunctionBus.guiInputPacket.getSteeringWheelValue());
+    private JLabel debug = new JLabel("debug:" + virtualFunctionBus.guiInputPacket.getDebugSwitch());
+    private JLabel speedLimit = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
+    JLabel accSpeed = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
+    JLabel accDistance = new JLabel("Acc Distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
+
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
@@ -35,21 +41,6 @@ public class Dashboard extends JPanel {
 
 
     private Gui parent;
-
-    private Thread timer = new Thread() {
-        int difference;
-
-        public void run() {
-            while (true) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ex) {
-                    LOGGER.error(ex.getMessage());
-                }
-            }
-        }
-    };
-
     /**
      * Initialize the dashboard
      */
@@ -118,8 +109,6 @@ public class Dashboard extends JPanel {
         gasBar.setValue((int)virtualFunctionBus.guiInputPacket.getGasPedalValue());
         gasBar.setStringPainted(true);
 
-
-
         JLabel breakLabel = new JLabel("break pedal");
 
         breakBar.setStringPainted(true);
@@ -133,11 +122,15 @@ public class Dashboard extends JPanel {
         add(pedalPanel);
     }
 
+    private  JPanel compactPanel  = new JPanel();
     public void drawAccGridLayout(){
+        GridLayout compactLayout = new GridLayout(1,2,0,0);
         GridLayout accGridLayout = new GridLayout(4, 2, 4,4);
         GridLayout optsGridLayout = new GridLayout(4, 2, 4, 4);
         GridLayout signGridLayout = new GridLayout(3,1,0,0);
 
+
+        compactPanel.setLayout(compactLayout);
 
         JPanel accPanel = new JPanel();
         accPanel.setLayout(accGridLayout);
@@ -148,16 +141,19 @@ public class Dashboard extends JPanel {
         JPanel signPanel = new JPanel();
         signPanel.setLayout(signGridLayout);
 
-        accPanel.add(optsPanel);
-        accPanel.add(signPanel);
+        compactPanel.add(accPanel);
+        compactPanel.add(optsPanel);
 
-        JLabel accSpeed = new JLabel("160");
-        JLabel accDistance = new JLabel("1.2");
         JCheckBox acc = new JCheckBox("ACC");
         acc.setSelected(true);
         JCheckBox pp = new JCheckBox("PP");
         JCheckBox lka = new JCheckBox("LKA");
         JCheckBox lkaWarning = new JCheckBox("LKA WARNING");
+
+        acc.setEnabled(false);
+        pp.setEnabled(false);
+        lka.setEnabled(false);
+        lkaWarning.setEnabled(false);
 
         accPanel.add(accSpeed);
         accPanel.add(accDistance);
@@ -169,6 +165,9 @@ public class Dashboard extends JPanel {
         JCheckBox aeb = new JCheckBox("AEB WARN");
         JCheckBox rrWarn = new JCheckBox("RR WARN");
 
+        aeb .setEnabled(false);
+        rrWarn.setEnabled(false);
+
         accPanel.add(lastSign);
         accPanel.add(aeb);
         accPanel.add(rrWarn);
@@ -177,17 +176,12 @@ public class Dashboard extends JPanel {
 
     }
 
-    private void drawDebugGridLAyout(){
+    JPanel debugPanel = new JPanel();
+
+    private void drawDebugGridLayout(){
         GridLayout debugGridLayout = new GridLayout(4, 1, 8, 8);
 
-        JPanel debugPanel = new JPanel();
         debugPanel.setLayout(debugGridLayout);
-
-
-        JLabel speedLimit = new JLabel("speed limit: 60");
-
-        JLabel debug = new JLabel("debug:");
-        JLabel steeringWheel = new JLabel("steering wheel: " + "+25");
         JLabel pos = new JLabel("x: " + 350 + "y: " + 500);
 
         debugPanel.add(speedLimit);
@@ -203,8 +197,8 @@ public class Dashboard extends JPanel {
         drawMeterGridLayout();
         drawIndexGridLayout();
         drawPedalGridLayout();
-        //drawAccGridLayout();
-        drawDebugGridLAyout();
+        drawAccGridLayout();
+        drawDebugGridLayout();
     }
 
     public void refreshDrawing(){
@@ -215,6 +209,13 @@ public class Dashboard extends JPanel {
         gasBar.setValue((int)virtualFunctionBus.guiInputPacket.getGasPedalValue());
         breakBar.setValue((int)virtualFunctionBus.guiInputPacket.getBreakPedalValue());
         pedalPanel.revalidate();
+
+        steeringWheel.setText("steering wheel: " + virtualFunctionBus.guiInputPacket.getSteeringWheelValue());
+        debug.setText("debug:" + virtualFunctionBus.guiInputPacket.getDebugSwitch());
+        debugPanel.revalidate();
+
+        accSpeed.setText("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
+        accDistance.setText("Acc distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
     }
 
     private void indexStatus(){
