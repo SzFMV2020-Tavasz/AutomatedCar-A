@@ -51,6 +51,7 @@ public class Main {
 
         window = new Gui();
         window.setVirtualFunctionBus(car.getVirtualFunctionBus());
+
     }
 
     private void loop() {
@@ -58,6 +59,7 @@ public class Main {
             try {
                 car.drive();
                 window.getCourseDisplay().drawWorld(displayWorld);
+                window.getDashboard().refreshDrawing();
 //                window.getCourseDisplay().refreshFrame();
                 Thread.sleep(CYCLE_PERIOD);
             } catch (InterruptedException e) {

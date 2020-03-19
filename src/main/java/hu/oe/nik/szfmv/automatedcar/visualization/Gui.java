@@ -49,17 +49,16 @@ public class Gui extends JFrame {
         courseDisplay = new CourseDisplay(this);
         add(courseDisplay);
 
+        KeyListener listen = listener.getHMIListener();
+        this.addKeyListener(listen);
+
         dashboard = new Dashboard(this);
         add(dashboard);
 
         setVisible(true);
 
         keysPressed = new ArrayList<>();
-
-        KeyListener listen = listener.getHMIListener();
-
-        this.addKeyListener(listen);
-        loop();
+       // loop();
 
     }
     public void loop()
@@ -88,7 +87,7 @@ public class Gui extends JFrame {
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
         listener.setVirtualFunctionBus(virtualFunctionBus);
-
+        dashboard.setVirtualFunctionBus(virtualFunctionBus);
     }
 
     public CourseDisplay getCourseDisplay() {

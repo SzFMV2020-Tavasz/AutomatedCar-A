@@ -11,5 +11,5 @@ public interface ReadOnlyGuiInputPacket {
     double getSteeringWheelValue();
     boolean getACCStatus();
     int getTempomatValue();
-    double getFollowingDistancValue();
+    double getFollowingDistanceValue();
 }

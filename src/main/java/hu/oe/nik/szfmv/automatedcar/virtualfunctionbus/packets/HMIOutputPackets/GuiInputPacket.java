@@ -13,7 +13,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
     @Override
     public Index.IndexStatus getIndexStatus() {
-        return null;
+        return indexStatus;
     }
 
     private double gasPedalValue;//0-100
@@ -67,7 +67,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     }
 
     @Override
-    public double getFollowingDistancValue() {
+    public double getFollowingDistanceValue() {
         return 0;
     }
 }

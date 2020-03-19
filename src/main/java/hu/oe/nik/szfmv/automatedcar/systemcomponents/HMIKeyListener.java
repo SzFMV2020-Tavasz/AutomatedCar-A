@@ -13,11 +13,6 @@ public class HMIKeyListener {
 
     KeyProcesser Processer = new KeyProcesser();
 
-    public KeyListener getHMIListener()
-    {
-        return listen;
-    }
-
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
         Processer.setVirtualFunctionBus(virtualFunctionBus);
     }
@@ -30,6 +25,7 @@ public class HMIKeyListener {
 
         @Override
         public void keyReleased(KeyEvent e) {
+
             int keyCode = e.getKeyCode();
             switch(keyCode)
             {
@@ -54,6 +50,7 @@ public class HMIKeyListener {
 
         @Override
         public void keyPressed(KeyEvent e) {
+
             int keyCode = e.getKeyCode();
             switch(keyCode)
             {
@@ -128,5 +125,9 @@ public class HMIKeyListener {
         }
     };
 
+    public KeyListener getHMIListener()
+    {
 
+        return listen;
+    }
 }

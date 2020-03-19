@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 import org.apache.logging.log4j.LogManager;
@@ -7,11 +8,24 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 
 /**
  * Dashboard shows the state of the ego car, thus helps in debugging.
  */
 public class Dashboard extends JPanel {
+
+    private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
+
+    private  JLabel gear = new JLabel("gear: " + virtualFunctionBus.guiInputPacket.getShifterPos());
+    private JLabel leftIndex = new JLabel("");
+    private JLabel rightIndex = new JLabel("");
+    private JProgressBar gasBar = new JProgressBar(0,100);
+    private JProgressBar breakBar = new JProgressBar(0, 100);
+
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
+        this.virtualFunctionBus = virtualFunctionBus;
+    }
 
     private static final Logger LOGGER = LogManager.getLogger(Dashboard.class);
 
@@ -27,13 +41,11 @@ public class Dashboard extends JPanel {
 
         public void run() {
             while (true) {
-
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ex) {
                     LOGGER.error(ex.getMessage());
                 }
-
             }
         }
     };
@@ -44,41 +56,26 @@ public class Dashboard extends JPanel {
     public Dashboard(Gui pt) {
 
 
-
         FlowLayout dashboardLayout = new FlowLayout();
         dashboardLayout.setVgap(16);
         setLayout(dashboardLayout);
 
         setBackground(new Color(backgroundColor));
         setBounds(770, 0, width, height);
-
+        setDoubleBuffered(true);
+        parent = pt;
         // example
+        drawEverything();
+    }
 
-        InputPacket inputPacket = new InputPacket();
-
-
-
-
-
-
-        GridLayout mainGridLayout = new GridLayout(5,1, 8, 8);
+    private void drawMeterGridLayout(){
         GridLayout meterGridLayout = new GridLayout(1,2,8,8);
-        GridLayout indexGridLayout = new GridLayout(1,3,8,8);
-        GridLayout pedalGridLayout = new GridLayout(4,1,8,8);
-        GridLayout accGridLayout = new GridLayout(4, 2, 4,4);
-        //GridLayout optsGridLayout = new GridLayout(4, 2, 4, 4);
-        //GridLayout signGridLayout = new GridLayout(3,1,0,0);
-        GridLayout debugGridLayout = new GridLayout(4, 1, 8, 8);
 
-        // meterPanel
         JPanel meterPanel = new JPanel();
         meterPanel.setLayout(meterGridLayout);
         meterPanel.setBounds(100,100, 250,100);
         meterPanel.setBackground(Color.MAGENTA);
         meterPanel.setVisible(true);
-
-
-
         // need vars from bus
         JLabel leftMeter = new JLabel( 2624 + " rpm");
         JLabel rightMeter = new JLabel(130 + " km/h");
@@ -86,37 +83,73 @@ public class Dashboard extends JPanel {
         meterPanel.add(leftMeter);
         meterPanel.add(rightMeter);
 
-        JPanel indexPanel = new JPanel();
+        add(meterPanel);
+    }
+
+    private  JPanel indexPanel = new JPanel();
+    private void drawIndexGridLayout(){
+        GridLayout indexGridLayout = new GridLayout(1,3,8,8);
+
         indexPanel.setVisible(true);
         indexPanel.setLayout(indexGridLayout);
         indexPanel.setBackground(Color.GREEN);
 
-        JLabel leftIndex = new JLabel("left");
 
-        JLabel rightIndex = new JLabel("right");
-        JLabel gear = new JLabel("gear: D");
 
 
         indexPanel.add(leftIndex);
         indexPanel.add(gear);
         indexPanel.add(rightIndex);
+        add(indexPanel);
+    }
 
-        JPanel pedalPanel = new JPanel();
+    private JPanel pedalPanel = new JPanel();
+    private void drawPedalGridLayout(){
+        GridLayout pedalGridLayout = new GridLayout(4,1,8,8);
+
+
+
         pedalPanel.setVisible(true);
         pedalPanel.setLayout(pedalGridLayout);
         pedalPanel.setBackground(Color.ORANGE);
 
-        //ACC
+        JLabel gasLabel = new JLabel("gas pedal");
+
+        gasBar.setValue((int)virtualFunctionBus.guiInputPacket.getGasPedalValue());
+        gasBar.setStringPainted(true);
+
+
+
+        JLabel breakLabel = new JLabel("break pedal");
+
+        breakBar.setStringPainted(true);
+        breakBar.setValue((int)virtualFunctionBus.guiInputPacket.getBreakPedalValue());
+
+        pedalPanel.add(gasLabel);
+        pedalPanel.add(gasBar);
+        pedalPanel.add(breakLabel);
+        pedalPanel.add(breakBar);
+
+        add(pedalPanel);
+    }
+
+    public void drawAccGridLayout(){
+        GridLayout accGridLayout = new GridLayout(4, 2, 4,4);
+        GridLayout optsGridLayout = new GridLayout(4, 2, 4, 4);
+        GridLayout signGridLayout = new GridLayout(3,1,0,0);
+
+
         JPanel accPanel = new JPanel();
         accPanel.setLayout(accGridLayout);
 
-        //JPanel optsPanel = new JPanel();
-        //optsPanel.setLayout(optsGridLayout);
+        JPanel optsPanel = new JPanel();
+        optsPanel.setLayout(optsGridLayout);
 
+        JPanel signPanel = new JPanel();
+        signPanel.setLayout(signGridLayout);
 
-        //JPanel signPanel = new JPanel();
-        //signPanel.setLayout(signGridLayout);
-
+        accPanel.add(optsPanel);
+        accPanel.add(signPanel);
 
         JLabel accSpeed = new JLabel("160");
         JLabel accDistance = new JLabel("1.2");
@@ -140,29 +173,13 @@ public class Dashboard extends JPanel {
         accPanel.add(aeb);
         accPanel.add(rrWarn);
 
-        //accPanel.add(optsPanel);
-        //accPanel.add(signPanel);
+        add(accPanel);
 
+    }
 
-        // pedal
-        JLabel gasLabel = new JLabel("gas pedal");
-        JProgressBar gasBar = new JProgressBar(0,100);
-        gasBar.setValue(80);
-        gasBar.setStringPainted(true);
+    private void drawDebugGridLAyout(){
+        GridLayout debugGridLayout = new GridLayout(4, 1, 8, 8);
 
-
-
-        JLabel breakLabel = new JLabel("break pedal");
-        JProgressBar breakBar = new JProgressBar(0, 100);
-        breakBar.setStringPainted(true);
-        breakBar.setValue(35);
-
-        pedalPanel.add(gasLabel);
-        pedalPanel.add(gasBar);
-        pedalPanel.add(breakLabel);
-        pedalPanel.add(breakBar);
-
-        // debug
         JPanel debugPanel = new JPanel();
         debugPanel.setLayout(debugGridLayout);
 
@@ -180,19 +197,38 @@ public class Dashboard extends JPanel {
 
 
 
-        add(meterPanel);
-        add(indexPanel);
-        add(accPanel);
-        add(pedalPanel);
         add(debugPanel);
-
-
-
-        //example end
-
-        parent = pt;
-
-        timer.start();
+    }
+    private void drawEverything() {
+        drawMeterGridLayout();
+        drawIndexGridLayout();
+        drawPedalGridLayout();
+        //drawAccGridLayout();
+        drawDebugGridLAyout();
     }
 
+    public void refreshDrawing(){
+        gear.setText("gear: " + virtualFunctionBus.guiInputPacket.getShifterPos());
+        indexStatus();
+        indexPanel.revalidate();
+
+        gasBar.setValue((int)virtualFunctionBus.guiInputPacket.getGasPedalValue());
+        breakBar.setValue((int)virtualFunctionBus.guiInputPacket.getBreakPedalValue());
+        pedalPanel.revalidate();
+    }
+
+    private void indexStatus(){
+        if(virtualFunctionBus.guiInputPacket.getIndexStatus()== Index.IndexStatus.LEFT) {
+            leftIndex.setText("LEFT");
+            rightIndex.setText("");
+        }
+        else if(virtualFunctionBus.guiInputPacket.getIndexStatus()== Index.IndexStatus.RIGHT){
+            leftIndex.setText("");
+            rightIndex.setText("RIGHT");
+        }
+        else {
+            leftIndex.setText("");
+            rightIndex.setText("");
+        }
+    }
 }
