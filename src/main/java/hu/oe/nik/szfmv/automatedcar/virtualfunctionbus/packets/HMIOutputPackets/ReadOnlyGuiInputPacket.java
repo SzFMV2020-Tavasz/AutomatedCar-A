@@ -10,6 +10,8 @@ public interface ReadOnlyGuiInputPacket {
     double getBreakPedalValue();
     double getSteeringWheelValue();
     boolean getACCStatus();
-    int getTempomatValue();
-    double getFollowingDistanceValue();
+    int getAccSpeedValue();
+    double getAccFollowingDistanceValue();
+    boolean getParkingPilotStatus();
+    boolean getLaneKeepingAssistant();
 }

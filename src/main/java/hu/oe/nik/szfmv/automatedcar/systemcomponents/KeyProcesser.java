@@ -8,16 +8,45 @@ import java.awt.event.KeyEvent;
 
 public class KeyProcesser {
 
-    private PedalPosition pedalPos = new PedalPosition();
-
-    private Index index = new Index();
+    private VirtualFunctionBus virtualFunctionBus;
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
+        this.virtualFunctionBus=virtualFunctionBus;
         pedalPos.setVirtualFunctionBus(virtualFunctionBus);
         accManager.setVirtualFunctionBus(virtualFunctionBus);
         shiftManager.setVirtualFunctionBus(virtualFunctionBus);
         index.setVirtualFunctionBus(virtualFunctionBus);
     }
+
+    private boolean zeroIsPressed;
+    private boolean controlIsPressed;
+
+    public void zeroPressed(){
+        zeroIsPressed=true;
+    }
+
+    public void zeroReleased(){
+        zeroIsPressed=false;
+    }
+
+    public void controlPressed(){
+        controlIsPressed=true;
+    }
+
+    public void controlReleased(){
+        controlIsPressed=false;
+    }
+
+    private boolean debugMode;
+
+    private void setDebugMode(){
+        if(zeroIsPressed && controlIsPressed){
+            debugMode=!debugMode;
+        }
+        virtualFunctionBus.inputPacket.setDebugSwitch(debugMode);
+    }
+
+    private PedalPosition pedalPos = new PedalPosition();
 
     public int KeyPressed(int keyCode)
     {
@@ -37,20 +66,26 @@ public class KeyProcesser {
 
     public void breakPedalReleased(){pedalPos.breakPedalUp();}
 
+    public void steeringLeftPressed(){pedalPos.startSteeringLeft();}
+
+    public void steeringRightPressed(){pedalPos.startSteeringRight();}
+
+    public void steeringReleased(){pedalPos.steeringWheelReleased();}
+
 
     private ACC accManager = new ACC();
 
-    public void IsOnPressed() {accManager.IsOnPressedCheck();}
+    public void turnAccSwitch(){accManager.turnAccSwitch();}
 
-    public void MinusSpeedValue() {accManager.Minus();}
+    public void turnLaneKeepingSwitch(){accManager.turnLaneKeepingAssistantSwitch();}
 
-    public void PlusSpeedValue() {accManager.Plus();}
+    public void turnParkingPilotSwitch(){accManager.turnParkingPilotSwitch();}
 
-    public  void FollowerGapSetter() {accManager.FollowerGapSetter(); }
+    public void increaseAccSpeed(){accManager.increaseAccSpeed();}
 
-    protected InputPacket inputPacket = new InputPacket();
+    public void decreaseAccSpeed(){accManager.decreaseAccSpeed();}
 
-    public  double ChangeReturnFollowerGapSetter() {return accManager.ReturnFollowerGap();}
+    public void turnAccDistance(){accManager.turnAccDistance();}
 
 
     protected Shitfer shiftManager = new Shitfer();
@@ -60,11 +95,7 @@ public class KeyProcesser {
     public void LowerShift() {shiftManager.Decrement();}
 
 
-    public void steeringLeftPressed(){pedalPos.startSteeringLeft();}
-
-    public void steeringRightPressed(){pedalPos.startSteeringRight();}
-
-    public void steeringReleased(){pedalPos.steeringWheelReleased();}
+    private Index index = new Index();
 
     public void indexRight(){index.setStatusRight();}
 

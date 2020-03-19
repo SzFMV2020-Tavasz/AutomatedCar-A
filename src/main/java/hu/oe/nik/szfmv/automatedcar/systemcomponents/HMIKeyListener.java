@@ -45,6 +45,14 @@ public class HMIKeyListener {
                 case KeyEvent.VK_A:
                     Processer.steeringReleased();
                     break;
+
+                case KeyEvent.VK_0:
+                    Processer.zeroReleased();
+                    break;
+
+                case KeyEvent.VK_CONTROL:
+                    Processer.controlReleased();
+                    break;
             }
         }
 
@@ -87,21 +95,11 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_I:
-                    Processer.MinusSpeedValue();
+                    Processer.decreaseAccSpeed();
                     break;
 
-                case KeyEvent.VK_O:
-                    Processer.PlusSpeedValue();
-                    break;
-
-
-                case KeyEvent.VK_T:
-                   Processer.IsOnPressed();
-                    break;
-
-
-                case KeyEvent.VK_CONTROL:
-                    Processer.KeyPressed(keyCode);
+                case KeyEvent.VK_R:
+                   Processer.turnAccSwitch();
                     break;
 
                 case KeyEvent.VK_0:
@@ -109,16 +107,23 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_J:
-                    Processer.KeyPressed(keyCode);
+                    Processer.turnLaneKeepingSwitch();
                     break;
 
                 case KeyEvent.VK_P:
-                    Processer.KeyPressed(keyCode);
+                    Processer.turnParkingPilotSwitch();
                     break;
 
-                case KeyEvent.VK_U:
-                    Processer.FollowerGapSetter();
-                    Processer.inputPacket.setAccFollowerGap(Processer.ChangeReturnFollowerGapSetter());
+                case KeyEvent.VK_T:
+                    Processer.turnAccDistance();
+                    break;
+
+                case KeyEvent.VK_O:
+                    Processer.zeroPressed();
+                    break;
+
+                case KeyEvent.VK_CONTROL:
+                    Processer.controlPressed();
                     break;
             }
 

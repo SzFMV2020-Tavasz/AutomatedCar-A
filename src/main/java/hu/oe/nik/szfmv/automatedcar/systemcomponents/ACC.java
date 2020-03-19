@@ -1,97 +1,59 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import org.apache.logging.log4j.core.config.composite.DefaultMergeStrategy;
 
 public class ACC {
 
     private VirtualFunctionBus virtualFunctionBus;
 
-    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
-        this.virtualFunctionBus=virtualFunctionBus;
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
+        this.virtualFunctionBus = virtualFunctionBus;
     }
 
-    protected int avarageSpeed = 50;
+    private boolean accSwitch;
 
-    protected boolean isOn = false;
-
-    private static final int minSpeed = 30;
-    private static final int maxSpeed = 160;
-    private static final int step = 10;
-
-    public void Set(int setSpeed) {
-        avarageSpeed = setSpeed;
-        isOn = true;
+    public void turnAccSwitch() {
+        accSwitch = !accSwitch;
+        virtualFunctionBus.guiInputPacket.setAccSwitch(accSwitch);
     }
 
-    public void Plus() {
-        if (avarageSpeed + step <= maxSpeed)
-            avarageSpeed += step;
+    private boolean parkingPilotSwitch;
+
+    public void turnParkingPilotSwitch() {
+        parkingPilotSwitch = !parkingPilotSwitch;
+        virtualFunctionBus.guiInputPacket.setParkingPilotStatus(parkingPilotSwitch);
     }
 
-    public void Minus() {
-        if (avarageSpeed - step >= minSpeed)
-            avarageSpeed -= step;
+    private boolean laneKeepingAssistantSwitch;
+
+    public void turnLaneKeepingAssistantSwitch() {
+        laneKeepingAssistantSwitch = !laneKeepingAssistantSwitch;
+        virtualFunctionBus.guiInputPacket.setLaneKeepingAssistantStatus(laneKeepingAssistantSwitch);
     }
 
-    void turnOn() {
-        isOn = true;
-        virtualFunctionBus.inputPacket.setAccState(true);
-        virtualFunctionBus.inputPacket.setAccSpeed(ChangeNewAccSpeed());
-    }
+    private int accSpeed;
 
-
-    void  turnOff()
-    {
-        isOn = false;
-        virtualFunctionBus.inputPacket.setAccState(false);
-    }
-
-    public int getReferenceSpeed()
-    {
-        return avarageSpeed;
-    }
-
-
-
-
-    private double[] followerGap = {0.8, 1.0, 1.2, 1.4};
-    private int index = 0;
-
-    public void FollowerGapSetter() {
-        if (index < followerGap.length - 1) {
-            ++index;
-        } else {
-            index = 0;
+    public void increaseAccSpeed() {
+        if (accSpeed <= 150) {
+            accSpeed += 10;
         }
+        virtualFunctionBus.guiInputPacket.setAccSpeedValue(accSpeed);
     }
 
-    public double ReturnFollowerGap()
-    {
-        return followerGap[index];
+    public void decreaseAccSpeed() {
+        if (accSpeed >= 40) {
+            accSpeed -= 10;
+        }
+        virtualFunctionBus.guiInputPacket.setAccSpeedValue(accSpeed);
     }
 
+    private double[] accDistance = new double[]{0.8,1.0,1.2,1.4};
 
+    private int accDistanceIndex;
 
-    private int ChangeNewAccSpeed() {
-        var currentVelocity = virtualFunctionBus.toPowerTrainPacket.getGasPedalValue();
-        if (currentVelocity >= 40 && currentVelocity <= 160) {
-            return (int)currentVelocity;
-        } else {
-            return virtualFunctionBus.inputPacket.getAccSpeed();
-        }
-    }
-
-    public void IsOnPressedCheck()
-    {
-        if (isOn == true)
-        {
-            turnOff();
-        }
-        else
-        {
-            turnOn();
-        }
+    public void turnAccDistance(){
+        accDistanceIndex = (accDistanceIndex+1) % 4;
+        virtualFunctionBus.guiInputPacket.setAccFollowingDistance(accDistance[accDistanceIndex]);
     }
 
 }

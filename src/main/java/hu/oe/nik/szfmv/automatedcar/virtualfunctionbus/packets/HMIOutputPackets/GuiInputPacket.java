@@ -56,18 +56,58 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return shiftChangeRequest;
     }
 
+    private boolean accSwitch;
+
+    public void setAccSwitch(boolean accSwitch) {
+        this.accSwitch = accSwitch;
+    }
+
     @Override
     public boolean getACCStatus() {
         return false;
     }
 
-    @Override
-    public int getTempomatValue() {
-        return 0;
+    private int accSpeedValue;
+
+    public void setAccSpeedValue(int accSpeedValue) {
+        this.accSpeedValue = accSpeedValue;
     }
 
     @Override
-    public double getFollowingDistanceValue() {
+    public int getAccSpeedValue() {
         return 0;
+    }
+
+    private double accFollowingDistance;
+
+    public void setAccFollowingDistance(double accFollowingDistance) {
+        this.accFollowingDistance = accFollowingDistance;
+    }
+
+    @Override
+    public double getAccFollowingDistanceValue() {
+        return 0;
+    }
+
+    private boolean parkingPilotStatus;
+
+    public void setParkingPilotStatus(boolean parkingPilotStatus) {
+        this.parkingPilotStatus = parkingPilotStatus;
+    }
+
+    @Override
+    public boolean getParkingPilotStatus() {
+        return parkingPilotStatus;
+    }
+
+    private boolean laneKeepingAssistantStatus;
+
+    public void setLaneKeepingAssistantStatus(boolean laneKeepingAssistantStatus) {
+        this.laneKeepingAssistantStatus = laneKeepingAssistantStatus;
+    }
+
+    @Override
+    public boolean getLaneKeepingAssistant() {
+        return laneKeepingAssistantStatus;
     }
 }
