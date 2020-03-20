@@ -27,6 +27,9 @@ public class Dashboard extends JPanel {
     private JLabel speedLimit = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
     JLabel accSpeed = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
     JLabel accDistance = new JLabel("Acc Distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
+    JCheckBox pp = new JCheckBox("PP");
+    JCheckBox lka = new JCheckBox("LKA");
+    JCheckBox acc = new JCheckBox("ACC");
 
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
@@ -144,10 +147,7 @@ public class Dashboard extends JPanel {
         compactPanel.add(accPanel);
         compactPanel.add(optsPanel);
 
-        JCheckBox acc = new JCheckBox("ACC");
-        acc.setSelected(true);
-        JCheckBox pp = new JCheckBox("PP");
-        JCheckBox lka = new JCheckBox("LKA");
+        acc.setSelected(false);
         JCheckBox lkaWarning = new JCheckBox("LKA WARNING");
 
         acc.setEnabled(false);
@@ -159,7 +159,8 @@ public class Dashboard extends JPanel {
         accPanel.add(accDistance);
         accPanel.add(acc);
         accPanel.add(lka);
-        accPanel.add(lkaWarning);
+        accPanel.add(pp);
+       // accPanel.add(lkaWarning);
 
         JLabel lastSign = new JLabel("last road sign");
         JCheckBox aeb = new JCheckBox("AEB WARN");
@@ -170,7 +171,7 @@ public class Dashboard extends JPanel {
 
         accPanel.add(lastSign);
         accPanel.add(aeb);
-        accPanel.add(rrWarn);
+        //accPanel.add(rrWarn);
 
         add(accPanel);
 
@@ -214,8 +215,12 @@ public class Dashboard extends JPanel {
         debug.setText("debug:" + virtualFunctionBus.guiInputPacket.getDebugSwitch());
         debugPanel.revalidate();
 
-        accSpeed.setText("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
+        accSpeed.setText("Acc speed: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
         accDistance.setText("Acc distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
+        acc.setSelected(virtualFunctionBus.guiInputPacket.getACCStatus());
+        pp.setSelected(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());
+        lka.setSelected(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
+
     }
 
     private void indexStatus(){

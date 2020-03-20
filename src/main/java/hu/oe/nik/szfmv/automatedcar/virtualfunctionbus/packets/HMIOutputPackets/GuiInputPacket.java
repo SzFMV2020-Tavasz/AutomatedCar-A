@@ -78,7 +78,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return accSpeedValue;
     }
 
-    private double accFollowingDistance;
+    private double accFollowingDistance = 0.8;
 
     public void setAccFollowingDistance(double accFollowingDistance) {
         this.accFollowingDistance = accFollowingDistance;

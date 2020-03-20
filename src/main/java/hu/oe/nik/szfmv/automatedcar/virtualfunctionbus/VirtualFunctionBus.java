@@ -29,7 +29,7 @@ public class VirtualFunctionBus {
 
     private List<SystemComponent> components = new ArrayList<>();
 
-    private DebugMode DebugMode = new DebugMode();
+    public DebugMode DebugMode = new DebugMode();
 
     /**
      * Registers the provided {@link SystemComponent}
