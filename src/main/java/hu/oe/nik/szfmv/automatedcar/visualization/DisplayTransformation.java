@@ -35,12 +35,10 @@ public final class DisplayTransformation {
      */
     public static DisplayImageData repositionImage(int x, int y, float rotation,
                                                    String imageFileName, AutomatedCar automatedCar) {
-        // Move the displayObject to the point where it would be
-        // if the automatedCar would be at the center of the screen
 
         // Calculate the rotation needed to change the automatedCar's orientation
         // to the desired orientation
-        double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION - automatedCar.getRotation();
+        double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION - automatedCar.getRotation() ;
 
         // Calculate the translation needed to move the automatedCar's reference point
         // to it's desired place
@@ -49,7 +47,7 @@ public final class DisplayTransformation {
                 VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_Y - automatedCar.getY());
 
         // Calculate the distance between the automatedCar's and the displayObject's reference points
-        // (a.k.a.the position of the outer rotation point relative to the displayeObject's reference point)
+        // (a.k.a.the position of the outer rotation point relative to the displayObject's reference point)
         Point2D refPointDistance = new Point2D.Double(automatedCar.getX() - x,
             automatedCar.getY() - y);
 
@@ -83,32 +81,47 @@ public final class DisplayTransformation {
      * the polygon must keep its relative position to the egocar translated and rotated to its display position.
      * </p>
      *
-     * @param origX        the x component of the reference point (0,0) of the polygon
-     * @param origY        the y component of the reference point (0,0) of the polygon
-     * @param targetX      the x component of the target position of the reference point of the polygon
-     * @param targetY      the x component of the target position of the reference point of the polygon
+     * @param x        the x component of the reference point (0,0) of the polygon
+     * @param y        the y component of the reference point (0,0) of the polygon
      * @param rotation     the rotation of the polygon (sum of inherited and calculated)
+     * @param automatedCar  The egocar whose position and rotation defines the return data
      * @param polygon      the polygon to rotate
-     * @param automatedCar the egocar whose position and rotation defines the return data
      * @return A {@link Path2D} object containing the rotated polygon data
      */
-    public static Path2D repositionPolygon(int origX, int origY, int targetX, int targetY, float rotation,
+    public static Path2D repositionPolygon(int x, int y,  float rotation,
                                            Polygon polygon, AutomatedCar automatedCar) {
 
-        // Calculate the translation needed to move the element's reference point
+        // Calculate the rotation needed to change the automatedCar's orientation
+        // to the desired orientation
+        double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION - automatedCar.getRotation();
+
+        // Calculate the translation needed to move the automatedCar's reference point
         // to it's desired place
-        Point2D translation =
-            new Point2D.Double(targetX - origX, targetY - origY);
+        Point2D carMovement =
+            new Point2D.Double(VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_X - automatedCar.getX(),
+                VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_Y - automatedCar.getY());
+
+        // Calculate the distance between the automatedCar's and the displayObject's reference points
+        // (a.k.a.the position of the outer rotation point relative to the displayObject's reference point)
+        Point2D refPointDistance = new Point2D.Double(automatedCar.getX() - x,
+            automatedCar.getY() - y);
+
+        // Calculate the displayObject's reference point's rotation around the automatedCar's reference point
+        AffineTransform translateRefPoints = AffineTransform.getRotateInstance(rotationAngle,
+            refPointDistance.getX(), refPointDistance.getY());
+
+        // Calculate the new reference point
+        int refX = x + (int) (Math.round(translateRefPoints.getTranslateX() + carMovement.getX()));
+        int refY = y + (int) (Math.round(translateRefPoints.getTranslateY() + carMovement.getY()));
 
         // rotate and translate the the polygon with the calculated rotation
         AffineTransform t = new AffineTransform();
-        t.translate(targetX, targetY);
-        t.rotate(rotation);
+        t.translate(refX, refY);
+        t.rotate(rotationAngle - rotation);
         Path2D rotatedPolygon = (Path2D.Double) t.createTransformedShape(polygon);
 
         return rotatedPolygon;
     }
-
 
     /**
      * Rotates the movement vector.
@@ -118,11 +131,20 @@ public final class DisplayTransformation {
      *
      * @param x            The x component of the movement vector
      * @param y            The y component of the movement vector
-     * @param rotation     The rotation of the movement vector
      * @param automatedCar The egocar whose position and rotation defines the return data
      * @return The {@link Point2D} object containing the rotated movement vector
      */
-    public Point2D repositionMovementVector(int x, int y, float rotation, AutomatedCar automatedCar) {
-        return null;
+    public static Point2D repositionMovementVector(int x, int y, AutomatedCar automatedCar) {
+
+        // Calculate the rotation needed to change the automatedCar's orientation
+        // to the desired orientation
+        double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION - automatedCar.getRotation();
+
+        // rotate and translate the the polygon with the calculated rotation
+        // Calculate the displayObject's reference point's rotation around the automatedCar's reference point
+        AffineTransform translatedVector = AffineTransform.getRotateInstance(rotationAngle,
+            -x, -y);
+
+        return new Point2D.Double(x + translatedVector.getTranslateX(), y + translatedVector.getTranslateY());
     }
 }
