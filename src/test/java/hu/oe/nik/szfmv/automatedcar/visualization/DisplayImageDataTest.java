@@ -14,8 +14,8 @@ public class DisplayImageDataTest {
      */
     @BeforeEach
     public void init() {
-        displayImageData = new DisplayImageData(10,11,1.2f,
-            20, 21, 30,31);
+        displayImageData = new DisplayImageData(10, 11, 1.2f,
+            20, 21, 30, 31);
     }
 
     @Test
