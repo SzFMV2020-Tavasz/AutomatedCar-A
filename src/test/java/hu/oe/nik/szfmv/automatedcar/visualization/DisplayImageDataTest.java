@@ -18,6 +18,9 @@ public class DisplayImageDataTest {
             20, 21, 30, 31);
     }
 
+    /**
+     * Check whether the class gets instantiated when the new DisplayObjectData() is called.
+     */
     @Test
     public void classInstantiated() {
         assertNotNull(displayImageData);
