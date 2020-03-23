@@ -65,6 +65,9 @@ public class DisplayTransformationTest {
         assertEquals(645 + 21, Math.round(p[1]));
     }
 
+    /**
+     * Check whether the rotated and translated movement vector is at the right display position
+     */
     @Test
     public void returnedMovementVector() {
         Point2D p = DisplayTransformation.repositionMovementVector(10, 20, automatedCar);
