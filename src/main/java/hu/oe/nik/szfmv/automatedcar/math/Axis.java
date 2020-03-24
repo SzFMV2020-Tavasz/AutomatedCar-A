@@ -46,12 +46,20 @@ public enum Axis {
 
         @Override
         public double getXDiff() {
-            return axis == Axis.X ? (positive ? +1 : -1) : 0;
+            if (this.axis == Axis.X) {
+                return (positive ? +1.0 : -1.0);
+            } else {
+                return 0;
+            }
         }
 
         @Override
         public double getYDiff() {
-            return axis == Axis.Y ? (positive ? +1 : -1) : 0;
+            if (this.axis == Axis.Y) {
+                return (positive ? +1.0 : -1.0);
+            } else {
+                return 0;
+            }
         }
 
         @Override
