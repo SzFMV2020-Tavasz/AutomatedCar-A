@@ -108,10 +108,7 @@ public interface IVector {
 
             @Override public double getRadiansRelativeTo(IVector direction) {
                 double xRads = direction.getRadiansRelativeTo(Axis.X);
-                double relativeRads  = (getRadiansRelativeToAxisX() - xRads) % (2 * PI);
-                while (relativeRads < -PI) relativeRads += 2*PI;
-                while (relativeRads > PI) relativeRads -= 2*PI;
-                return relativeRads;
+                return inPeriodOfPI(getRadiansRelativeToAxisX() - xRads);
             }
 
             @Override public double getRadiansRelativeTo(Axis axis) {
@@ -179,6 +176,22 @@ public interface IVector {
      * @return A new vector rotated by the given gradians.*/
     default IVector rotateByGradians(double grads) {
         return rotateByRadians(grads / 200 * PI);
+    }
+
+    /**Puts the given radian value within the bounds of {@code -}{@link Math#PI PI} to {@code +}{@link Math#PI PI}.
+     * @return Value between {@code -}{@link Math#PI PI} and {@code +}{@link Math#PI PI} (both inclusive).*/
+    private static double inPeriodOfPI(double radians) {
+        radians = radians % (2 * PI);
+
+        while (radians < -PI) {
+            radians += 2*PI;
+        }
+
+        while (radians > PI) {
+            radians -= 2*PI;
+        }
+
+        return radians;
     }
 
 }
