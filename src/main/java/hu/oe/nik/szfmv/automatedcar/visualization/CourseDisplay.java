@@ -31,6 +31,7 @@ public class CourseDisplay extends JPanel {
         setBounds(0, 0, width, height);
         setBackground(new Color(backgroundColor));
         parent = pt;
+
     }
 
 
@@ -80,13 +81,16 @@ public class CourseDisplay extends JPanel {
             g2d.drawImage(object.getImage(), t, this);
 
             // draw debug polygons that are not selected individually.
-            for (Path2D poly : object.getDebugPolygons()) {
+            Path2D poly =  object.getDebugPolygon();
+            // check if the polygon actually exists
+            if (poly != null) {
                 if (displayWorld.isDebugOn() && !displayWorld.getDebugObjects().contains(object.getId())) {
                     runOfTheMillDebugPolygons.add(poly);
                 } else {
                     selectedDebugPolygons.add(poly);
                 }
             }
+
         }
 
         drawSensorsIfSet(g2d, displayWorld);
