@@ -41,4 +41,6 @@ public class World {
     public void addObjectToWorld(WorldObject o) {
         worldObjects.add(o);
     }
+
+    /***/
 }
