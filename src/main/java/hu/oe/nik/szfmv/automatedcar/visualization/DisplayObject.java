@@ -50,7 +50,8 @@ public class DisplayObject extends WorldObject {
 
     /**
      * The constructor of the DisplayObject class.
-     * @param worldObject the WorldObject which position should be calculated.
+     *
+     * @param worldObject  the WorldObject which position should be calculated.
      * @param automatedCar The AutomatedCar (egocar) that the DisplayObject should keep its relative position to.
      */
     public DisplayObject(final WorldObject worldObject, final AutomatedCar automatedCar) {
@@ -70,6 +71,7 @@ public class DisplayObject extends WorldObject {
     public int getRotationDisplacementX() {
         return this.rotationDisplacementX;
     }
+
     public int getRotationDisplacementY() {
         return this.rotationDisplacementY;
     }
@@ -77,6 +79,7 @@ public class DisplayObject extends WorldObject {
     /**
      * Gets the x component of the segment line connecting the image's upper left corner
      * and the refrence point
+     *
      * @return the distance X
      */
     public int getRefDifferenceX() {
@@ -86,6 +89,7 @@ public class DisplayObject extends WorldObject {
     /**
      * Gets the y component of the segment line connecting the image's upper left corner
      * and the refrence point
+     *
      * @return the distance Y
      */
     public int getRefDifferenceY() {
@@ -98,41 +102,33 @@ public class DisplayObject extends WorldObject {
 
     /**
      * This method calculates the position and rotation of the DisplayObject's debug polygon.
-     *
+     * <p>
      * Called by the constructor
      */
     private void loadDebugPolygon() {
-        try {
-            // Checking method existence because the method is not in the master as of this moment.
-            // May be removed later
-            Class<?> wo = Class.forName(getClass().getPackage().getName() + "." + "worldObject");
-            Method method = wo.getMethod("getPolygon", null);
 
-            Polygon origPoly = worldObject.getPolygon();
-            if (origPoly != null) {
-                // translation of polygon may not be needed later.
-                // this is a just-in-case transformation to make up for polygon and image reference point difference
-                // so even if it could be added to the next transformation, it is better to be kept separate
-                Point2D refPoint = VisualizationConfig.getReferencePoint(this.imageFileName);
-                // if we don't clone the polygon, the fix object's debug polygon will run away.
-                Polygon tempPoly = new Polygon(origPoly.xpoints, origPoly.ypoints, origPoly.npoints);
-                tempPoly.translate((int) -refPoint.getX(), (int) -refPoint.getY());
+        Polygon origPoly = worldObject.getPolygon();
+        if (origPoly != null) {
+            // translation of polygon may not be needed later.
+            // this is a just-in-case transformation to make up for polygon and image reference point difference
+            // so even if it could be added to the next transformation, it is better to be kept separate
+            Point2D refPoint = VisualizationConfig.getReferencePoint(this.imageFileName);
+            // if we don't clone the polygon, the fix object's debug polygon will run away.
+            Polygon tempPoly = new Polygon(origPoly.xpoints, origPoly.ypoints, origPoly.npoints);
+            tempPoly.translate((int) -refPoint.getX(), (int) -refPoint.getY());
 
-                Path2D poly = DisplayTransformation.repositionPolygon(worldObject.getX(), worldObject.getY(),
-                    (float) worldObject.getRotation(), tempPoly, automatedCar);
-                if (poly != null) {
-                    debugPolygon = poly;
-                }
+            Path2D poly = DisplayTransformation.repositionPolygon(worldObject.getX(), worldObject.getY(),
+                (float) worldObject.getRotation(), tempPoly, automatedCar);
+            if (poly != null) {
+                debugPolygon = poly;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
     }
 
     /**
      * This method calculates the position and rotation of the DisplayObject.
-     *
+     * <p>
      * Called by the constructor
      */
     private void calculatePosition() {
@@ -146,35 +142,35 @@ public class DisplayObject extends WorldObject {
         // Calculate the translation needed to move the automatedCar's reference point
         // to it's desired place
         Point2D carMovement =
-                new Point2D.Double(VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_X - automatedCar.getX() ,
-                         VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_Y - automatedCar.getY());
+            new Point2D.Double(VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_X - automatedCar.getX(),
+                VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_Y - automatedCar.getY());
 
         // Calculate the distance between the automatedCar's and the displayObject's reference points
         // (a.k.a.the position of the outer rotation point relative to the displayeObject's reference point)
         Point2D refPointDistance = new Point2D.Double(automatedCar.getX() - worldObject.getX(),
-                automatedCar.getY() - worldObject.getY());
+            automatedCar.getY() - worldObject.getY());
 
         // Calculate the displayObject's referenrence point's rotation around the automatedCar's reference point
-        AffineTransform  translateRefPoints = AffineTransform.getRotateInstance(rotationAngle ,
-                refPointDistance.getX(), refPointDistance.getY());
+        AffineTransform translateRefPoints = AffineTransform.getRotateInstance(rotationAngle,
+            refPointDistance.getX(), refPointDistance.getY());
 
         // Calculate the displayObject's reference point's displacement due to the difference between
         // the displayObject's reference point and the displayObject's image's rotation origo.
-        Point2D refPoint = VisualizationConfig.getReferencePoint (this.imageFileName);
-        AffineTransform fixRefPoint = AffineTransform.getRotateInstance(+ worldObject.getRotation()
-                       + rotationAngle, refPoint.getX(), refPoint.getY());
+        Point2D refPoint = VisualizationConfig.getReferencePoint(this.imageFileName);
+        AffineTransform fixRefPoint = AffineTransform.getRotateInstance(+worldObject.getRotation()
+            + rotationAngle, refPoint.getX(), refPoint.getY());
 
         // set the class values according to the calculations
-        this.x += (int)(Math.round(translateRefPoints.getTranslateX() + carMovement.getX()));
-        this.y += (int)(Math.round(translateRefPoints.getTranslateY() + carMovement.getY()));
+        this.x += (int) (Math.round(translateRefPoints.getTranslateX() + carMovement.getX()));
+        this.y += (int) (Math.round(translateRefPoints.getTranslateY() + carMovement.getY()));
 
-        this.rotation = (float)rotationAngle + worldObject.getRotation();
+        this.rotation = (float) rotationAngle + worldObject.getRotation();
 
-        this.rotationDisplacementX = (int)Math.round(fixRefPoint.getTranslateX());
-        this.rotationDisplacementY = (int)Math.round(fixRefPoint.getTranslateY());
+        this.rotationDisplacementX = (int) Math.round(fixRefPoint.getTranslateX());
+        this.rotationDisplacementY = (int) Math.round(fixRefPoint.getTranslateY());
 
-        this.refDifferenceX = (int)refPoint.getX();
-        this.refDifferenceY = (int)refPoint.getY();
+        this.refDifferenceX = (int) refPoint.getX();
+        this.refDifferenceY = (int) refPoint.getY();
     }
 
     private float getAngleFromRotationMatrix(float[][] matrix) {

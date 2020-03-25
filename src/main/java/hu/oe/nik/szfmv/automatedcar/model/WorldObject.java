@@ -133,6 +133,11 @@ public class WorldObject {
         return this.image;
     }
 
+    // will be added later by team 2 but needed for
+    public Polygon getPolygon(){
+        return null;
+    }
+
     public void initImage() {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
