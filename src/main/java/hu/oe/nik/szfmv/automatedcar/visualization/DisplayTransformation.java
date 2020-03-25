@@ -117,7 +117,7 @@ public final class DisplayTransformation {
         // rotate and translate the the polygon with the calculated rotation
         AffineTransform t = new AffineTransform();
         t.translate(refX, refY);
-        t.rotate(rotationAngle - rotation);
+        t.rotate(rotationAngle + rotation);
         Path2D rotatedPolygon = (Path2D.Double) t.createTransformedShape(polygon);
 
         return rotatedPolygon;

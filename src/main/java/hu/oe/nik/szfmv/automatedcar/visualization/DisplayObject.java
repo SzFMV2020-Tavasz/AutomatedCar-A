@@ -1,13 +1,15 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
+import hu.oe.nik.szfmv.automatedcar.Main;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.AffineTransform;
-import java.util.ArrayList;
 
 /**
  * Class for handling the objects to be displayed.
@@ -16,7 +18,7 @@ import java.util.ArrayList;
  * regardless of the egocar's rotation and position.
  */
 public class DisplayObject extends WorldObject {
-
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
     /**
      * The translation values needed for fixing the position difference caused by the difference between
      * the displayObject's reference point and the displayObject's image's rotation origo.
@@ -42,16 +44,8 @@ public class DisplayObject extends WorldObject {
     /**
      * temporary data for testing polylines
      */
-    protected int[] tempRoad2Lane90RightPolygonXs =
-        {176, 159, 143, 127, 111, 96, 81, 67, 54, 42, 30, 20, 11, 4, -3, -8, -11, -13, -14,
-            -13, -11, -8, -3, 4, 11, 20, 30, 42, 54, 67, 81, 96, 111, 127, 143, 159};
-    protected int[] tempRoad2Lane90RightPolygonYs =
-        {-190, -189, -187, -184, -179, -172, -165, -156, -146, -134, -122, -109, -95, -80, -65, -49, -33, -17, 0,
-            -17, -33, -49, -65, -80, -95, -109, -122, -134, -146, -156, -165, -172, -179, -184, -187, -189};
 
-    protected Polygon tempRoad2Lane90RightPolygonInner =
-        new Polygon(tempRoad2Lane90RightPolygonXs, tempRoad2Lane90RightPolygonYs, tempRoad2Lane90RightPolygonXs.length);
-    protected ArrayList<Path2D> debugPolygons;
+    protected Path2D debugPolygon;
 
     /**
      * The constructor of the DisplayObject class.
@@ -69,8 +63,7 @@ public class DisplayObject extends WorldObject {
         }
         this.z = worldObject.getZ();
         calculatePosition();
-        createDebugPolygonList();
-
+        loadDebugPolygon();
     }
 
     public int getRotationDisplacementX() {
@@ -98,55 +91,31 @@ public class DisplayObject extends WorldObject {
         return this.refDifferenceY;
     }
 
-    public ArrayList<Path2D> getDebugPolygons() {
-        return debugPolygons;
+    public Path2D getDebugPolygon() {
+        return debugPolygon;
     }
 
     /**
-     * Initializing the polygon list
+     * This method calculates the position and rotation of the DisplayObject's debug polygon.
      *
-     * It needs to be a list, because usually there are more then one polygons to draw for a WorldObject.
+     * Called by the constructor
      */
-    private void createDebugPolygonList() {
-        debugPolygons = new ArrayList<>();
-        Path2D poly = getTestPolygon();
-        if (poly != null) {
-            debugPolygons.add(poly);
-        }
-    }
+    private void loadDebugPolygon() {
+        Polygon origPoly = worldObject.getPolygon();
+        if (origPoly != null) {
+            // translation of polygon may not be needed later.
+            // this is a just-in-case transformation to make up for polygon and image reference point difference
+            // so even if it could be added to the next transformation, it is better to be kept separate
+            Point2D refPoint = VisualizationConfig.getReferencePoint(this.imageFileName);
+            // if we don't clone the polygon, the fix object's debug polygon will run away.
+            Polygon tempPoly = new Polygon(origPoly.xpoints, origPoly.ypoints, origPoly.npoints);
+            tempPoly.translate ((int) -refPoint.getX(), (int) -refPoint.getY());
 
-    /**
-     * Only works for the road_2lane_90right.png
-     * @return the rotated and translated Path2D element
-     */
-    private Path2D getTestPolygon() {
-        // only draw for the element it has polygons for
-        if (this.getImageFileName().equals("road_2lane_90right.png")) {
-
-            // Calculate the translation needed to move the automatedCar's reference point
-            // to it's desired place
-            Point2D carMovement =
-                new Point2D.Double(VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_X - automatedCar.getX() ,
-                    VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_Y - automatedCar.getY());
-
-            // Calculate the translation needed to move the automatedCar's reference point
-            // to it's desired place
-            Point2D translation =
-                new Point2D.Double(this.getX() - worldObject.getX(), this.getY() - worldObject.getY());
-
-            // calculate the rotation between the image's original and target orientation
-            double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION -
-                automatedCar.getRotation() + worldObject.getRotation();
-
-            // rotate and translate the the polygon with the calculated rotation
-            AffineTransform t = new AffineTransform();
-            t.translate(this.getX(), this.getY());
-            t.rotate(rotationAngle);
-            Path2D rotated = (Path2D.Double)t.createTransformedShape(tempRoad2Lane90RightPolygonInner);
-
-            return rotated;
-        } else {
-            return null;
+            Path2D poly = DisplayTransformation.repositionPolygon(worldObject.getX(), worldObject.getY(),
+                (float) worldObject.getRotation(), tempPoly, automatedCar);
+            if (poly != null) {
+                debugPolygon = poly;
+            }
         }
     }
 

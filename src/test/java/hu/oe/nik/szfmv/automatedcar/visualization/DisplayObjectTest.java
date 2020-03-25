@@ -1,13 +1,11 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
-import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.awt.geom.Path2D;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -15,32 +13,34 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class DisplayObjectTest {
 
     private MockDisplayObject displayObject;
-    private WorldObject worldObject;
+    private MockWorldObject worldObject;
     private AutomatedCar automatedCar;
     private int numberOfDecimals = 3;
     private int forPrecision = (int)Math.pow(10, numberOfDecimals);
 
     /**
-     * Extending class with methods for testing private parameters
+     * Extending classes with methods for testing private parameters
      */
-    class MockDisplayObject extends DisplayObject
-    {
-        MockDisplayObject(WorldObject worldObject, AutomatedCar automatedCar)
-        {
-            super (worldObject, automatedCar);
+    class MockWorldObject extends WorldObject {
+        MockWorldObject(int width, int height, String fileName) {
+            super (width, height, fileName);
         }
 
-        float getWorldObjectRotation()
-        {
-            return worldObject.getRotation();
-        }
-
-        void setPolygons()
-        {
-            tempRoad2Lane90RightPolygonInner = new Polygon( new int[]{10}, new int[]{20}, 1 );
+        @Override
+        public Polygon getPolygon() {
+            return new Polygon(new int[]{10}, new int[]{20}, 1);
         }
     }
 
+    class MockDisplayObject extends DisplayObject {
+        MockDisplayObject(WorldObject worldObject, AutomatedCar automatedCar) {
+            super (worldObject, automatedCar);
+        }
+
+        float getWorldObjectRotation() {
+            return worldObject.getRotation();
+        }
+    }
     /**
      * Setting up the test.
      */
@@ -49,7 +49,7 @@ public class DisplayObjectTest {
         VisualizationConfig.loadReferencePoints("reference_points.xml");
         automatedCar = new AutomatedCar(292, 230, "car_2_red.png");
         automatedCar.setRotation(-(float) Math.PI / 4) ;  // 45 +
-        worldObject = new WorldObject(399, 540, "road_2lane_90right.png");
+        worldObject = new MockWorldObject(399, 540, "road_2lane_90right.png");
         displayObject = new MockDisplayObject(worldObject, automatedCar);
 
     }
@@ -78,8 +78,8 @@ public class DisplayObjectTest {
      */
     @Test
     public void rotation() {
-        assertEquals((float) Math.round(Math.PI / 4  * forPrecision)/forPrecision,
-                (float)Math.round(displayObject.getRotation() * forPrecision)/forPrecision);
+        assertEquals((float) Math.round(Math.PI / 4  * forPrecision) / forPrecision,
+                (float)Math.round(displayObject.getRotation() * forPrecision) / forPrecision);
     }
 
     /**
@@ -96,8 +96,7 @@ public class DisplayObjectTest {
      * Check whether the displayObject's reference point xy values are right
      */
     @Test
-    public void referencePoint()
-    {
+    public void referencePoint() {
         assertEquals(349, displayObject.getRefDifferenceX());
         assertEquals(525, displayObject.getRefDifferenceY());
     }
@@ -110,10 +109,10 @@ public class DisplayObjectTest {
     @Test
     public void checkConversionRotationMatrixToMatrixSinPos() {
         // Setting up different rotation from matrix
-        worldObject.setRotationMatrix( new float[][]{{-0.7071f, 0.7071f},{-0.7071f, -0.7071f}});
+        worldObject.setRotationMatrix(new float[][]{{-0.7071f, 0.7071f}, {-0.7071f, -0.7071f}});
         displayObject = new MockDisplayObject(worldObject, automatedCar);
         assertEquals(Math.round(Math.PI / 4 * 5 * forPrecision) / (float) forPrecision,
-            Math.round(( -displayObject.getWorldObjectRotation()) * forPrecision) / (float) forPrecision);
+            Math.round((-displayObject.getWorldObjectRotation()) * forPrecision) / (float) forPrecision);
     }
 
     /**
@@ -124,7 +123,7 @@ public class DisplayObjectTest {
     @Test
     public void checkConversionRotationMatrixToMatrixSinNeg() {
         // Setting up different rotation from matrix
-        worldObject.setRotationMatrix( new float[][]{{0.7071f, -0.7071f},{0.7071f, 0.7071f}});
+        worldObject.setRotationMatrix (new float[][]{{0.7071f, -0.7071f}, {0.7071f, 0.7071f}});
         displayObject = new MockDisplayObject(worldObject, automatedCar);
         assertEquals(Math.round(Math.PI / 4  * forPrecision) / (float) forPrecision,
             Math.round((-displayObject.getWorldObjectRotation()) * forPrecision) / (float) forPrecision);
@@ -134,11 +133,11 @@ public class DisplayObjectTest {
      * Checks the calculated display polygon rotation and orientation
       */
     @Test
-    public void checkPolygonRotationResults(){
-        assertEquals(499, Math.round(displayObject.getDebugPolygons().get(0).getCurrentPoint().getX()
-            * forPrecision) /forPrecision);
-        assertEquals(635, Math.round(displayObject.getDebugPolygons().get(0).getCurrentPoint().getY()
-            * forPrecision) /forPrecision);
+    public void checkPolygonRotationResults() {
+        assertEquals(358, Math.round(displayObject.getDebugPolygon().getCurrentPoint().getX()
+            * forPrecision) / forPrecision);
+        assertEquals(48, Math.round(displayObject.getDebugPolygon().getCurrentPoint().getY()
+            * forPrecision) / forPrecision);
     }
 
 }
