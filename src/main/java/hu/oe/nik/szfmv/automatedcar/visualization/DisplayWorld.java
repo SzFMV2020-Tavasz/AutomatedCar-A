@@ -84,10 +84,10 @@ public class DisplayWorld {
 
         // loop through the fix objects and create their DisplayObjects
         for (WorldObject obj : fixWorldObjects) {
-            if (obj.getX() - automatedCar.getX() < 1000) {
+
                 DisplayObject dispObj = new DisplayObject(obj, automatedCar);
                 returnList.add(dispObj);
-            }
+
         }
 
         // refresh dynamic objects
@@ -106,6 +106,17 @@ public class DisplayWorld {
         returnList.add(egoCar);
 
         return returnList;
+    }
+
+    /**
+     * Get the translated and rotated egocar.
+     *
+     * Method is done separately to fix display order.
+     * @return the DisplayObject containing the egocar.
+     */
+    public DisplayObject getEgoCar() {
+        DisplayObject egoCar = new DisplayObject(automatedCar, automatedCar);
+        return egoCar;
     }
 
     public void setShowCamera(boolean showCamera) {
@@ -151,21 +162,6 @@ public class DisplayWorld {
         for (String id : objIDList) {
             if (!debugObjects.contains(id)) {
                 debugObjects.add(id);
-            }
-        }
-    }
-
-    /**
-     * removes the object names to the list of object IDs of the objects that should be shown lined with a polygon
-     *
-     * Does not check for valid IDs - if the ID is not valid, it wont be turned off
-     *
-     * @param objIDList the object id list to add
-     */
-    public void remmoveObjectsToDebug(List<String> objIDList) {
-        for (String id : objIDList) {
-            if (debugObjects.contains(id)) {
-                debugObjects.remove(id);
             }
         }
     }

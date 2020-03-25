@@ -74,11 +74,7 @@ public class CourseDisplay extends JPanel {
         ArrayList<Path2D> selectedDebugPolygons = new ArrayList<>();
 
         for (DisplayObject object : displayWorld.getDisplayObjects()) {
-            AffineTransform t = new AffineTransform();
-            t.translate(object.getX() + object.getRotationDisplacementX() - object.getRefDifferenceX(),
-                    object.getY() + object.getRotationDisplacementY() - object.getRefDifferenceY());
-            t.rotate(object.getRotation());
-            g2d.drawImage(object.getImage(), t, this);
+           drawDisplayObject(g2d, object);
 
             // draw debug polygons that are not selected individually.
             Path2D poly =  object.getDebugPolygon();
@@ -90,13 +86,22 @@ public class CourseDisplay extends JPanel {
                     selectedDebugPolygons.add(poly);
                 }
             }
-
         }
 
-        drawSensorsIfSet(g2d, displayWorld);
+        drawPolygon(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
+
+        drawDisplayObject(g2d, displayWorld.getEgoCar());
 
         // needs to be drawn last so it shows above everything
-        drawPolygon(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
+        drawSensorsIfSet(g2d, displayWorld);
+    }
+
+    private void drawDisplayObject(Graphics2D g2d, DisplayObject object) {
+        AffineTransform t = new AffineTransform();
+        t.translate(object.getX() + object.getRotationDisplacementX() - object.getRefDifferenceX(),
+            object.getY() + object.getRotationDisplacementY() - object.getRefDifferenceY());
+        t.rotate(object.getRotation());
+        g2d.drawImage(object.getImage(), t, this);
     }
 
     /**
