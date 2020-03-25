@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.AffineTransform;
+import java.lang.reflect.Method;
 
 /**
  * Class for handling the objects to be displayed.
@@ -101,22 +102,32 @@ public class DisplayObject extends WorldObject {
      * Called by the constructor
      */
     private void loadDebugPolygon() {
-        Polygon origPoly = worldObject.getPolygon();
-        if (origPoly != null) {
-            // translation of polygon may not be needed later.
-            // this is a just-in-case transformation to make up for polygon and image reference point difference
-            // so even if it could be added to the next transformation, it is better to be kept separate
-            Point2D refPoint = VisualizationConfig.getReferencePoint(this.imageFileName);
-            // if we don't clone the polygon, the fix object's debug polygon will run away.
-            Polygon tempPoly = new Polygon(origPoly.xpoints, origPoly.ypoints, origPoly.npoints);
-            tempPoly.translate ((int) -refPoint.getX(), (int) -refPoint.getY());
+        try {
+            // Checking method existence because the method is not in the master as of this moment.
+            // May be removed later
+            Class<?> wo = Class.forName(getClass().getPackage().getName() + "." + "worldObject");
+            Method method = wo.getMethod("getPolygon", null);
 
-            Path2D poly = DisplayTransformation.repositionPolygon(worldObject.getX(), worldObject.getY(),
-                (float) worldObject.getRotation(), tempPoly, automatedCar);
-            if (poly != null) {
-                debugPolygon = poly;
+            Polygon origPoly = worldObject.getPolygon();
+            if (origPoly != null) {
+                // translation of polygon may not be needed later.
+                // this is a just-in-case transformation to make up for polygon and image reference point difference
+                // so even if it could be added to the next transformation, it is better to be kept separate
+                Point2D refPoint = VisualizationConfig.getReferencePoint(this.imageFileName);
+                // if we don't clone the polygon, the fix object's debug polygon will run away.
+                Polygon tempPoly = new Polygon(origPoly.xpoints, origPoly.ypoints, origPoly.npoints);
+                tempPoly.translate((int) -refPoint.getX(), (int) -refPoint.getY());
+
+                Path2D poly = DisplayTransformation.repositionPolygon(worldObject.getX(), worldObject.getY(),
+                    (float) worldObject.getRotation(), tempPoly, automatedCar);
+                if (poly != null) {
+                    debugPolygon = poly;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     /**
