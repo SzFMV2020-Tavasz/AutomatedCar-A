@@ -97,10 +97,11 @@ public class CourseDisplay extends JPanel {
     }
 
     private void drawDisplayObject(Graphics2D g2d, DisplayObject object) {
+        DisplayImageData didObject = object.getDisplayImageData();
         AffineTransform t = new AffineTransform();
-        t.translate(object.getX() + object.getRotationDisplacementX() - object.getRefDifferenceX(),
-            object.getY() + object.getRotationDisplacementY() - object.getRefDifferenceY());
-        t.rotate(object.getRotation());
+        t.translate(didObject.getX() + didObject.getRotationDisplacementX() - didObject.getRefDifferenceX(),
+            didObject.getY() + didObject.getRotationDisplacementY() - didObject.getRefDifferenceY());
+        t.rotate(didObject.getRotation());
         g2d.drawImage(object.getImage(), t, this);
     }
 

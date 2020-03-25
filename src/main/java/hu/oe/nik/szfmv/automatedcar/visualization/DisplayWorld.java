@@ -84,10 +84,8 @@ public class DisplayWorld {
 
         // loop through the fix objects and create their DisplayObjects
         for (WorldObject obj : fixWorldObjects) {
-
-                DisplayObject dispObj = new DisplayObject(obj, automatedCar);
-                returnList.add(dispObj);
-
+            DisplayObject dispObj = new DisplayObject(obj, automatedCar);
+            returnList.add(dispObj);
         }
 
         // refresh dynamic objects

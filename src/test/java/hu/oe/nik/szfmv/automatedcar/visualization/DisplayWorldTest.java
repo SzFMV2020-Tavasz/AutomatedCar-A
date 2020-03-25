@@ -119,10 +119,10 @@ public class DisplayWorldTest {
 
     @Test
     public void showEgoCar() {
-        DisplayObject egocar = displayWorld.getEgoCar();
-        assertEquals(385, egocar.getX());
-        assertEquals(350, egocar.getY());
-        assertEquals(0, egocar.getRotation());
+        DisplayImageData egocarDisplayImageData = displayWorld.getEgoCar().getDisplayImageData();
+        assertEquals(385, egocarDisplayImageData.getX());
+        assertEquals(350, egocarDisplayImageData.getY());
+        assertEquals(0, egocarDisplayImageData.getRotation());
     }
 
 }

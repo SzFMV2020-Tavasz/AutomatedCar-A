@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.AffineTransform;
-import java.lang.reflect.Method;
 
 /**
  * Class for handling the objects to be displayed.
@@ -20,18 +18,6 @@ import java.lang.reflect.Method;
  */
 public class DisplayObject extends WorldObject {
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
-    /**
-     * The translation values needed for fixing the position difference caused by the difference between
-     * the displayObject's reference point and the displayObject's image's rotation origo.
-     */
-    protected int rotationDisplacementX;
-    protected int rotationDisplacementY;
-
-    /**
-     * The translation needed to move from the image upper left corner to the image reference point
-     */
-    protected int refDifferenceX;
-    protected int refDifferenceY;
 
     /**
      * Original worldObject stored for accessing its values
@@ -43,10 +29,11 @@ public class DisplayObject extends WorldObject {
     protected AutomatedCar automatedCar;
 
     /**
-     * temporary data for testing polylines
+     * Debug polygon of the DisplayObject
      */
-
     protected Path2D debugPolygon;
+
+    protected DisplayImageData displayImageData;
 
     /**
      * The constructor of the DisplayObject class.
@@ -68,34 +55,10 @@ public class DisplayObject extends WorldObject {
         loadDebugPolygon();
     }
 
-    public int getRotationDisplacementX() {
-        return this.rotationDisplacementX;
-    }
-
-    public int getRotationDisplacementY() {
-        return this.rotationDisplacementY;
-    }
-
     /**
-     * Gets the x component of the segment line connecting the image's upper left corner
-     * and the refrence point
-     *
-     * @return the distance X
+     * Gets the rotated and translated debugpolygon
+     * @return Path2d object representint the debugpolygon in its intended place
      */
-    public int getRefDifferenceX() {
-        return this.refDifferenceX;
-    }
-
-    /**
-     * Gets the y component of the segment line connecting the image's upper left corner
-     * and the refrence point
-     *
-     * @return the distance Y
-     */
-    public int getRefDifferenceY() {
-        return this.refDifferenceY;
-    }
-
     public Path2D getDebugPolygon() {
         return debugPolygon;
     }
@@ -123,7 +86,14 @@ public class DisplayObject extends WorldObject {
                 debugPolygon = poly;
             }
         }
+    }
 
+    /**
+     * Gets the DisplayImageData of the rotated and translated DisplayObject in one go
+     * @return the {@link DisplayImageData} object holding the display information
+     */
+    DisplayImageData getDisplayImageData() {
+        return displayImageData;
     }
 
     /**
@@ -132,45 +102,8 @@ public class DisplayObject extends WorldObject {
      * Called by the constructor
      */
     private void calculatePosition() {
-        // Move the displayObject to the point where it would be
-        // if the automatedCar would be at the center of the screen
-
-        // Calculate the rotation needed to change the automatedCar's orientation
-        // to the desired orientation
-        double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION - automatedCar.getRotation();
-
-        // Calculate the translation needed to move the automatedCar's reference point
-        // to it's desired place
-        Point2D carMovement =
-            new Point2D.Double(VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_X - automatedCar.getX(),
-                VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_Y - automatedCar.getY());
-
-        // Calculate the distance between the automatedCar's and the displayObject's reference points
-        // (a.k.a.the position of the outer rotation point relative to the displayeObject's reference point)
-        Point2D refPointDistance = new Point2D.Double(automatedCar.getX() - worldObject.getX(),
-            automatedCar.getY() - worldObject.getY());
-
-        // Calculate the displayObject's referenrence point's rotation around the automatedCar's reference point
-        AffineTransform translateRefPoints = AffineTransform.getRotateInstance(rotationAngle,
-            refPointDistance.getX(), refPointDistance.getY());
-
-        // Calculate the displayObject's reference point's displacement due to the difference between
-        // the displayObject's reference point and the displayObject's image's rotation origo.
-        Point2D refPoint = VisualizationConfig.getReferencePoint(this.imageFileName);
-        AffineTransform fixRefPoint = AffineTransform.getRotateInstance(+worldObject.getRotation()
-            + rotationAngle, refPoint.getX(), refPoint.getY());
-
-        // set the class values according to the calculations
-        this.x += (int) (Math.round(translateRefPoints.getTranslateX() + carMovement.getX()));
-        this.y += (int) (Math.round(translateRefPoints.getTranslateY() + carMovement.getY()));
-
-        this.rotation = (float) rotationAngle + worldObject.getRotation();
-
-        this.rotationDisplacementX = (int) Math.round(fixRefPoint.getTranslateX());
-        this.rotationDisplacementY = (int) Math.round(fixRefPoint.getTranslateY());
-
-        this.refDifferenceX = (int) refPoint.getX();
-        this.refDifferenceY = (int) refPoint.getY();
+        displayImageData = DisplayTransformation.repositionImage(worldObject.getX(), worldObject.getY(),
+            worldObject.getRotation(), worldObject.getImageFileName(), automatedCar);
     }
 
     private float getAngleFromRotationMatrix(float[][] matrix) {

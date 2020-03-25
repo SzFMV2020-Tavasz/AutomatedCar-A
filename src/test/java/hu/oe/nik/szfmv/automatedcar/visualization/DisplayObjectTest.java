@@ -17,6 +17,7 @@ public class DisplayObjectTest {
     private AutomatedCar automatedCar;
     private int numberOfDecimals = 3;
     private int forPrecision = (int)Math.pow(10, numberOfDecimals);
+    DisplayImageData displayImageData;
 
     /**
      * Extending classes with methods for testing private parameters
@@ -51,7 +52,7 @@ public class DisplayObjectTest {
         automatedCar.setRotation(-(float) Math.PI / 4) ;  // 45 +
         worldObject = new MockWorldObject(399, 540, "road_2lane_90right.png");
         displayObject = new MockDisplayObject(worldObject, automatedCar);
-
+        displayImageData = displayObject.getDisplayImageData();
     }
 
     /**
@@ -68,8 +69,8 @@ public class DisplayObjectTest {
      */
     @Test
     public void relativePosition() {
-        assertEquals(241, displayObject.getX());
-        assertEquals(645, displayObject.getY());
+        assertEquals(241, displayImageData .getX());
+        assertEquals(645, displayImageData.getY());
     }
 
     /**
@@ -79,7 +80,7 @@ public class DisplayObjectTest {
     @Test
     public void rotation() {
         assertEquals((float) Math.round(Math.PI / 4  * forPrecision) / forPrecision,
-                (float)Math.round(displayObject.getRotation() * forPrecision) / forPrecision);
+                (float)Math.round(displayImageData.getRotation() * forPrecision) / forPrecision);
     }
 
     /**
@@ -88,8 +89,8 @@ public class DisplayObjectTest {
      */
     @Test
     public void rotationDisplacement() {
-        assertEquals(473, displayObject.getRotationDisplacementX());
-        assertEquals(-93, displayObject.getRotationDisplacementY());
+        assertEquals(473, displayImageData.getRotationDisplacementX());
+        assertEquals(-93, displayImageData.getRotationDisplacementY());
     }
 
     /**
@@ -97,8 +98,8 @@ public class DisplayObjectTest {
      */
     @Test
     public void referencePoint() {
-        assertEquals(349, displayObject.getRefDifferenceX());
-        assertEquals(525, displayObject.getRefDifferenceY());
+        assertEquals(349, displayImageData.getRefDifferenceX());
+        assertEquals(525, displayImageData.getRefDifferenceY());
     }
 
     /**
