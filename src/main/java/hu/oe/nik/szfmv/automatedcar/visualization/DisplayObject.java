@@ -36,11 +36,6 @@ public class DisplayObject extends WorldObject {
     protected DisplayImageData displayImageData;
 
     /**
-     * Only for testing purposes
-     */
-    protected DisplayObject() {};
-
-    /**
      * The constructor of the DisplayObject class.
      *
      * @param worldObject  the WorldObject which position should be calculated.

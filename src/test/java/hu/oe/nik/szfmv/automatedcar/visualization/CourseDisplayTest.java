@@ -2,6 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.World;
+import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,12 +26,22 @@ public class CourseDisplayTest {
 
     class MockDisplayObject extends DisplayObject {
 
+        public MockDisplayObject() {
+            super ( new WorldObject(100, 100, "car_2_red.png"),
+                new AutomatedCar(0, 0, "car_2_red.png"));
+
+        }
+
         void setDisplayImageData(int x, int y) {
             displayImageData = new DisplayImageData(x, y, 0,
                 0, 0, 0, 0);
         }
 
+        @Override
+        public void initImage() {
+        }
 
+        @Override
         public BufferedImage  getImage() {
             BufferedImage bi = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
             int red = 0xFFFF0000;
@@ -63,8 +74,8 @@ public class CourseDisplayTest {
         bi = new BufferedImage(32, 16, BufferedImage.TYPE_INT_RGB);
         g2 = bi.createGraphics();
 
-        automatedCar = new AutomatedCar(292, 230, "car_2_red.png");
-        world = new World(1000, 800);
+        automatedCar = new AutomatedCar(0, 0, "car_2_red.png");
+        world = new World(100, 100);
         displayWorld = new MockDisplayWorld(world, automatedCar);
 
     }
