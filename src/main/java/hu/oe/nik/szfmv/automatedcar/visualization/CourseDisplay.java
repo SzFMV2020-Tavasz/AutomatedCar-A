@@ -74,7 +74,7 @@ public class CourseDisplay extends JPanel {
         ArrayList<Path2D> selectedDebugPolygons = new ArrayList<>();
 
         for (DisplayObject object : displayWorld.getDisplayObjects()) {
-           drawDisplayObject(g2d, object);
+            drawDisplayObject(g2d, object);
 
             // draw debug polygons that are not selected individually.
             Path2D poly =  object.getDebugPolygon();
