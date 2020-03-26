@@ -527,13 +527,13 @@ public class WorldObject {
                 this.polygon = Create2Lane45Polygon(true);
                 break;
             case "road_2lane_45right":
-                this.polygon = Create2Lane45Polygon(true);
+                this.polygon = Create2Lane45Polygon(false);
                 break;
             case "road_2lane_90left":
                 this.polygon = Create2Lane90Polygon(true);
                 break;
             case "road_2lane_90right":
-                this.polygon = Create2Lane90Polygon(true);
+                this.polygon = Create2Lane90Polygon(false);
                 break;
             case "road_2lane_rotary":
                 this.polygon = Create2LaneRotaryPolygon();
