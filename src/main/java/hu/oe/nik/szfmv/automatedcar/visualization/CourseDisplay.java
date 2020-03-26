@@ -68,7 +68,7 @@ public class CourseDisplay extends JPanel {
         paintComponent(getGraphics(), displayWorld);
     }
 
-    private void drawObjects(Graphics2D g2d, DisplayWorld displayWorld) {
+    protected void drawObjects(Graphics2D g2d, DisplayWorld displayWorld) {
 
         ArrayList<Path2D> runOfTheMillDebugPolygons = new ArrayList<>();
         ArrayList<Path2D> selectedDebugPolygons = new ArrayList<>();
