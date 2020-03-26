@@ -15,19 +15,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CourseDisplayTest {
-    Gui gui ;
-    CourseDisplay courseDisplay;
+    MockCourseDisplay courseDisplay;
     MockDisplayWorld displayWorld;
     AutomatedCar automatedCar;
     World world;
     BufferedImage bi;
     Graphics2D g2;
 
+    class MockCourseDisplay extends CourseDisplay {
+        MockCourseDisplay() {
+            super(null);
+        }
+    }
 
     class MockDisplayObject extends DisplayObject {
 
         public MockDisplayObject() {
-            super ( new WorldObject(100, 100, "car_2_red.png"),
+            super (new WorldObject(100, 100, "car_2_red.png"),
                 new AutomatedCar(0, 0, "car_2_red.png"));
 
         }
@@ -69,8 +73,8 @@ public class CourseDisplayTest {
 
     @BeforeEach
     public void init() {
-        gui = new Gui();
-        courseDisplay = new CourseDisplay(gui);
+
+        courseDisplay = new MockCourseDisplay();
         bi = new BufferedImage(32, 16, BufferedImage.TYPE_INT_RGB);
         g2 = bi.createGraphics();
 
@@ -79,7 +83,6 @@ public class CourseDisplayTest {
         displayWorld = new MockDisplayWorld(world, automatedCar);
 
     }
-
 
     /**
      * Check whether the class gets instatniatied when new DispLayWorld() called.
