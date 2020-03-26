@@ -118,10 +118,11 @@ public class DisplayWorldTest {
     }
 
     @Test
-    public void removeElementsToDebugList() {
-        displayWorld.remmoveObjectsToDebug(new ArrayList<>(Arrays.asList("id1", "id5")));
-
-        assertEquals(false, displayWorld.getDebugObjects().contains("id1"));
-        assertEquals(1, displayWorld.getDebugObjects().size());
+    public void showEgoCar() {
+        DisplayImageData egocarDisplayImageData = displayWorld.getEgoCar().getDisplayImageData();
+        assertEquals(385, egocarDisplayImageData.getX());
+        assertEquals(350, egocarDisplayImageData.getY());
+        assertEquals(0, egocarDisplayImageData.getRotation());
     }
+
 }

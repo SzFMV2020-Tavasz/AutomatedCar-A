@@ -31,6 +31,7 @@ public class CourseDisplay extends JPanel {
         setBounds(0, 0, width, height);
         setBackground(new Color(backgroundColor));
         parent = pt;
+
     }
 
 
@@ -67,20 +68,18 @@ public class CourseDisplay extends JPanel {
         paintComponent(getGraphics(), displayWorld);
     }
 
-    private void drawObjects(Graphics2D g2d, DisplayWorld displayWorld) {
+    protected void drawObjects(Graphics2D g2d, DisplayWorld displayWorld) {
 
         ArrayList<Path2D> runOfTheMillDebugPolygons = new ArrayList<>();
         ArrayList<Path2D> selectedDebugPolygons = new ArrayList<>();
 
         for (DisplayObject object : displayWorld.getDisplayObjects()) {
-            AffineTransform t = new AffineTransform();
-            t.translate(object.getX() + object.getRotationDisplacementX() - object.getRefDifferenceX(),
-                    object.getY() + object.getRotationDisplacementY() - object.getRefDifferenceY());
-            t.rotate(object.getRotation());
-            g2d.drawImage(object.getImage(), t, this);
+            drawDisplayObject(g2d, object);
 
             // draw debug polygons that are not selected individually.
-            for (Path2D poly : object.getDebugPolygons()) {
+            Path2D poly =  object.getDebugPolygon();
+            // check if the polygon actually exists
+            if (poly != null) {
                 if (displayWorld.isDebugOn() && !displayWorld.getDebugObjects().contains(object.getId())) {
                     runOfTheMillDebugPolygons.add(poly);
                 } else {
@@ -89,10 +88,21 @@ public class CourseDisplay extends JPanel {
             }
         }
 
-        drawSensorsIfSet(g2d, displayWorld);
+        drawPolygon(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
+
+        drawDisplayObject(g2d, displayWorld.getEgoCar());
 
         // needs to be drawn last so it shows above everything
-        drawPolygon(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
+        drawSensorsIfSet(g2d, displayWorld);
+    }
+
+    private void drawDisplayObject(Graphics2D g2d, DisplayObject object) {
+        DisplayImageData didObject = object.getDisplayImageData();
+        AffineTransform t = new AffineTransform();
+        t.translate(didObject.getX() + didObject.getRotationDisplacementX() - didObject.getRefDifferenceX(),
+            didObject.getY() + didObject.getRotationDisplacementY() - didObject.getRefDifferenceY());
+        t.rotate(didObject.getRotation());
+        g2d.drawImage(object.getImage(), t, this);
     }
 
     /**

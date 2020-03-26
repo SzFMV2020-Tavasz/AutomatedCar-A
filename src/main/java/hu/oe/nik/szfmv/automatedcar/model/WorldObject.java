@@ -40,6 +40,7 @@ public class WorldObject {
         this.rotationMatrix = new float[2][2];
     }
 
+
     public int getX() {
         return x;
     }
@@ -133,6 +134,11 @@ public class WorldObject {
         return this.image;
     }
 
+    // will be added later by team 2 but needed for
+    public Polygon getPolygon() {
+        return null;
+    }
+
     public void initImage() {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
@@ -145,8 +151,9 @@ public class WorldObject {
     }
 
     public void initObject() {
-        if (id == null)
+        if (id == null) {
             setId(type + "_" + (uid++));
+        }
         setImageFileName(this.type + ".png");
         initImage();
     }
