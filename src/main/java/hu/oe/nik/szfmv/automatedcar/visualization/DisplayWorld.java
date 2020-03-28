@@ -168,25 +168,10 @@ public class DisplayWorld {
      * @return true if the debug mode is on
      */
     public boolean isDebugOn() {
-        if (virtualFunctionBus.debugMode != null ) {
-            debugOn = virtualFunctionBus.debugMode.getDebuggingState();
+        if (virtualFunctionBus.debugModePacket != null ) {
+            debugOn = virtualFunctionBus.debugModePacket.getDebuggingState();
         }
         return debugOn;
-    }
-
-    /**
-     * Adds the object names to the list of object IDs that should be shown lined with a polygon.
-     *
-     * Does not check for valid IDs - if the ID is not valid, it wont be turned on
-     *
-     * @param objIDList the object id list to add
-     */
-    public void addObjectsToDebug(List<String> objIDList) {
-        for (String id : objIDList) {
-            if (!debugObjects.contains(id)) {
-                debugObjects.add(id);
-            }
-        }
     }
 
     /**
@@ -249,6 +234,10 @@ public class DisplayWorld {
      * @return
      */
     public List<String> getDebugObjects() {
+
+        if (virtualFunctionBus.selectedDebugListPacket != null) {
+            debugObjects = virtualFunctionBus.selectedDebugListPacket.getDebugList();
+        }
         return debugObjects;
     }
 }

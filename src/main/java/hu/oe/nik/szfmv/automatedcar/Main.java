@@ -6,9 +6,6 @@ import hu.oe.nik.szfmv.automatedcar.visualization.Gui;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Main {
 
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
@@ -46,7 +43,6 @@ public class Main {
         displayWorld.setShowCamera(true);
         displayWorld.setShowRadar(true);
         displayWorld.setShowUltrasound(true);
-        displayWorld.addObjectsToDebug(new ArrayList<String>(Arrays.asList("road_2lane_90right_24")));
 
         window = new Gui();
         window.setVirtualFunctionBus(car.getVirtualFunctionBus());

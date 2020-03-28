@@ -2,10 +2,13 @@ package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus;
 
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugMode;
+
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarVisualizationPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ISelectedDebugListPacket;
+
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IUltrasoundsVisualizationPacket;
 
 import java.util.ArrayList;
@@ -23,7 +26,8 @@ public class VirtualFunctionBus {
     public IRadarVisualizationPacket radarVisualizationPacket;
     public ICameraVisualizationPacket cameraVisualizationPacket;
     public IUltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
-    public DebugMode debugMode;
+    public DebugModePacket debugModePacket;
+    public ISelectedDebugListPacket selectedDebugListPacket;
 
     public List<WorldObject> worldObjects = new ArrayList<>();
 

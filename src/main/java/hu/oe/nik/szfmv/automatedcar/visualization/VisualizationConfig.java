@@ -50,6 +50,7 @@ public final class VisualizationConfig {
 
     // ultrasound sensors
     public static final int ULTRASOUND_SENSORS_COUNT = 8;
+    public static final int SENSOR_COLOR_ALPHA = 125;
 
     // debug mode color
     public static final Color RUN_OF_THE_MILL_DEBUG_COLOR = new Color(255, 0, 255);

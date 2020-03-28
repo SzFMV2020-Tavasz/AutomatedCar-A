@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DebugModeTest {
+public class DebugModePacketTest {
     AutomatedCar automatedCar;
-    DebugMode debugMode;
+    DebugModePacket debugModePacket;
 
     @BeforeEach
     public void init(){
         //AutomatedCar automatedCar = new AutomatedCar(200, 200, "car_2_red.png");
-        debugMode = new DebugMode();
-        debugMode.setDebuggingState(true);
+        debugModePacket = new DebugModePacket();
+        debugModePacket.setDebuggingState(true);
     }
 
     /**
@@ -23,7 +23,7 @@ public class DebugModeTest {
      */
     @Test
     public void classInstantiated() {
-        assertNotNull(debugMode);
+        assertNotNull(debugModePacket);
     }
 
     /**
@@ -31,6 +31,6 @@ public class DebugModeTest {
      */
     @Test
     public void settingPassed() {
-        assertEquals(true, debugMode.getDebuggingState());
+        assertEquals(true, debugModePacket.getDebuggingState());
     }
 }

@@ -1,12 +1,12 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization;
 
-public class DebugMode implements IDebugMode {
+public class DebugModePacket implements IDebugModePacket {
     private boolean debuggingModeState = false;
 
     /**
      * Debugging setting goes here
      */
-    public DebugMode() {
+    public DebugModePacket() {
     }
 
     /**

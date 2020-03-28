@@ -4,10 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugMode;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.CameraVisualizationPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundsVisualizationPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,8 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,9 +56,14 @@ public class DisplayWorldTest {
                 UltrasoundPositions.REAR_LEFT_SIDE, source, corner1, corner2);
             virtualFunctionBus.ultrasoundsVisualizationPacket = ultrasoundsVisualizationPacket;
 
-            DebugMode debugMode = new DebugMode();
-            debugMode.setDebuggingState(true);
-            virtualFunctionBus.debugMode = debugMode;
+            DebugModePacket debugModePacket = new DebugModePacket();
+            debugModePacket.setDebuggingState(true);
+            virtualFunctionBus.debugModePacket = debugModePacket;
+
+            SelectedDebugListPacket selectedDebugListPacket = new SelectedDebugListPacket();
+            selectedDebugListPacket.addDebugListElement("id1");
+            selectedDebugListPacket.addDebugListElement("id2");
+            virtualFunctionBus.selectedDebugListPacket = selectedDebugListPacket;
 
             return virtualFunctionBus;
         }
@@ -135,7 +135,6 @@ public class DisplayWorldTest {
             automatedCar.setRotation((float) Math.PI / 2);  // No rotation
 
             displayWorld = new DisplayWorld(mockWorld, automatedCar);
-            displayWorld.addObjectsToDebug(new ArrayList<String>(Arrays.asList("id1", "id2")));
         }
 
 
@@ -179,14 +178,6 @@ public class DisplayWorldTest {
         }
 
         @Test
-        public void addElementsToDebugList() {
-            displayWorld.addObjectsToDebug(new ArrayList<>(Arrays.asList("id4", "id5", "id1")));
-
-            assertEquals(true, displayWorld.getDebugObjects().contains("id5"));
-            assertEquals(4, displayWorld.getDebugObjects().size());
-        }
-
-        @Test
         public void showEgoCar() {
             DisplayImageData egocarDisplayImageData = displayWorld.getEgoCar().getDisplayImageData();
             assertEquals(385, egocarDisplayImageData.getX());
@@ -211,6 +202,12 @@ public class DisplayWorldTest {
             DisplaySensorObject[] dso = displayWorld.getDisplayUltrasounds();
             assertEquals(10, dso[3].source.getX());
         }
+
+        @Test void checkDebugListPacket() {
+            List<String> list = displayWorld.getDebugObjects();
+            assertEquals("id1", list.get(0));
+            assertEquals("id2", list.get(1));
+        }
     }
 
     @Nested
@@ -230,7 +227,6 @@ public class DisplayWorldTest {
             automatedCar.setRotation((float) Math.PI / 2);  // No rotation
 
             displayWorld = new DisplayWorld(mockWorld, automatedCar);
-            displayWorld.addObjectsToDebug(new ArrayList<String>(Arrays.asList("id1", "id2")));
         }
 
         @Test
