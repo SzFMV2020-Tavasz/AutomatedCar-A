@@ -6,6 +6,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.Debugging.DebugMo
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarVisualizationPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IUltrasoundsVisualizationPacket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class VirtualFunctionBus {
     public ReadOnlySamplePacket samplePacket;
     public IRadarVisualizationPacket radarVisualizationPacket;
     public ICameraVisualizationPacket cameraVisualizationPacket;
+    public IUltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
 
     public List<WorldObject> worldObjects = new ArrayList<>();
 
