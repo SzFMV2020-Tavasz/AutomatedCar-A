@@ -4,6 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.Debugging.DebugMode;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarVisualizationPacket;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,14 @@ import java.util.List;
 public class VirtualFunctionBus {
 
     public ReadOnlySamplePacket samplePacket;
+    public IRadarVisualizationPacket radarVisualizationPacket;
 
     public List<WorldObject> worldObjects = new ArrayList<>();
 
     private List<SystemComponent> components = new ArrayList<>();
 
-    private DebugMode DebugMode = new DebugMode();
+    private DebugMode debugMode = new DebugMode();
+    
 
     /**
      * Registers the provided {@link SystemComponent}
