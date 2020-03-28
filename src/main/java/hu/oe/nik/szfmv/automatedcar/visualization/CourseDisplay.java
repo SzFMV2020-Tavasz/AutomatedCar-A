@@ -125,53 +125,54 @@ public class CourseDisplay extends JPanel {
 
     private void drawSensorsIfSet(Graphics2D g2d, DisplayWorld displayWorld) {
         if (displayWorld.isCameraShown()) {
-            drawCameraSensor(g2d);
+            drawCameraSensor(g2d, displayWorld);
         }
 
         if (displayWorld.isRadarShown()) {
-            drawRadarSensor(g2d);
+            drawRadarSensor(g2d, displayWorld);
         }
 
         if (displayWorld.isUltrasoundShown()) {
-            drawUltraSoundSensor(g2d);
+            drawUltraSoundSensor(g2d, displayWorld);
         }
     }
 
-    private void drawCameraSensor(Graphics2D g2d) {
-
-        g2d.setColor(VisualizationConfig.CAMERA_SENSOR_BG_COLOUR);
-        g2d.fillPolygon(VisualizationConfig.camera_sensor_polygon);
-        g2d.setStroke(new BasicStroke(2));
-        g2d.setColor(Color.black);
-        g2d.drawPolygon(VisualizationConfig.camera_sensor_polygon);
-
-        g2d.setStroke(VisualizationConfig.SENZOR_CENTER_LINE);
-        g2d.draw(VisualizationConfig.camera_sensor_centerline);
+    private void drawCameraSensor(Graphics2D g2d, DisplayWorld displayWorld) {
+        DisplaySensorObject did = displayWorld.getDisplayCamera();
+        drawSensorTriangle(g2d, did, true);
     }
 
-    private void drawRadarSensor(Graphics2D g2d) {
-        g2d.setColor(VisualizationConfig.RADAR_SENSOR_BG_COLOUR);
-        g2d.fillPolygon(VisualizationConfig.radar_sensor_polygon);
-        g2d.setStroke(new BasicStroke(2));
-        g2d.setColor(Color.black);
-        g2d.drawPolygon(VisualizationConfig.radar_sensor_polygon);
+    private void drawRadarSensor(Graphics2D g2d, DisplayWorld displayWorld) {
 
-        g2d.setStroke(VisualizationConfig.SENZOR_CENTER_LINE);
-        g2d.draw(VisualizationConfig.radar_sensor_centerline);
+        DisplaySensorObject did = displayWorld.getDisplayRadar();
+        drawSensorTriangle(g2d, did, true);
     }
 
-    private void drawUltraSoundSensor(Graphics2D g2d) {
-        for (Polygon poly : VisualizationConfig.ultrasound_sensor_polygons) {
-            if (poly != null) {
-                g2d.setColor(VisualizationConfig.ULTRASOUND_SENSOR_BG_COLOUR);
-                g2d.fillPolygon(poly);
-                g2d.setStroke(new BasicStroke(2));
-                g2d.setColor(Color.black);
-                g2d.drawPolygon(poly);
-                g2d.setStroke(new BasicStroke(2));
-                g2d.setColor(Color.black);
-                g2d.drawPolygon(poly);
+    private void drawUltraSoundSensor(Graphics2D g2d, DisplayWorld displayWorld) {
+        DisplaySensorObject[] dids = displayWorld.getDisplayUltrasounds();
+        if (dids != null) {
+            for (DisplaySensorObject did : dids) {
+                drawSensorTriangle(g2d, did, false);
+            }
+        }
+    }
+
+    private void drawSensorTriangle(Graphics2D g2d, DisplaySensorObject did, boolean centerline) {
+        if (did != null) {
+            Shape sensorTriangle = did.getDisplaySensorTriangle();
+            Color cl = did.getSensorColor();
+            g2d.setStroke(new BasicStroke(2));
+            g2d.setColor(new Color(cl.getRed(), cl.getGreen(), cl.getRed(), 125));
+            g2d.fill(sensorTriangle);
+            g2d.setStroke(new BasicStroke(2));
+            g2d.setColor(Color.black);
+            g2d.draw(sensorTriangle);
+
+            if (centerline) {
+                g2d.setStroke(VisualizationConfig.SENSOR_CENTER_LINE);
+                g2d.draw(did.getSensorCenterLine());
             }
         }
     }
 }
+
