@@ -8,7 +8,7 @@ import java.awt.geom.Point2D;
 
 class DisplaySensorObject {
 
-    protected AutomatedCar automatedCar;
+    private AutomatedCar automatedCar;
     protected Point2D source;
     protected Point2D corner1;
     protected Point2D corner2;

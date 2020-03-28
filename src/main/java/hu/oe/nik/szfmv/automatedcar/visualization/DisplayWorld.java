@@ -4,11 +4,14 @@ import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.Main;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,6 +24,8 @@ import java.util.List;
 public class DisplayWorld {
 
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
+
+    final VirtualFunctionBus virtualFunctionBus;
 
     private List<WorldObject> fixWorldObjects;
     private List<WorldObject> dynamicWorldObjects;
@@ -35,6 +40,11 @@ public class DisplayWorld {
     private boolean debugOn;
     private List<String> debugObjects;
 
+    private DisplaySensorObject displayRadar;
+
+    private DisplaySensorObject displayCamera;
+    private DisplaySensorObject[] displayUltrasounds;
+
     /**
      * The constructor for the DisplayWorld class
      *
@@ -42,6 +52,7 @@ public class DisplayWorld {
      * @param automatedCar the {@link AutomatedCar} that has to be in the middle of the screen
      */
     public DisplayWorld(World world, AutomatedCar automatedCar) {
+        virtualFunctionBus = automatedCar.getVirtualFunctionBus();
         fixWorldObjects = new ArrayList<>();
         dynamicWorldObjects = new ArrayList<>();
         this.world = world;
@@ -49,7 +60,10 @@ public class DisplayWorld {
         getFixWorldObjectsFromWorld();
         getDynamicWorldObjectsFromWorld();
         VisualizationConfig.loadReferencePoints("reference_points.xml");
-        VisualizationConfig.calculateSensorPolygons();
+        displayCamera = new DisplaySensorObject(automatedCar);
+        displayRadar = new DisplaySensorObject(automatedCar);
+        displayUltrasounds = new DisplaySensorObject[VisualizationConfig.ULTRASOUND_SENSORS_COUNT];
+        Arrays.fill(displayUltrasounds, new DisplaySensorObject(automatedCar));
         showCamera = false;
         showRadar = false;
         showUltrasound = false;
@@ -78,7 +92,7 @@ public class DisplayWorld {
      *
      * @return List of DisplayObjects rotated and moved according to the egocar's position
      */
-    public List<DisplayObject> getDisplayObjects() {
+    List<DisplayObject> getDisplayObjects() {
 
         List<DisplayObject> returnList = new ArrayList<DisplayObject>();
 
@@ -133,6 +147,10 @@ public class DisplayWorld {
         this.debugOn = debugOn;
     }
 
+    /**
+     * Gets whether the camera's sensor triangle is shown or not
+     * @return true if the camera is shown
+     */
     public boolean isCameraShown() {
         return showCamera;
     }
@@ -141,10 +159,18 @@ public class DisplayWorld {
         return showRadar;
     }
 
+    /**
+     * Gets whether the ultrasound's sensor triangle is shown or not
+     * @return true if the ultraound is shown
+     */
     public boolean isUltrasoundShown() {
         return showUltrasound;
     }
 
+    /**
+     * Gets whether the Debug mode is on
+     * @return true if the debug mode is on
+     */
     public boolean isDebugOn() {
         return debugOn;
     }
@@ -161,6 +187,61 @@ public class DisplayWorld {
             if (!debugObjects.contains(id)) {
                 debugObjects.add(id);
             }
+        }
+    }
+
+    /**
+     * Gets the actual state of the DisplaySensorObject for the camera sensor
+     * @return a {@link DisplaySensorObject} containing the passed data
+     */
+    DisplaySensorObject getDisplayCamera() {
+        if (virtualFunctionBus.cameraVisualizationPacket != null) {
+            Point2D source = virtualFunctionBus.cameraVisualizationPacket.getSensorSource();
+            Point2D corner1 = virtualFunctionBus.cameraVisualizationPacket.getSensorCorner1();
+            Point2D corner2 = virtualFunctionBus.cameraVisualizationPacket.getSensorCorner2();
+            Color color = virtualFunctionBus.cameraVisualizationPacket.getColor();
+            displayCamera.setSensorTriangle(source, corner1, corner2);
+            displayCamera.setSensorColor(color);
+            return displayCamera;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gets the actual state of the DisplaySensorObject for the radar sensor
+     * @return a {@link DisplaySensorObject} containing the passed data
+     */
+    DisplaySensorObject getDisplayRadar() {
+        if (virtualFunctionBus.radarVisualizationPacket != null) {
+            Point2D source = virtualFunctionBus.radarVisualizationPacket.getSensorSource();
+            Point2D corner1 = virtualFunctionBus.radarVisualizationPacket.getSensorCorner1();
+            Point2D corner2 = virtualFunctionBus.radarVisualizationPacket.getSensorCorner2();
+            Color color = virtualFunctionBus.radarVisualizationPacket.getColor();
+            displayRadar.setSensorTriangle(source, corner1, corner2);
+            displayRadar.setSensorColor(color);
+            return displayRadar;
+        } else {
+            return null;
+        }
+
+    }
+
+    DisplaySensorObject[] getDisplayUltrasounds() {
+        if(virtualFunctionBus.ultrasoundsVisualizationPacket != null) {
+            Point2D[] sources = virtualFunctionBus.ultrasoundsVisualizationPacket.getSources();
+            Point2D[] corner1s = virtualFunctionBus.ultrasoundsVisualizationPacket.getCorner1s();
+            Point2D[] corner2s = virtualFunctionBus.ultrasoundsVisualizationPacket.getCorner2s();
+            Color color = virtualFunctionBus.ultrasoundsVisualizationPacket.getColor();
+            for (int i = 0; i < VisualizationConfig.ULTRASOUND_SENSORS_COUNT; i++) {
+                if (sources[i] != null) {
+                    displayUltrasounds[i].setSensorTriangle(sources[i], corner1s[i], corner2s[i]);
+                    displayUltrasounds[i].setSensorColor(color);
+                }
+            }
+            return displayUltrasounds;
+        } else {
+            return null;
         }
     }
 
