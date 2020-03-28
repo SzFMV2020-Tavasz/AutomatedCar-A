@@ -5,11 +5,14 @@ import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraVisualizationPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ISelectedDebugListPacket;
-
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IUltrasoundDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IUltrasoundsVisualizationPacket;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,9 @@ public class VirtualFunctionBus {
     public IUltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
     public DebugModePacket debugModePacket;
     public ISelectedDebugListPacket selectedDebugListPacket;
+    public ICameraDisplayStatePacket cameraDisplayStatePacket;
+    public IRadarDisplayStatePacket radarDisplayStatePacket;
+    public IUltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
 
     public List<WorldObject> worldObjects = new ArrayList<>();
 

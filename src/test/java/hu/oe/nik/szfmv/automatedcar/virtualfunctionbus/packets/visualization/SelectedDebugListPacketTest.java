@@ -49,6 +49,7 @@ public class SelectedDebugListPacketTest {
     /**
      * Checks whether element removed twice causes problem
      */
+    @Test
     public void elementRemovedTwice() {
         selectedDebugListPacket.removeDebugElement("ez");
         selectedDebugListPacket.removeDebugElement("ez");

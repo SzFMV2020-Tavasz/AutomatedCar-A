@@ -40,9 +40,6 @@ public class Main {
 
         // create the displayworld
         displayWorld = new DisplayWorld(world, car);
-        displayWorld.setShowCamera(true);
-        displayWorld.setShowRadar(true);
-        displayWorld.setShowUltrasound(true);
 
         window = new Gui();
         window.setVirtualFunctionBus(car.getVirtualFunctionBus());

@@ -4,7 +4,15 @@ import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.*;
+
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.CameraDisplayStatePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.CameraVisualizationPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarDisplayStatePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.SelectedDebugListPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundDisplayStatePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundsVisualizationPacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -56,6 +64,13 @@ public class DisplayWorldTest {
                 UltrasoundPositions.REAR_LEFT_SIDE, source, corner1, corner2);
             virtualFunctionBus.ultrasoundsVisualizationPacket = ultrasoundsVisualizationPacket;
 
+            debugPacketSets(virtualFunctionBus);
+            sensorStateSets(virtualFunctionBus);
+
+            return virtualFunctionBus;
+        }
+
+        private void debugPacketSets(VirtualFunctionBus virtualFunctionBus) {
             DebugModePacket debugModePacket = new DebugModePacket();
             debugModePacket.setDebuggingState(true);
             virtualFunctionBus.debugModePacket = debugModePacket;
@@ -64,8 +79,20 @@ public class DisplayWorldTest {
             selectedDebugListPacket.addDebugListElement("id1");
             selectedDebugListPacket.addDebugListElement("id2");
             virtualFunctionBus.selectedDebugListPacket = selectedDebugListPacket;
+        }
 
-            return virtualFunctionBus;
+        private void sensorStateSets(VirtualFunctionBus virtualFunctionBus) {
+            CameraDisplayStatePacket cameraDisplayStatePacket = new CameraDisplayStatePacket();
+            cameraDisplayStatePacket.setCameraDisplayState(true);
+            virtualFunctionBus.cameraDisplayStatePacket = cameraDisplayStatePacket;
+
+            RadarDisplayStatePacket radarDisplayStatePacket = new RadarDisplayStatePacket();
+            radarDisplayStatePacket.setRadarDisplayState(true);
+            virtualFunctionBus.radarDisplayStatePacket = radarDisplayStatePacket;
+
+            UltrasoundDisplayStatePacket ultrasoundDisplayStatePacket =  new UltrasoundDisplayStatePacket();
+            ultrasoundDisplayStatePacket.setUltrasoundDisplayState(true);
+            virtualFunctionBus.ultrasoundDisplayStatePacket = ultrasoundDisplayStatePacket;
         }
     }
 
@@ -161,19 +188,16 @@ public class DisplayWorldTest {
 
         @Test
         public void cameraSensorDisplayOn() {
-            displayWorld.setShowCamera(true);
             assertEquals(true, displayWorld.isCameraShown());
         }
 
         @Test
         public void radarSensorDisplayOn() {
-            displayWorld.setShowRadar(true);
             assertEquals(true, displayWorld.isRadarShown());
         }
 
         @Test
         public void ultrasSoundSensorDisplayOn() {
-            displayWorld.setShowUltrasound(true);
             assertEquals(true, displayWorld.isUltrasoundShown());
         }
 

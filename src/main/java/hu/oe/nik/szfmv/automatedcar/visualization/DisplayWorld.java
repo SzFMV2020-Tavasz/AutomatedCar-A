@@ -131,27 +131,21 @@ public class DisplayWorld {
         return egoCar;
     }
 
-    public void setShowCamera(boolean showCamera) {
-        this.showCamera = showCamera;
-    }
-
-    public void setShowRadar(boolean showRadar) {
-        this.showRadar = showRadar;
-    }
-
-    public void setShowUltrasound(boolean showUltrasound) {
-        this.showUltrasound = showUltrasound;
-    }
-
     /**
      * Gets whether the camera's sensor triangle is shown or not
      * @return true if the camera is shown
      */
     public boolean isCameraShown() {
+        if (virtualFunctionBus.cameraDisplayStatePacket != null) {
+            showCamera = virtualFunctionBus.cameraDisplayStatePacket.getCameraDisplayState();
+        }
         return showCamera;
     }
 
     public boolean isRadarShown() {
+        if (virtualFunctionBus.radarDisplayStatePacket != null) {
+            showRadar = virtualFunctionBus.radarDisplayStatePacket.getRadarDisplayState();
+        }
         return showRadar;
     }
 
@@ -160,6 +154,9 @@ public class DisplayWorld {
      * @return true if the ultraound is shown
      */
     public boolean isUltrasoundShown() {
+        if (virtualFunctionBus.ultrasoundDisplayStatePacket != null) {
+            showUltrasound = virtualFunctionBus.ultrasoundDisplayStatePacket.getUltrasoundDisplayState();
+        }
         return showUltrasound;
     }
 
@@ -168,7 +165,7 @@ public class DisplayWorld {
      * @return true if the debug mode is on
      */
     public boolean isDebugOn() {
-        if (virtualFunctionBus.debugModePacket != null ) {
+        if (virtualFunctionBus.debugModePacket != null) {
             debugOn = virtualFunctionBus.debugModePacket.getDebuggingState();
         }
         return debugOn;
@@ -212,15 +209,21 @@ public class DisplayWorld {
     }
 
     DisplaySensorObject[] getDisplayUltrasounds() {
-        if(virtualFunctionBus.ultrasoundsVisualizationPacket != null) {
+        if (virtualFunctionBus.ultrasoundsVisualizationPacket != null) {
             Point2D[] sources = virtualFunctionBus.ultrasoundsVisualizationPacket.getSources();
             Point2D[] corner1s = virtualFunctionBus.ultrasoundsVisualizationPacket.getCorner1s();
             Point2D[] corner2s = virtualFunctionBus.ultrasoundsVisualizationPacket.getCorner2s();
             Color color = virtualFunctionBus.ultrasoundsVisualizationPacket.getColor();
+
             for (int i = 0; i < VisualizationConfig.ULTRASOUND_SENSORS_COUNT; i++) {
+
+                displayUltrasounds[i] = null;
+
                 if (sources[i] != null) {
-                    displayUltrasounds[i].setSensorTriangle(sources[i], corner1s[i], corner2s[i]);
-                    displayUltrasounds[i].setSensorColor(color);
+                    DisplaySensorObject did = new DisplaySensorObject(automatedCar);
+                    did.setSensorTriangle(sources[i], corner1s[i], corner2s[i]);
+                    did.setSensorColor(color);
+                    displayUltrasounds[i] = did;
                 }
             }
             return displayUltrasounds;

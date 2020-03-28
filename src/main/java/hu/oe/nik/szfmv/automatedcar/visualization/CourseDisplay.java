@@ -162,7 +162,7 @@ public class CourseDisplay extends JPanel {
             Shape sensorTriangle = did.getDisplaySensorTriangle();
             Color cl = did.getSensorColor();
             g2d.setStroke(new BasicStroke(2));
-            g2d.setColor(new Color(cl.getRed(), cl.getGreen(), cl.getRed(), VisualizationConfig.SENSOR_COLOR_ALPHA));
+            g2d.setColor(new Color(cl.getRed(), cl.getGreen(), cl.getBlue(), VisualizationConfig.SENSOR_COLOR_ALPHA));
             g2d.fill(sensorTriangle);
             g2d.setStroke(new BasicStroke(2));
             g2d.setColor(Color.black);
