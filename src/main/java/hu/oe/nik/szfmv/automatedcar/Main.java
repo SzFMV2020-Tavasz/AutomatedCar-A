@@ -36,17 +36,16 @@ public class Main {
         world = new World(5000, 3000);
 
         // create an automated car
-        // car = new AutomatedCar(3522, 2316, "car_2_white.png");
+        car = new AutomatedCar(3522, 2316, "car_2_white.png");
         // car = new AutomatedCar(474, 669, "car_2_white.png");
-        car = new AutomatedCar(540, 1850, "car_2_white.png");
+        // car = new AutomatedCar(540, 1850, "car_2_white.png");
         car.setRotation(0);
 
         // create the displayworld
         displayWorld = new DisplayWorld(world, car);
         displayWorld.setShowCamera(true);
-        displayWorld.setShowRadar(false);
-        displayWorld.setShowUltrasound(false);
-        displayWorld.setDebugOn(true);
+        displayWorld.setShowRadar(true);
+        displayWorld.setShowUltrasound(true);
         displayWorld.addObjectsToDebug(new ArrayList<String>(Arrays.asList("road_2lane_90right_24")));
 
         window = new Gui();
