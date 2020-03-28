@@ -4,6 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugMode;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.CameraVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundsVisualizationPacket;
@@ -59,6 +60,10 @@ public class DisplayWorldTest {
             ultrasoundsVisualizationPacket.setSensorTriangle(
                 UltrasoundPositions.REAR_LEFT_SIDE, source, corner1, corner2);
             virtualFunctionBus.ultrasoundsVisualizationPacket = ultrasoundsVisualizationPacket;
+
+            DebugMode debugMode = new DebugMode();
+            debugMode.setDebuggingState(true);
+            virtualFunctionBus.debugMode = debugMode;
 
             return virtualFunctionBus;
         }
@@ -152,7 +157,6 @@ public class DisplayWorldTest {
 
         @Test
         public void debugModeSet() {
-            displayWorld.setDebugOn(true);
             assertEquals(true, displayWorld.isDebugOn());
         }
 

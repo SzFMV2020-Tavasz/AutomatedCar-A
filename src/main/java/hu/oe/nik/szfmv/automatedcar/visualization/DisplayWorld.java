@@ -143,10 +143,6 @@ public class DisplayWorld {
         this.showUltrasound = showUltrasound;
     }
 
-    public void setDebugOn(boolean debugOn) {
-        this.debugOn = debugOn;
-    }
-
     /**
      * Gets whether the camera's sensor triangle is shown or not
      * @return true if the camera is shown
@@ -172,6 +168,9 @@ public class DisplayWorld {
      * @return true if the debug mode is on
      */
     public boolean isDebugOn() {
+        if (virtualFunctionBus.debugMode != null ) {
+            debugOn = virtualFunctionBus.debugMode.getDebuggingState();
+        }
         return debugOn;
     }
 

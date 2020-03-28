@@ -2,7 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus;
 
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.Debugging.DebugMode;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugMode;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarVisualizationPacket;
@@ -23,13 +23,11 @@ public class VirtualFunctionBus {
     public IRadarVisualizationPacket radarVisualizationPacket;
     public ICameraVisualizationPacket cameraVisualizationPacket;
     public IUltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
+    public DebugMode debugMode;
 
     public List<WorldObject> worldObjects = new ArrayList<>();
 
     private List<SystemComponent> components = new ArrayList<>();
-
-    private DebugMode debugMode = new DebugMode();
-
 
     /**
      * Registers the provided {@link SystemComponent}

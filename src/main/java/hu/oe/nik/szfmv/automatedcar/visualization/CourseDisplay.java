@@ -82,7 +82,7 @@ public class CourseDisplay extends JPanel {
             if (poly != null) {
                 if (displayWorld.isDebugOn() && !displayWorld.getDebugObjects().contains(object.getId())) {
                     runOfTheMillDebugPolygons.add(poly);
-                } else {
+                } else if (displayWorld.getDebugObjects().contains(object.getId())) {
                     selectedDebugPolygons.add(poly);
                 }
             }
