@@ -31,6 +31,7 @@ public class CourseDisplay extends JPanel {
         setBounds(0, 0, width, height);
         setBackground(new Color(backgroundColor));
         parent = pt;
+
     }
 
 
@@ -67,32 +68,41 @@ public class CourseDisplay extends JPanel {
         paintComponent(getGraphics(), displayWorld);
     }
 
-    private void drawObjects(Graphics2D g2d, DisplayWorld displayWorld) {
+    protected void drawObjects(Graphics2D g2d, DisplayWorld displayWorld) {
 
         ArrayList<Path2D> runOfTheMillDebugPolygons = new ArrayList<>();
         ArrayList<Path2D> selectedDebugPolygons = new ArrayList<>();
 
         for (DisplayObject object : displayWorld.getDisplayObjects()) {
-            AffineTransform t = new AffineTransform();
-            t.translate(object.getX() + object.getRotationDisplacementX() - object.getRefDifferenceX(),
-                    object.getY() + object.getRotationDisplacementY() - object.getRefDifferenceY());
-            t.rotate(object.getRotation());
-            g2d.drawImage(object.getImage(), t, this);
+            drawDisplayObject(g2d, object);
 
             // draw debug polygons that are not selected individually.
-            for (Path2D poly : object.getDebugPolygons()) {
+            Path2D poly =  object.getDebugPolygon();
+            // check if the polygon actually exists
+            if (poly != null) {
                 if (displayWorld.isDebugOn() && !displayWorld.getDebugObjects().contains(object.getId())) {
                     runOfTheMillDebugPolygons.add(poly);
-                } else {
+                } else if (displayWorld.getDebugObjects().contains(object.getId())) {
                     selectedDebugPolygons.add(poly);
                 }
             }
         }
 
-        drawSensorsIfSet(g2d, displayWorld);
+        drawPolygon(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
+
+        drawDisplayObject(g2d, displayWorld.getEgoCar());
 
         // needs to be drawn last so it shows above everything
-        drawPolygon(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
+        drawSensorsIfSet(g2d, displayWorld);
+    }
+
+    private void drawDisplayObject(Graphics2D g2d, DisplayObject object) {
+        DisplayImageData didObject = object.getDisplayImageData();
+        AffineTransform t = new AffineTransform();
+        t.translate(didObject.getX() + didObject.getRotationDisplacementX() - didObject.getRefDifferenceX(),
+            didObject.getY() + didObject.getRotationDisplacementY() - didObject.getRefDifferenceY());
+        t.rotate(didObject.getRotation());
+        g2d.drawImage(object.getImage(), t, this);
     }
 
     /**
@@ -115,53 +125,54 @@ public class CourseDisplay extends JPanel {
 
     private void drawSensorsIfSet(Graphics2D g2d, DisplayWorld displayWorld) {
         if (displayWorld.isCameraShown()) {
-            drawCameraSensor(g2d);
+            drawCameraSensor(g2d, displayWorld);
         }
 
         if (displayWorld.isRadarShown()) {
-            drawRadarSensor(g2d);
+            drawRadarSensor(g2d, displayWorld);
         }
 
         if (displayWorld.isUltrasoundShown()) {
-            drawUltraSoundSensor(g2d);
+            drawUltraSoundSensor(g2d, displayWorld);
         }
     }
 
-    private void drawCameraSensor(Graphics2D g2d) {
-
-        g2d.setColor(VisualizationConfig.CAMERA_SENSOR_BG_COLOUR);
-        g2d.fillPolygon(VisualizationConfig.camera_sensor_polygon);
-        g2d.setStroke(new BasicStroke(2));
-        g2d.setColor(Color.black);
-        g2d.drawPolygon(VisualizationConfig.camera_sensor_polygon);
-
-        g2d.setStroke(VisualizationConfig.SENZOR_CENTER_LINE);
-        g2d.draw(VisualizationConfig.camera_sensor_centerline);
+    private void drawCameraSensor(Graphics2D g2d, DisplayWorld displayWorld) {
+        DisplaySensorObject did = displayWorld.getDisplayCamera();
+        drawSensorTriangle(g2d, did, true);
     }
 
-    private void drawRadarSensor(Graphics2D g2d) {
-        g2d.setColor(VisualizationConfig.RADAR_SENSOR_BG_COLOUR);
-        g2d.fillPolygon(VisualizationConfig.radar_sensor_polygon);
-        g2d.setStroke(new BasicStroke(2));
-        g2d.setColor(Color.black);
-        g2d.drawPolygon(VisualizationConfig.radar_sensor_polygon);
+    private void drawRadarSensor(Graphics2D g2d, DisplayWorld displayWorld) {
 
-        g2d.setStroke(VisualizationConfig.SENZOR_CENTER_LINE);
-        g2d.draw(VisualizationConfig.radar_sensor_centerline);
+        DisplaySensorObject did = displayWorld.getDisplayRadar();
+        drawSensorTriangle(g2d, did, true);
     }
 
-    private void drawUltraSoundSensor(Graphics2D g2d) {
-        for (Polygon poly : VisualizationConfig.ultrasound_sensor_polygons) {
-            if (poly != null) {
-                g2d.setColor(VisualizationConfig.ULTRASOUND_SENSOR_BG_COLOUR);
-                g2d.fillPolygon(poly);
-                g2d.setStroke(new BasicStroke(2));
-                g2d.setColor(Color.black);
-                g2d.drawPolygon(poly);
-                g2d.setStroke(new BasicStroke(2));
-                g2d.setColor(Color.black);
-                g2d.drawPolygon(poly);
+    private void drawUltraSoundSensor(Graphics2D g2d, DisplayWorld displayWorld) {
+        DisplaySensorObject[] dids = displayWorld.getDisplayUltrasounds();
+        if (dids != null) {
+            for (DisplaySensorObject did : dids) {
+                drawSensorTriangle(g2d, did, false);
+            }
+        }
+    }
+
+    private void drawSensorTriangle(Graphics2D g2d, DisplaySensorObject did, boolean centerline) {
+        if (did != null) {
+            Shape sensorTriangle = did.getDisplaySensorTriangle();
+            Color cl = did.getSensorColor();
+            g2d.setStroke(new BasicStroke(2));
+            g2d.setColor(new Color(cl.getRed(), cl.getGreen(), cl.getBlue(), VisualizationConfig.SENSOR_COLOR_ALPHA));
+            g2d.fill(sensorTriangle);
+            g2d.setStroke(new BasicStroke(2));
+            g2d.setColor(Color.black);
+            g2d.draw(sensorTriangle);
+
+            if (centerline) {
+                g2d.setStroke(VisualizationConfig.SENSOR_CENTER_LINE);
+                g2d.draw(did.getSensorCenterLine());
             }
         }
     }
 }
+
