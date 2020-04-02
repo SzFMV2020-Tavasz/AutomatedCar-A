@@ -19,6 +19,9 @@ public class Dashboard extends JPanel {
 
     private Gui parent;
 
+    private Gauge kmhGauge;
+    private Gauge rpmGauge;
+
     private Thread timer = new Thread() {
         int difference;
 
@@ -47,6 +50,13 @@ public class Dashboard extends JPanel {
         parent = pt;
 
         timer.start();
+
+        rpmGauge = new Gauge(0, 15, 117, 118, "rpm", 0, 8000, 1000);
+        kmhGauge = new Gauge(115, 15, 117, 118, "km / h", 0, 200, 20);
+        add(rpmGauge);
+        add(kmhGauge);
+
+        kmhGauge.setValue(40);
     }
 
 }
