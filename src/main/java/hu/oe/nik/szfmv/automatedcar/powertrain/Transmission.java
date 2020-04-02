@@ -72,7 +72,7 @@ public class Transmission implements ITransmission {
      */
     @Override
     public void loop(int rpm) {
-        switchGearsFowrard(rpm);
+        switchGearsForward(rpm);
         switchGearsReverse(rpm);
     }
 
@@ -101,7 +101,7 @@ public class Transmission implements ITransmission {
      * Switching gears in reverse mode.
      * @param rpm The actual RPM value.
      */
-    private void switchGearsFowrard(int rpm) {
+    private void switchGearsForward(int rpm) {
         //switching gears in drive mode
         if(gearMode == CarTransmissionMode.D_DRIVE){
             switch (driveinternalgear){
