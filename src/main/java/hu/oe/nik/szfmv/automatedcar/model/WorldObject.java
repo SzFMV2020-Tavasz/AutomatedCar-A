@@ -550,7 +550,7 @@ public class WorldObject {
             case "roadsign_parking_right":
                 this.polygon = CreateParkingSignPolygon();
                 break;
-            case "roadesign_priority_stop":
+            case "roadsign_priority_stop":
                 this.polygon = CreateStopSignPolygon();
                 break;
             case "roadsign_speed_40":
