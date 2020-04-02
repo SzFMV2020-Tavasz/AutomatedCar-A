@@ -9,23 +9,23 @@ public class Transmission implements ITransmission {
      * Tweak carefully.
      * TODO: calibrate !!!
      */
-    private final int RPM_gear_0_upshift_threshold = 2000;
-    private final int RPM_gear_1_downshift_threshold = 1500;
-    private final int RPM_gear_1_upshift_threshold = 6000;
-    private final int RPM_gear_2_downshift_threshold = 3000;
-    private final int RPM_gear_2_upshift_threshold = 6000;
-    private final int RPM_gear_3_downshift_threshold = 3000;
-    private final int RPM_gear_3_upshift_threshold = 6000;
-    private final int RPM_gear_4_downshift_threshold = 3000;
-    private final int RPM_gear_4_upshift_threshold = 6000;
-    private final int RPM_gear_5_downshift_threshold = 3000;
+    private static int RPM_GEAR_0_UPSHIFT_THRESHOLD = 2000;
+    private static int RPM_GEAR_1_DOWNSHIFT_THRESHOLD = 1500;
+    private static int RPM_GEAR_1_UPSHIFT_THRESHOLD = 6000;
+    private static int RPM_GEAR_2_DOWNSHIFT_THRESHOLD = 3000;
+    private static int RPM_GEAR_2_UPSHIFT_THRESHOLD = 6000;
+    private static int RPM_GEAR_3_DOWNSHIFT_THRESHOLD = 3000;
+    private static int RPM_GEAR_3_UPSHIFT_THRESHOLD = 6000;
+    private static int RPM_GEAR_4_DOWNSHIFT_THRESHOLD = 3000;
+    private static int RPM_GEAR_4_UPSHIFT_THRESHOLD = 6000;
+    private static int RPM_GEAR_5_DOWNSHIFT_THRESHOLD = 3000;
 
     /**
      * Field storing the automatic transmissions internal gear state in {@link CarTransmissionMode#D_DRIVE D} mode.
      * Zero equals neutral.
      * Range: 0-5
      */
-    private int drive_internal_gear = 0;
+    private int driveinternalgear = 0;
 
     /**
      * Field storing the transmission's actual gear.
@@ -33,15 +33,15 @@ public class Transmission implements ITransmission {
     private CarTransmissionMode gearMode = CarTransmissionMode.P_PARKING;
 
     /**
-     * Getter method for the {@link Transmission#drive_internal_gear} field.
+     * Gets the automatic transmissions actual gear in drive mode.
      * @return Returns the actual gear. 
      */
-    public int getDrive_internal_gear(){
-        return drive_internal_gear;
+    public int getDriveInternalGear(){
+        return driveinternalgear;
     }
 
     /**
-     * Getter method for {@link Transmission#gearMode} field.
+     * Gets the actual gear mode.
      *
      * @return The actual value of the gearMode field.
      */
@@ -58,10 +58,10 @@ public class Transmission implements ITransmission {
      * @param gear The gear you want to switch into.
      * @return Returns true if the shifting was successful, false if it was unsuccessful.
      *
-     * TODO: This implementation will change speeds anytime at the moment. We need to check the engine status before speed chane.
+     * TODO: This implementation will change speeds anytime at the moment. We need to check the engine status before speed change.
      */
     @Override
-    public boolean Shift(CarTransmissionMode gear) {
+    public boolean shift(CarTransmissionMode gear) {
         gearMode = gear;
         return true;
     }
@@ -71,42 +71,81 @@ public class Transmission implements ITransmission {
      * (I strongly recommend, to call it in the SystemComponent's loop method.)
      */
     @Override
-    public void Loop(int rpm) {
-        //switching gears in drive mode
-        if(gearMode == CarTransmissionMode.D_DRIVE){
-            switch (drive_internal_gear){
+    public void loop(int rpm) {
+        switchGearsFowrard(rpm);
+        switchGearsReverse(rpm);
+    }
+
+    /**
+     * Switching gears in forward mode.
+     * @param rpm The actual RPM value.
+     */
+    private void switchGearsReverse(int rpm) {
+        if(gearMode == CarTransmissionMode.R_REVERSE){
+            switch (driveinternalgear){
                 case 0:
-                    if(rpm > RPM_gear_0_upshift_threshold) drive_internal_gear++;
+                    if(rpm > RPM_GEAR_0_UPSHIFT_THRESHOLD){
+                        driveinternalgear++;
+                    }
                     break;
                 case 1:
-                    if(rpm > RPM_gear_1_upshift_threshold) drive_internal_gear++;
-                    if(rpm < RPM_gear_1_downshift_threshold) drive_internal_gear--;
-                    break;
-                case 2:
-                    if(rpm > RPM_gear_2_upshift_threshold) drive_internal_gear++;
-                    if(rpm < RPM_gear_2_downshift_threshold) drive_internal_gear--;
-                    break;
-                case 3:
-                    if(rpm > RPM_gear_3_upshift_threshold) drive_internal_gear++;
-                    if(rpm < RPM_gear_3_downshift_threshold) drive_internal_gear--;
-                    break;
-                case 4:
-                    if(rpm > RPM_gear_4_upshift_threshold) drive_internal_gear++;
-                    if(rpm < RPM_gear_4_downshift_threshold) drive_internal_gear--;
-                    break;
-                case 5:
-                    if(rpm < RPM_gear_5_downshift_threshold) drive_internal_gear--;
+                    if(rpm < RPM_GEAR_1_DOWNSHIFT_THRESHOLD){
+                        driveinternalgear--;
+                    }
                     break;
             }
         }
-        // switching gears in reverse mode
-        if(gearMode == CarTransmissionMode.R_REVERSE){
-            switch (drive_internal_gear){
+    }
+
+    /**
+     * Switching gears in reverse mode.
+     * @param rpm The actual RPM value.
+     */
+    private void switchGearsFowrard(int rpm) {
+        //switching gears in drive mode
+        if(gearMode == CarTransmissionMode.D_DRIVE){
+            switch (driveinternalgear){
                 case 0:
-                    if(rpm > RPM_gear_0_upshift_threshold) drive_internal_gear++;
+                    if(rpm > RPM_GEAR_0_UPSHIFT_THRESHOLD) {
+                        driveinternalgear++;
+                    }
                     break;
                 case 1:
-                    if(rpm < RPM_gear_1_downshift_threshold) drive_internal_gear--;
+                    if(rpm > RPM_GEAR_1_UPSHIFT_THRESHOLD) {
+                        driveinternalgear++;
+                    }
+                    if(rpm < RPM_GEAR_1_DOWNSHIFT_THRESHOLD){
+                        driveinternalgear--;
+                    }
+                    break;
+                case 2:
+                    if(rpm > RPM_GEAR_2_UPSHIFT_THRESHOLD){
+                        driveinternalgear++;
+                    }
+                    if(rpm < RPM_GEAR_2_DOWNSHIFT_THRESHOLD){
+                        driveinternalgear--;
+                    }
+                    break;
+                case 3:
+                    if(rpm > RPM_GEAR_3_UPSHIFT_THRESHOLD){
+                        driveinternalgear++;
+                    }
+                    if(rpm < RPM_GEAR_3_DOWNSHIFT_THRESHOLD){
+                        driveinternalgear--;
+                    }
+                    break;
+                case 4:
+                    if(rpm > RPM_GEAR_4_UPSHIFT_THRESHOLD){
+                        driveinternalgear++;
+                    }
+                    if(rpm < RPM_GEAR_4_DOWNSHIFT_THRESHOLD){
+                        driveinternalgear--;
+                    }
+                    break;
+                case 5:
+                    if(rpm < RPM_GEAR_5_DOWNSHIFT_THRESHOLD){
+                        driveinternalgear--;
+                    }
                     break;
             }
         }

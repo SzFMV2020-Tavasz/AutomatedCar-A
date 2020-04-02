@@ -7,7 +7,7 @@ package hu.oe.nik.szfmv.automatedcar.powertrain;
 public interface ITransmission {
 
     /**
-     * Getter method for gearMode field.
+     * Gets the actual gear mode.
      * @return The actual value of the gearMode field.
      */
     CarTransmissionMode getGearMode();
@@ -19,11 +19,11 @@ public interface ITransmission {
      * @param gear The gear you want to switch into.
      * @return Returns true if the shifting was successful, false if it was unsuccessful.
      */
-    boolean Shift(CarTransmissionMode gear);
+    boolean shift(CarTransmissionMode gear);
 
     /**
      * Calculates the actual state of the transmission when it is called.
      * (I strongly recommend, to call it in the SystemComponent's loop method.)
      */
-    void Loop(int RPM);
+    void loop(int RPM);
 }
