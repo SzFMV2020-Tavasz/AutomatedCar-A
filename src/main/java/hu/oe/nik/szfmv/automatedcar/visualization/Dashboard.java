@@ -17,6 +17,8 @@ public class Dashboard extends JPanel {
 
     private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
+    private JOptionPane jOptionPane;
+
     private  JLabel gear = new JLabel("gear: P");
     private JLabel leftIndex = new JLabel("");
     private JLabel rightIndex = new JLabel("");
@@ -221,6 +223,23 @@ public class Dashboard extends JPanel {
         pp.setSelected(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());
         lka.setSelected(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
 
+    }
+
+    public  void drawMenuWindow(boolean isOn)
+    {
+        UIManager um = new UIManager();
+        um.put("OptionPane.messageForeground", Color.WHITE);
+        um.put("Panel.background", Color.BLUE);
+
+        JOptionPane optionPane =new JOptionPane("a - bal"+"\n"+"d - jobb"+"\n"+"w - gáz"+"\n"+"s - fék"+"\n"+"q - bal index"+"\n"+"e - jobb index"+"\n"+
+                "k - levele váltás"+"\n"+"l - lefele váltás"+"\n"+"i - tempomat csökkentés"+ "\n"+"o - tempomat nővelése"+"\n"+"ctr+0 - debug mód"+"\n"+
+                "t-tempomat be/ki"+"\n"+"j - sáv tartó" + "\n"+"p - parkolás pilota be/ki"+"\n"+"u - követési távolság nővelése");
+        optionPane.setOptionType(JOptionPane.DEFAULT_OPTION);
+        optionPane.setIcon(null);
+        optionPane.setOptions(new Object[]{});
+        optionPane.setMessageType(JOptionPane.DEFAULT_OPTION);
+        JDialog dialog = optionPane.createDialog(null, "HELP MENU");
+        dialog.setVisible(true);
     }
 
     private void indexStatus(){
