@@ -46,7 +46,7 @@ public class KeyProcesser {
             debugMode=!debugMode;
         }
         virtualFunctionBus.guiInputPacket.setDebugSwitch(debugMode);
-        virtualFunctionBus.DebugMode.setDebuggingMode(debugMode);
+        virtualFunctionBus.debugModePacket.setDebuggingState(debugMode);
     }
 
     private boolean HelpMenuSwitch = false;
