@@ -121,4 +121,15 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     public boolean getDebugSwitch() {
         return debugSwitch;
     }
+
+    private boolean helpMenuSwitch;
+
+    public void setHelpMenuSwitch(boolean helpMenuSwitch) {
+        this.helpMenuSwitch = helpMenuSwitch;
+    }
+
+    @Override
+    public boolean getHelpMenuSwitch() {
+        return helpMenuSwitch;
+    }
 }

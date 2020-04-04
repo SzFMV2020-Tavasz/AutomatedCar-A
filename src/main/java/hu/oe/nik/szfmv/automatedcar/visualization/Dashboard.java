@@ -18,6 +18,8 @@ public class Dashboard extends JPanel {
     private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
     private JOptionPane jOptionPane = new JOptionPane();
+    private  JOptionPane optionPane;
+    private  JDialog dialog;
 
     private  JLabel gear = new JLabel("gear: P");
     private JLabel leftIndex = new JLabel("");
@@ -191,7 +193,6 @@ public class Dashboard extends JPanel {
         debugPanel.add(debug);
         debugPanel.add(steeringWheel);
         debugPanel.add(pos);
-        debugPanel.add(jOptionPane);
 
 
 
@@ -203,6 +204,8 @@ public class Dashboard extends JPanel {
         drawPedalGridLayout();
         drawAccGridLayout();
         drawDebugGridLayout();
+        //drawMenuWindow();
+
     }
 
     public void refreshDrawing(){
@@ -223,25 +226,25 @@ public class Dashboard extends JPanel {
         acc.setSelected(virtualFunctionBus.guiInputPacket.getACCStatus());
         pp.setSelected(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());
         lka.setSelected(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
-
     }
 
-    public  void drawMenuWindow()
+    public  void drawMenuWindow( )
     {
         Thread popUpWindow = new Thread(()->{
             UIManager um = new UIManager();
             um.put("OptionPane.messageForeground", Color.WHITE);
             um.put("Panel.background", Color.BLUE);
 
-            JOptionPane optionPane =new JOptionPane("a - bal"+"\n"+"d - jobb"+"\n"+"w - gáz"+"\n"+"s - fék"+"\n"+"q - bal index"+"\n"+"e - jobb index"+"\n"+
+            optionPane =new JOptionPane("a - bal"+"\n"+"d - jobb"+"\n"+"w - gáz"+"\n"+"s - fék"+"\n"+"q - bal index"+"\n"+"e - jobb index"+"\n"+
                     "k - levele váltás"+"\n"+"l - lefele váltás"+"\n"+"i - tempomat csökkentés"+ "\n"+"o - tempomat nővelése"+"\n"+"ctr+0 - debug mód"+"\n"+
-                    "t-tempomat be/ki"+"\n"+"j - sáv tartó" + "\n"+"p - parkolás pilota be/ki"+"\n"+"u - követési távolság nővelése");
+                    "t-tempomat be/ki"+"\n"+"j - sáv tartó" + "\n"+"p - parkolás pilota be/ki"+"\n"+"u - követési távolság nővelése" +"\n h - help menü");
             optionPane.setOptionType(JOptionPane.DEFAULT_OPTION);
             optionPane.setIcon(null);
             optionPane.setOptions(new Object[]{});
             optionPane.setMessageType(JOptionPane.DEFAULT_OPTION);
-            JDialog dialog = optionPane.createDialog(null, "HELP MENU");
-            dialog.setVisible(true);
+            dialog = optionPane.createDialog(null, "HELP MENU");
+            dialog.setVisible(false);
+
         });
         popUpWindow.start();
     }

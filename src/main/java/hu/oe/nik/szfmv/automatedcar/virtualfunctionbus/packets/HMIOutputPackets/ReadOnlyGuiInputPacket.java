@@ -15,4 +15,5 @@ public interface ReadOnlyGuiInputPacket {
     boolean getParkingPilotStatus();
     boolean getLaneKeepingAssistant();
     boolean getDebugSwitch();
+    boolean getHelpMenuSwitch();
 }

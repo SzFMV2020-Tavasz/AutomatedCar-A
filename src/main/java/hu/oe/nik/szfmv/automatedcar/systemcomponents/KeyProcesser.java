@@ -49,6 +49,13 @@ public class KeyProcesser {
         virtualFunctionBus.DebugMode.setDebuggingMode(debugMode);
     }
 
+    private boolean HelpMenuSwitch = false;
+
+    public void helpButtonPressed(){
+        HelpMenuSwitch = !HelpMenuSwitch;
+        virtualFunctionBus.guiInputPacket.setHelpMenuSwitch(HelpMenuSwitch);
+    }
+
     private PedalPosition pedalPos = new PedalPosition();
 
     public int KeyPressed(int keyCode)
