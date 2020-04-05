@@ -46,6 +46,14 @@ public class KeyProcesser {
             debugMode=!debugMode;
         }
         virtualFunctionBus.guiInputPacket.setDebugSwitch(debugMode);
+        virtualFunctionBus.debugModePacket.setDebuggingState(debugMode);
+    }
+
+    private boolean HelpMenuSwitch = false;
+
+    public void helpButtonPressed(){
+        HelpMenuSwitch = !HelpMenuSwitch;
+        virtualFunctionBus.guiInputPacket.setHelpMenuSwitch(HelpMenuSwitch);
     }
 
     private PedalPosition pedalPos = new PedalPosition();

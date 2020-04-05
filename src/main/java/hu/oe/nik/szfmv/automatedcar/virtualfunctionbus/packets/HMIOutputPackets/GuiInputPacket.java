@@ -78,7 +78,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return accSpeedValue;
     }
 
-    private double accFollowingDistance;
+    private double accFollowingDistance = 0.8;
 
     public void setAccFollowingDistance(double accFollowingDistance) {
         this.accFollowingDistance = accFollowingDistance;
@@ -120,5 +120,16 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     @Override
     public boolean getDebugSwitch() {
         return debugSwitch;
+    }
+
+    private boolean helpMenuSwitch;
+
+    public void setHelpMenuSwitch(boolean helpMenuSwitch) {
+        this.helpMenuSwitch = helpMenuSwitch;
+    }
+
+    @Override
+    public boolean getHelpMenuSwitch() {
+        return helpMenuSwitch;
     }
 }

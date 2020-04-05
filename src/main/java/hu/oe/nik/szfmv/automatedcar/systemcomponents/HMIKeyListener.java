@@ -62,6 +62,10 @@ public class HMIKeyListener {
             int keyCode = e.getKeyCode();
             switch(keyCode)
             {
+                case KeyEvent.VK_H:
+                    Processer.helpButtonPressed();
+                    break;
+
                 case KeyEvent.VK_W:
                     Processer.gasPedalPressed();
                     break;

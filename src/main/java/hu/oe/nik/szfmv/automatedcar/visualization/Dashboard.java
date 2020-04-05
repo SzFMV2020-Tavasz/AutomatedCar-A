@@ -17,7 +17,9 @@ public class Dashboard extends JPanel {
 
     private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
-    private JOptionPane popUpWindow = new JOptionPane();
+    private JOptionPane jOptionPane = new JOptionPane();
+    private  JOptionPane optionPane;
+    private  JDialog dialog;
 
     private  JLabel gear = new JLabel("gear: P");
     private JLabel leftIndex = new JLabel("");
@@ -29,6 +31,9 @@ public class Dashboard extends JPanel {
     private JLabel speedLimit = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
     JLabel accSpeed = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
     JLabel accDistance = new JLabel("Acc Distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
+    JCheckBox pp = new JCheckBox("PP");
+    JCheckBox lka = new JCheckBox("LKA");
+    JCheckBox acc = new JCheckBox("ACC");
 
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
@@ -146,10 +151,7 @@ public class Dashboard extends JPanel {
         compactPanel.add(accPanel);
         compactPanel.add(optsPanel);
 
-        JCheckBox acc = new JCheckBox("ACC");
-        acc.setSelected(true);
-        JCheckBox pp = new JCheckBox("PP");
-        JCheckBox lka = new JCheckBox("LKA");
+        acc.setSelected(false);
         JCheckBox lkaWarning = new JCheckBox("LKA WARNING");
 
         acc.setEnabled(false);
@@ -161,7 +163,8 @@ public class Dashboard extends JPanel {
         accPanel.add(accDistance);
         accPanel.add(acc);
         accPanel.add(lka);
-        accPanel.add(lkaWarning);
+        accPanel.add(pp);
+       // accPanel.add(lkaWarning);
 
         JLabel lastSign = new JLabel("last road sign");
         JCheckBox aeb = new JCheckBox("AEB WARN");
@@ -172,7 +175,7 @@ public class Dashboard extends JPanel {
 
         accPanel.add(lastSign);
         accPanel.add(aeb);
-        accPanel.add(rrWarn);
+        //accPanel.add(rrWarn);
 
         add(accPanel);
 
@@ -190,7 +193,6 @@ public class Dashboard extends JPanel {
         debugPanel.add(debug);
         debugPanel.add(steeringWheel);
         debugPanel.add(pos);
-        debugPanel.add(popUpWindow);
 
 
 
@@ -202,25 +204,9 @@ public class Dashboard extends JPanel {
         drawPedalGridLayout();
         drawAccGridLayout();
         drawDebugGridLayout();
+        //drawMenuWindow();
+
     }
-
-    public  void drawMenuWindow(boolean isOn)
-    {
-        UIManager um = new UIManager();
-        um.put("OptionPane.messageForeground", Color.WHITE);
-        um.put("Panel.background", Color.BLUE);
-
-        JOptionPane optionPane =new JOptionPane("a - bal"+"\n"+"d - jobb"+"\n"+"w - gáz"+"\n"+"s - fék"+"\n"+"q - bal index"+"\n"+"e - jobb index"+"\n"+
-                "k - levele váltás"+"\n"+"l - lefele váltás"+"\n"+"i - tempomat csökkentés"+ "\n"+"o - tempomat nővelése"+"\n"+"ctr+0 - debug mód"+"\n"+
-                "t-tempomat be/ki"+"\n"+"j - sáv tartó" + "\n"+"p - parkolás pilota be/ki"+"\n"+"u - követési távolság nővelése");
-        optionPane.setOptionType(JOptionPane.DEFAULT_OPTION);
-        optionPane.setIcon(null);
-        optionPane.setOptions(new Object[]{});
-        optionPane.setMessageType(JOptionPane.DEFAULT_OPTION);
-        JDialog dialog = optionPane.createDialog(null, "HELP MENU");
-        dialog.setVisible(true);
-    }
-
 
     public void refreshDrawing(){
         gear.setText("gear: " + virtualFunctionBus.guiInputPacket.getShifterPos());
@@ -235,13 +221,33 @@ public class Dashboard extends JPanel {
         debug.setText("debug:" + virtualFunctionBus.guiInputPacket.getDebugSwitch());
         debugPanel.revalidate();
 
-        accSpeed.setText("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
+        accSpeed.setText("Acc speed: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
         accDistance.setText("Acc distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
-
-        drawMenuWindow(true);
+        acc.setSelected(virtualFunctionBus.guiInputPacket.getACCStatus());
+        pp.setSelected(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());
+        lka.setSelected(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
     }
 
+    public  void drawMenuWindow( )
+    {
+        Thread popUpWindow = new Thread(()->{
+            UIManager um = new UIManager();
+            um.put("OptionPane.messageForeground", Color.WHITE);
+            um.put("Panel.background", Color.BLUE);
 
+            optionPane =new JOptionPane("a - bal"+"\n"+"d - jobb"+"\n"+"w - gáz"+"\n"+"s - fék"+"\n"+"q - bal index"+"\n"+"e - jobb index"+"\n"+
+                    "k - levele váltás"+"\n"+"l - lefele váltás"+"\n"+"i - tempomat csökkentés"+ "\n"+"o - tempomat nővelése"+"\n"+"ctr+0 - debug mód"+"\n"+
+                    "t-tempomat be/ki"+"\n"+"j - sáv tartó" + "\n"+"p - parkolás pilota be/ki"+"\n"+"u - követési távolság nővelése" +"\n h - help menü");
+            optionPane.setOptionType(JOptionPane.DEFAULT_OPTION);
+            optionPane.setIcon(null);
+            optionPane.setOptions(new Object[]{});
+            optionPane.setMessageType(JOptionPane.DEFAULT_OPTION);
+            dialog = optionPane.createDialog(null, "HELP MENU");
+            dialog.setVisible(false);
+
+        });
+        popUpWindow.start();
+    }
 
     private void indexStatus(){
         if(virtualFunctionBus.guiInputPacket.getIndexStatus()== Index.IndexStatus.LEFT) {
