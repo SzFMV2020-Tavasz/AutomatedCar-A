@@ -416,37 +416,41 @@ public class WorldObject {
 
     private Polygon CreateParkingSignPolygon() {
         var parkingSign = new Polygon();
-        parkingSign.addPoint(0, 0);
-        parkingSign.addPoint(80, 0);
-        parkingSign.addPoint(80, 80);
-        parkingSign.addPoint(0, 80);
-
+        parkingSign.addPoint(41, 30);
+        parkingSign.addPoint(50, 33);
+        parkingSign.addPoint(53, 41);
+        parkingSign.addPoint(50, 50);
+        parkingSign.addPoint(41, 55);
+        parkingSign.addPoint(31, 51);
+        parkingSign.addPoint(27, 41);
+        parkingSign.addPoint(32, 32);
         return parkingSign;
     }
 
     private Polygon CreateStopSignPolygon() {
         var stopSign = new Polygon();
-        stopSign.addPoint(0, 23);
-        stopSign.addPoint(23, 0);
-        stopSign.addPoint(56, 0);
-        stopSign.addPoint(80, 23);
-        stopSign.addPoint(80, 55);
-        stopSign.addPoint(55, 80);
-        stopSign.addPoint(23, 80);
+        stopSign.addPoint(41, 30);
+        stopSign.addPoint(50, 33);
+        stopSign.addPoint(53, 41);
+        stopSign.addPoint(50, 50);
+        stopSign.addPoint(41, 55);
+        stopSign.addPoint(31, 51);
+        stopSign.addPoint(27, 41);
+        stopSign.addPoint(32, 32);
 
         return stopSign;
     }
 
     private Polygon CreateSpeedSignPolygon() {
         var speedSign = new Polygon();
-        speedSign.addPoint(0, 38);
-        speedSign.addPoint(10, 12);
-        speedSign.addPoint(40, 0);
-        speedSign.addPoint(66, 10);
-        speedSign.addPoint(79, 40);
-        speedSign.addPoint(70, 65);
-        speedSign.addPoint(40, 80);
-        speedSign.addPoint(10, 67);
+        speedSign.addPoint(41, 30);
+        speedSign.addPoint(50, 33);
+        speedSign.addPoint(53, 41);
+        speedSign.addPoint(50, 50);
+        speedSign.addPoint(41, 55);
+        speedSign.addPoint(31, 51);
+        speedSign.addPoint(27, 41);
+        speedSign.addPoint(32, 32);
 
         return speedSign;
     }
@@ -550,7 +554,7 @@ public class WorldObject {
             case "roadsign_parking_right":
                 this.polygon = CreateParkingSignPolygon();
                 break;
-            case "roadesign_priority_stop":
+            case "roadsign_priority_stop":
                 this.polygon = CreateStopSignPolygon();
                 break;
             case "roadsign_speed_40":
@@ -559,8 +563,8 @@ public class WorldObject {
                 this.polygon = CreateSpeedSignPolygon();
                 break;
             case "tree":
-            default:
                 this.polygon = CreateTreePolygon();
+            default:
                 break;
         }
     }
