@@ -40,7 +40,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     }
 
 
-    private double steeringWheelValue;//not determined yet, probably -180-180
+    private double steeringWheelValue;
 
     public void setSteeringWheelValue(double steeringWheelValue) {
         this.steeringWheelValue = steeringWheelValue;
