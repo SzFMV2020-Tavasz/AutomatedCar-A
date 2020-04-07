@@ -5,9 +5,11 @@ import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
 public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
     private double gasPedalValue;//0-100
-    public void setGasPedalValue(double gasPedalValue){
-        this.gasPedalValue=gasPedalValue;
+
+    public void setGasPedalValue(double gasPedalValue) {
+        this.gasPedalValue = gasPedalValue;
     }
+
     @Override
     public double getGasPedalValue() {
         return gasPedalValue;
@@ -15,9 +17,11 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
 
     private double breakPedalValue;//0-100
-    public void setBreakPedalValue(double breakPedalValue){
-        this.breakPedalValue=breakPedalValue;
+
+    public void setBreakPedalValue(double breakPedalValue) {
+        this.breakPedalValue = breakPedalValue;
     }
+
     @Override
     public double getBreakPedalValue() {
         return breakPedalValue;
@@ -25,9 +29,11 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
 
     private double steeringWheelValue;//not determined yet, probably -180-180
-    public void setSteeringWheelValue(double steeringWheelValue){
-        this.steeringWheelValue=steeringWheelValue;
+
+    public void setSteeringWheelValue(double steeringWheelValue) {
+        this.steeringWheelValue = steeringWheelValue;
     }
+
     @Override
     public double getSteeringWheelValue() {
         return steeringWheelValue;
@@ -35,9 +41,11 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
 
     private shitfer.ShiftPos shiftChangeRequest;//P-R-N-D
+
     public void setShiftChangeRequest(shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
+
     @Override
     public shitfer.ShiftPos getShiftChangeRequest() {
         return shiftChangeRequest;
@@ -45,9 +53,11 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
 
     private int tempomatValue;
+
     public void setTempomatValue(int tempomatValue) {
         this.tempomatValue = tempomatValue;
     }
+
     @Override
     public int getTempomatValue() {
         return tempomatValue;
@@ -55,9 +65,11 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
 
     private boolean tempomatSwitch;
+
     public void setTempomatSwitch(boolean tempomatSwitch) {
         this.tempomatSwitch = tempomatSwitch;
     }
+
     @Override
     public boolean getTempomatSwitch() {
         return tempomatSwitch;
@@ -65,9 +77,11 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
 
     private double trackingDistanceValue;
+
     public void setTrackingDistanceValue(double trackingDistanceValue) {
         this.trackingDistanceValue = trackingDistanceValue;
     }
+
     @Override
     public double getTrackingDistanceValue() {
         return trackingDistanceValue;
@@ -75,9 +89,11 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
 
     private boolean trackingDistanceSwitch;
+
     public void setTrackingDistanceSwitch(boolean trackingDistanceSwitch) {
         this.trackingDistanceSwitch = trackingDistanceSwitch;
     }
+
     @Override
     public boolean getTrackingDistanceSwitch() {
         return trackingDistanceSwitch;
