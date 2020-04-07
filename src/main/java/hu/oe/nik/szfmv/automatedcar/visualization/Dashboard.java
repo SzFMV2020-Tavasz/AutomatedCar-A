@@ -2,13 +2,11 @@ package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyListener;
 
 /**
  * Dashboard shows the state of the ego car, thus helps in debugging.
@@ -37,6 +35,7 @@ public class Dashboard extends JPanel {
     JCheckBox pp = new JCheckBox("PP");
     JCheckBox lka = new JCheckBox("LKA");
     JCheckBox acc = new JCheckBox("ACC");
+    JPanel meterPanel = new JPanel();
 
    /*private JLabel pedalExplainerText=new JLabel("W/S : Throttle/Break  ");
     private JLabel steeringExplainerText=new JLabel(" A/D :Turn Left/Right");
@@ -85,7 +84,7 @@ public class Dashboard extends JPanel {
     private void drawMeterGridLayout(){
         GridLayout meterGridLayout = new GridLayout(1,2,8,8);
 
-        JPanel meterPanel = new JPanel();
+
         meterPanel.setLayout(meterGridLayout);
         meterPanel.setBounds(100,100, 250,100);
         meterPanel.setBackground(Color.MAGENTA);
@@ -94,8 +93,8 @@ public class Dashboard extends JPanel {
         JLabel leftMeter = new JLabel( 2624 + " rpm");
         JLabel rightMeter = new JLabel(130 + " km/h");
 
-        meterPanel.add(leftMeter);
-        meterPanel.add(rightMeter);
+      //  meterPanel.add(leftMeter);
+       // meterPanel.add(rightMeter);
 
         add(meterPanel);
     }
@@ -220,7 +219,7 @@ public class Dashboard extends JPanel {
         drawPedalGridLayout();
         drawAccGridLayout();
         drawDebugGridLayout();
-        OMeterPlacing();
+        oMeterPlacing();
         //drawMenuWindow();
 
     }
@@ -262,12 +261,15 @@ public class Dashboard extends JPanel {
         rpmMeter.setBounds(120, 25, 110, 100);
     }
 
-    private void OMeterPlacing() {
+    private void oMeterPlacing() {
         CreateRPMmeter();
         CreateSpeedometer();
 
         add(speedMeter);
         add(rpmMeter);
+        meterPanel.add(speedMeter);
+        meterPanel.add(rpmMeter);
+
     }
 
 
