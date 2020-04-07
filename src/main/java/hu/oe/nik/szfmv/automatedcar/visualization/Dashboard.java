@@ -17,12 +17,12 @@ public class Dashboard extends JPanel {
 
     private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
-    private  JOptionPane optionPane;
-    private  JDialog dialog;
-    private  JLabel gear = new JLabel("gear: P");
+    private JOptionPane optionPane;
+    private JDialog dialog;
+    private JLabel gear = new JLabel("gear: P");
     private JLabel leftIndex = new JLabel("");
     private JLabel rightIndex = new JLabel("");
-    private JProgressBar gasBar = new JProgressBar(0,100);
+    private JProgressBar gasBar = new JProgressBar(0, 100);
     private JProgressBar breakBar = new JProgressBar(0, 100);
     private JLabel steeringWheel = new JLabel("steering wheel: " + virtualFunctionBus.guiInputPacket.getSteeringWheelValue());
     private JLabel debug = new JLabel("debug:" + virtualFunctionBus.guiInputPacket.getDebugSwitch());
@@ -47,6 +47,7 @@ public class Dashboard extends JPanel {
 
 
     private Gui parent;
+
     /**
      * Initialize the dashboard
      */
@@ -65,16 +66,16 @@ public class Dashboard extends JPanel {
         drawEverything();
     }
 
-    private void drawMeterGridLayout(){
-        GridLayout meterGridLayout = new GridLayout(1,2,8,8);
+    private void drawMeterGridLayout() {
+        GridLayout meterGridLayout = new GridLayout(1, 2, 8, 8);
 
         JPanel meterPanel = new JPanel();
         meterPanel.setLayout(meterGridLayout);
-        meterPanel.setBounds(100,100, 250,100);
+        meterPanel.setBounds(100, 100, 250, 100);
         meterPanel.setBackground(Color.MAGENTA);
         meterPanel.setVisible(true);
         // need vars from bus
-        JLabel leftMeter = new JLabel( 2624 + " rpm");
+        JLabel leftMeter = new JLabel(2624 + " rpm");
         JLabel rightMeter = new JLabel(130 + " km/h");
 
         meterPanel.add(leftMeter);
@@ -83,14 +84,12 @@ public class Dashboard extends JPanel {
         add(meterPanel);
     }
 
-    private void drawIndexGridLayout(){
-        GridLayout indexGridLayout = new GridLayout(1,3,8,8);
+    private void drawIndexGridLayout() {
+        GridLayout indexGridLayout = new GridLayout(1, 3, 8, 8);
 
         indexPanel.setVisible(true);
         indexPanel.setLayout(indexGridLayout);
         indexPanel.setBackground(Color.GREEN);
-
-
 
 
         indexPanel.add(leftIndex);
@@ -100,9 +99,9 @@ public class Dashboard extends JPanel {
     }
 
     private JPanel pedalPanel = new JPanel();
-    private void drawPedalGridLayout(){
-        GridLayout pedalGridLayout = new GridLayout(4, 1, 8, 8);
 
+    private void drawPedalGridLayout() {
+        GridLayout pedalGridLayout = new GridLayout(4, 1, 8, 8);
 
 
         pedalPanel.setVisible(true);
@@ -111,13 +110,13 @@ public class Dashboard extends JPanel {
 
         JLabel gasLabel = new JLabel("gas pedal");
 
-        gasBar.setValue((int)virtualFunctionBus.guiInputPacket.getGasPedalValue());
+        gasBar.setValue((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
         gasBar.setStringPainted(true);
 
         JLabel breakLabel = new JLabel("break pedal");
 
         breakBar.setStringPainted(true);
-        breakBar.setValue((int)virtualFunctionBus.guiInputPacket.getBreakPedalValue());
+        breakBar.setValue((int) virtualFunctionBus.guiInputPacket.getBreakPedalValue());
 
         pedalPanel.add(gasLabel);
         pedalPanel.add(gasBar);
@@ -127,12 +126,13 @@ public class Dashboard extends JPanel {
         add(pedalPanel);
     }
 
-    private  JPanel compactPanel  = new JPanel();
-    public void drawAccGridLayout(){
-        GridLayout compactLayout = new GridLayout(1,2,0,0);
-        GridLayout accGridLayout = new GridLayout(4, 2, 4,4);
-        GridLayout optsGridLayout = new GridLayout(4, 2,  4, 4);
-        GridLayout signGridLayout = new GridLayout(3,1,0,0);
+    private JPanel compactPanel = new JPanel();
+
+    public void drawAccGridLayout() {
+        GridLayout compactLayout = new GridLayout(1, 2, 0, 0);
+        GridLayout accGridLayout = new GridLayout(4, 2, 4, 4);
+        GridLayout optsGridLayout = new GridLayout(4, 2, 4, 4);
+        GridLayout signGridLayout = new GridLayout(3, 1, 0, 0);
 
 
         compactPanel.setLayout(compactLayout);
@@ -162,13 +162,13 @@ public class Dashboard extends JPanel {
         accPanel.add(acc);
         accPanel.add(lka);
         accPanel.add(pp);
-       // accPanel.add(lkaWarning);
+        // accPanel.add(lkaWarning);
 
         JLabel lastSign = new JLabel("last road sign");
         JCheckBox aeb = new JCheckBox("AEB WARN");
         JCheckBox rrWarn = new JCheckBox("RR WARN");
 
-        aeb .setEnabled(false);
+        aeb.setEnabled(false);
         rrWarn.setEnabled(false);
 
         accPanel.add(lastSign);
@@ -181,7 +181,7 @@ public class Dashboard extends JPanel {
 
     JPanel debugPanel = new JPanel();
 
-    private void drawDebugGridLayout(){
+    private void drawDebugGridLayout() {
         GridLayout debugGridLayout = new GridLayout(4, 1, 8, 8);
 
         debugPanel.setLayout(debugGridLayout);
@@ -193,9 +193,9 @@ public class Dashboard extends JPanel {
         debugPanel.add(pos);
 
 
-
         add(debugPanel);
     }
+
     private void drawEverything() {
         drawMeterGridLayout();
         drawIndexGridLayout();
@@ -206,13 +206,13 @@ public class Dashboard extends JPanel {
 
     }
 
-    public void refreshDrawing(){
+    public void refreshDrawing() {
         gear.setText("gear: " + virtualFunctionBus.guiInputPacket.getShifterPos());
         indexStatus();
         indexPanel.revalidate();
 
-        gasBar.setValue((int)virtualFunctionBus.guiInputPacket.getGasPedalValue());
-        breakBar.setValue((int)virtualFunctionBus.guiInputPacket.getBreakPedalValue());
+        gasBar.setValue((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
+        breakBar.setValue((int) virtualFunctionBus.guiInputPacket.getBreakPedalValue());
         pedalPanel.revalidate();
 
         steeringWheel.setText("steering wheel: " + virtualFunctionBus.guiInputPacket.getSteeringWheelValue());
@@ -226,16 +226,18 @@ public class Dashboard extends JPanel {
         lka.setSelected(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
     }
 
-    public  void drawMenuWindow( )
-    {
-        Thread popUpWindow = new Thread(()->{
+    public void drawMenuWindow() {
+        Thread popUpWindow = new Thread(() -> {
             UIManager um = new UIManager();
             UIManager.put("OptionPane.messageForeground", Color.WHITE);
             UIManager.put("Panel.background", Color.BLUE);
 
-            optionPane =new JOptionPane("a - bal" + "\n" + "d - jobb" + "\n" + "w - gáz" + "\n" + "s - fék" + "\n" + "q - bal index" + "\n" + "e - jobb index" + "\n" +
-                    "k - levele váltás" + "\n" + "l - lefele váltás" + "\n" + "i - tempomat csökkentés" + "\n" + "o - tempomat nővelése" + "\n" + "ctr+0 - debug mód" + "\n" +
-                    "t-tempomat be/ki" + "\n" + "j - sáv tartó" + "\n" + "p - parkolás pilota be/ki" + "\n" + "u - követési távolság nővelése" + "\n h - help menü");
+            optionPane = new JOptionPane("a - bal" + "\n" + "d - jobb" + "\n" + "w - gáz" + "\n" + "s - fék" + "\n"
+                    + "q - bal index" + "\n" + "e - jobb index" + "\n" +
+                    "k - levele váltás" + "\n" + "l - lefele váltás" + "\n"
+                    + "i - tempomat csökkentés" + "\n" + "o - tempomat nővelése" + "\n" + "ctr+0 - debug mód" + "\n" +
+                    "t-tempomat be/ki" + "\n" + "j - sáv tartó" + "\n"
+                    + "p - parkolás pilota be/ki" + "\n" + "u - követési távolság nővelése" + "\n h - help menü");
             optionPane.setOptionType(JOptionPane.DEFAULT_OPTION);
             optionPane.setIcon(null);
             optionPane.setOptions(new Object[]{});
@@ -247,16 +249,14 @@ public class Dashboard extends JPanel {
         popUpWindow.start();
     }
 
-    private void indexStatus(){
-        if(virtualFunctionBus.guiInputPacket.getIndexStatus()== Index.IndexStatus.LEFT) {
+    private void indexStatus() {
+        if (virtualFunctionBus.guiInputPacket.getIndexStatus() == Index.IndexStatus.LEFT) {
             leftIndex.setText("LEFT");
             rightIndex.setText("");
-        }
-        else if(virtualFunctionBus.guiInputPacket.getIndexStatus()== Index.IndexStatus.RIGHT){
+        } else if (virtualFunctionBus.guiInputPacket.getIndexStatus() == Index.IndexStatus.RIGHT) {
             leftIndex.setText("");
             rightIndex.setText("RIGHT");
-        }
-        else {
+        } else {
             leftIndex.setText("");
             rightIndex.setText("");
         }
