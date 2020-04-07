@@ -1,10 +1,17 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
 
 public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
-    private double gasPedalValue;//0-100
+    private double gasPedalValue;
+    private double breakPedalValue;
+    private double steeringWheelValue;
+    private shitfer.ShiftPos shiftChangeRequest;
+    private int tempomatValue;
+    private boolean tempomatSwitch;
+    private double trackingDistanceValue;
+    private boolean trackingDistanceSwitch;
 
     public void setGasPedalValue(double gasPedalValue) {
         this.gasPedalValue = gasPedalValue;
@@ -16,8 +23,6 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
     }
 
 
-    private double breakPedalValue;//0-100
-
     public void setBreakPedalValue(double breakPedalValue) {
         this.breakPedalValue = breakPedalValue;
     }
@@ -27,8 +32,6 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
         return breakPedalValue;
     }
 
-
-    private double steeringWheelValue;//not determined yet, probably -180-180
 
     public void setSteeringWheelValue(double steeringWheelValue) {
         this.steeringWheelValue = steeringWheelValue;
@@ -40,8 +43,6 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
     }
 
 
-    private shitfer.ShiftPos shiftChangeRequest;//P-R-N-D
-
     public void setShiftChangeRequest(shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
@@ -51,8 +52,6 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
         return shiftChangeRequest;
     }
 
-
-    private int tempomatValue;
 
     public void setTempomatValue(int tempomatValue) {
         this.tempomatValue = tempomatValue;
@@ -64,8 +63,6 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
     }
 
 
-    private boolean tempomatSwitch;
-
     public void setTempomatSwitch(boolean tempomatSwitch) {
         this.tempomatSwitch = tempomatSwitch;
     }
@@ -76,8 +73,6 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
     }
 
 
-    private double trackingDistanceValue;
-
     public void setTrackingDistanceValue(double trackingDistanceValue) {
         this.trackingDistanceValue = trackingDistanceValue;
     }
@@ -87,8 +82,6 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
         return trackingDistanceValue;
     }
 
-
-    private boolean trackingDistanceSwitch;
 
     public void setTrackingDistanceSwitch(boolean trackingDistanceSwitch) {
         this.trackingDistanceSwitch = trackingDistanceSwitch;

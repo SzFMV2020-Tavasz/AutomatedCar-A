@@ -1,4 +1,4 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
 
