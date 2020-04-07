@@ -17,6 +17,9 @@ public class Dashboard extends JPanel {
 
     Gui parent;
 
+    private TurnIndex leftTurn;
+    private TurnIndex rightTurn;
+
     private JLabel currentSpeedText = new JLabel("0 KM/h");
     private JLabel currentRpmText = new JLabel("0");
     private JLabel gearShiftText = new JLabel("Gear:");
@@ -164,8 +167,16 @@ public class Dashboard extends JPanel {
         add(referenceSpeedExplainer);
     }
 
+    public void turnIndexPlaceing(){
+        leftTurn = new TurnIndex(10,140,true);
+        leftTurn = new TurnIndex(190,140,false);
 
-    private void ProgressBarPlacing() {
+        add(leftTurn);
+        add(rightTurn);
+    }
+
+
+    private void progressBarPlacing() {
         gasProgressBar.setBounds(10, 405, 200, 15);
         breakProgressBar.setBounds(10, 435, 200, 15);
         gasProgressBar.setStringPainted(true);
@@ -176,27 +187,27 @@ public class Dashboard extends JPanel {
     }
 
     private void placeElements() {
-        //Turn_SignalPlacing();
-        ProgressBarPlacing();
+        turnIndexPlaceing();
+        progressBarPlacing();
         TextPlacing();
         OMeterPlacing();
         MarkerPlacing();
     }
 
-/*
-    private void inputEventHandling(InputPacket inputPacket) {
+
+   /* private void inputEventHandling(InputPacket inputPacket) {
         gasProgressBar.setValue(inputPacket.getGasPedalValue());
         breakProgressBar.setValue(inputPacket.getBreakPedalValue());
         steeringWheelValueText.setText(String.valueOf(inputPacket.getSteeringWheelValue()));
-        left_Turn_Signal.setOn(inputPacket.getLeftSignalValue());
-        right_Turn_Signal.setOn(inputPacket.getRightSignalValue());
+        turnLeft.setOn(inputPacket.getLeftSignalValue());
+        turnRight.setOn(inputPacket.getRightSignalValue());
         TimeGapMarker.setText(String.valueOf(inputPacket.getAccSpeed()));
         ReferenceSpeedMarker.setText(String.valueOf(inputPacket.getAccSpeed()));
         currentGearText.setText(String.valueOf(inputPacket.getShiftValue()));
         AccMarker.switchIt(inputPacket.getAccState());
         PPMarker.switchIt(inputPacket.getParkingPilotSwitch());
         LKAMarker.switchIt(inputPacket.getLaneKeepingAssistantSwitch());
-*/
+
    /* private void OtherEventHandling(PowertrainPacket packet) {
         speedoMeter.setPerf_Percentage(packet.getVelocity());
         RPMmeter.setPerf_Percentage(packet.getRPM());
