@@ -1,7 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
 
 public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
@@ -46,13 +46,13 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     }
 
 
-    private Shitfer.ShiftPos shiftChangeRequest = Shitfer.ShiftPos.P;//P-R-N-D
-    public void setShifterPos(Shitfer.ShiftPos shiftChangeRequest) {
+    private shitfer.ShiftPos shiftChangeRequest = shitfer.ShiftPos.P;//P-R-N-D
+    public void setShifterPos(shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
 
     @Override
-    public Shitfer.ShiftPos getShifterPos() {
+    public shitfer.ShiftPos getShifterPos() {
         return shiftChangeRequest;
     }
 

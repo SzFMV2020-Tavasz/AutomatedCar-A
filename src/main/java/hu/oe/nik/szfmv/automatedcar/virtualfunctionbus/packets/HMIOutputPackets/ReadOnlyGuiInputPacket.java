@@ -1,10 +1,10 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
 
 public interface ReadOnlyGuiInputPacket {
-    Shitfer.ShiftPos getShifterPos();
+    shitfer.ShiftPos getShifterPos();
     Index.IndexStatus getIndexStatus();
     double getGasPedalValue();
     double getBreakPedalValue();

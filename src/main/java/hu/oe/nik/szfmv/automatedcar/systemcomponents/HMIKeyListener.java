@@ -1,7 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
 
-
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 
@@ -13,7 +12,7 @@ public class HMIKeyListener {
 
     KeyProcesser Processer = new KeyProcesser();
 
-    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         Processer.setVirtualFunctionBus(virtualFunctionBus);
     }
 
@@ -27,8 +26,7 @@ public class HMIKeyListener {
         public void keyReleased(KeyEvent e) {
 
             int keyCode = e.getKeyCode();
-            switch(keyCode)
-            {
+            switch (keyCode) {
                 case KeyEvent.VK_W:
                     Processer.gasPedalReleased();
 
@@ -60,8 +58,7 @@ public class HMIKeyListener {
         public void keyPressed(KeyEvent e) {
 
             int keyCode = e.getKeyCode();
-            switch(keyCode)
-            {
+            switch (keyCode) {
                 case KeyEvent.VK_H:
                     Processer.helpButtonPressed();
                     break;
@@ -107,7 +104,7 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_R:
-                   Processer.turnAccSwitch();
+                    Processer.turnAccSwitch();
                     break;
 
                 case KeyEvent.VK_J:
@@ -134,8 +131,7 @@ public class HMIKeyListener {
         }
     };
 
-    public KeyListener getHMIListener()
-    {
+    public KeyListener getHMIListener() {
 
         return listen;
     }

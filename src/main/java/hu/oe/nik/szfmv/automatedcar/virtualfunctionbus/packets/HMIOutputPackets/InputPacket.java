@@ -1,6 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
 
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer.ShiftPos;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer.ShiftPos;
 
 public class InputPacket implements BaseInputPacket {
 
