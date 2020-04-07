@@ -2,7 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 
-public class Shitfer {
+public class shitfer {
     public enum ShiftPos {P, R, N, D}
 
     private int acttuallyValue = 0;

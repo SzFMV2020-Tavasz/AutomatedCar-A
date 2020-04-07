@@ -3,21 +3,16 @@ package hu.oe.nik.szfmv.automatedcar.visualization;
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Dashboard shows the state of the ego car, thus helps in debugging.
  */
 public class Dashboard extends JPanel {
+
 
     private final int width = 250;
     private final int height = 700;
@@ -190,17 +185,21 @@ public class Dashboard extends JPanel {
         MarkerPlacing();
     }
 
-    /*private Thread timer = new Thread() {
-        int difference;
+
 
         public void run() {
             while (true) {
+
 
                 try {
                     EventHandling();
                     Thread.sleep(40);
                 } catch (InterruptedException ex) {
                 }
+
+        aeb.setEnabled(false);
+        rrWarn.setEnabled(false);
+
 
             }
         }
@@ -221,6 +220,7 @@ public class Dashboard extends JPanel {
 
 
     }
+
 
 
    /* private void OtherEventHandling(PowertrainPacket packet) {
@@ -260,6 +260,10 @@ public class Dashboard extends JPanel {
             roadSign = (Sign)signPoints.get(closestPoint);
         }
 
+    private void drawDebugGridLayout() {
+        GridLayout debugGridLayout = new GridLayout(4, 1, 8, 8);
+
+
         if (roadSign != null) {
             ImageIcon i=new ImageIcon(roadSign.getImage());
 
@@ -267,15 +271,8 @@ public class Dashboard extends JPanel {
             lastRoadSign.setIcon(i);
             lastRoadSign.setText(null);
             speedLimitValueText.setText(roadSign.getSpeedLimit());
-
-        } else {
-
-            lastRoadSign.setIcon(null);
-            lastRoadSign.setText("No Sign");
-        }
-
-
     }*/
+
    /* private void AEBEventHandling(AEBPacket packet){
         if(packet.getState()== AEBState.COLLISION_AVOIDABLE)
             AEBWARNIndicator.switchIt(true);
@@ -296,9 +293,8 @@ public class Dashboard extends JPanel {
             if(virtualFunctionBus.emergencyBrakePacket!=null)
                 AEBEventHandling(virtualFunctionBus.emergencyBrakePacket);
         }
-
-
     }*/
+
 
     /**
      * Initialize the dashboard

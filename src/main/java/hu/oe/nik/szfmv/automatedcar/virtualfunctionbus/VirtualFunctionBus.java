@@ -2,9 +2,8 @@ package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus;
 
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.GuiInputPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.ToPowerTrainPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets.GuiInputPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets.ToPowerTrainPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraDisplayStatePacket;
@@ -26,8 +25,6 @@ import java.util.List;
  * getters respectively.
  */
 public class VirtualFunctionBus {
-
-    public InputPacket inputPacket = new InputPacket();
     public ToPowerTrainPacket toPowerTrainPacket = new ToPowerTrainPacket();
     public GuiInputPacket guiInputPacket = new GuiInputPacket();
 
@@ -44,7 +41,6 @@ public class VirtualFunctionBus {
     public List<WorldObject> worldObjects = new ArrayList<>();
 
     private List<SystemComponent> components = new ArrayList<>();
-
 
 
     /**

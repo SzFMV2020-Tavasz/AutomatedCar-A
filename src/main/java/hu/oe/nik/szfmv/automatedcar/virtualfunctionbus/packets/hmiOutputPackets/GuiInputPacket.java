@@ -1,11 +1,23 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
 
 public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
     private Index.IndexStatus indexStatus;
+    private double gasPedalValue;
+    private double breakPedalValue;
+    private double steeringWheelValue;
+    private shitfer.ShiftPos shiftChangeRequest = shitfer.ShiftPos.P;
+    private boolean accSwitch;
+    private int accSpeedValue = 30;
+    private double accFollowingDistance = 0.8;
+    private boolean parkingPilotStatus;
+    private boolean laneKeepingAssistantStatus;
+    private boolean debugSwitch;
+    private boolean helpMenuSwitch;
+
 
     public void setIndexStatus(Index.IndexStatus indexStatus) {
         this.indexStatus = indexStatus;
@@ -16,47 +28,46 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return indexStatus;
     }
 
-    private double gasPedalValue;//0-100
-    public void setGasPedalValue(double gasPedalValue){
-        this.gasPedalValue=gasPedalValue;
+
+    public void setGasPedalValue(double gasPedalValue) {
+        this.gasPedalValue = gasPedalValue;
     }
+
     @Override
     public double getGasPedalValue() {
         return gasPedalValue;
     }
 
 
-    private double breakPedalValue;//0-100
-    public void setBreakPedalValue(double breakPedalValue){
-        this.breakPedalValue=breakPedalValue;
+    public void setBreakPedalValue(double breakPedalValue) {
+        this.breakPedalValue = breakPedalValue;
     }
+
     @Override
     public double getBreakPedalValue() {
         return breakPedalValue;
     }
 
 
-    private double steeringWheelValue;//not determined yet, probably -180-180
-    public void setSteeringWheelValue(double steeringWheelValue){
-        this.steeringWheelValue=steeringWheelValue;
+    public void setSteeringWheelValue(double steeringWheelValue) {
+        this.steeringWheelValue = steeringWheelValue;
     }
+
     @Override
     public double getSteeringWheelValue() {
         return steeringWheelValue;
     }
 
 
-    private Shitfer.ShiftPos shiftChangeRequest = Shitfer.ShiftPos.P;//P-R-N-D
-    public void setShifterPos(Shitfer.ShiftPos shiftChangeRequest) {
+    public void setShifterPos(shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
 
     @Override
-    public Shitfer.ShiftPos getShifterPos() {
+    public shitfer.ShiftPos getShifterPos() {
         return shiftChangeRequest;
     }
 
-    private boolean accSwitch;
 
     public void setAccSwitch(boolean accSwitch) {
         this.accSwitch = accSwitch;
@@ -67,7 +78,6 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return accSwitch;
     }
 
-    private int accSpeedValue=30;
 
     public void setAccSpeedValue(int accSpeedValue) {
         this.accSpeedValue = accSpeedValue;
@@ -78,7 +88,6 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return accSpeedValue;
     }
 
-    private double accFollowingDistance = 0.8;
 
     public void setAccFollowingDistance(double accFollowingDistance) {
         this.accFollowingDistance = accFollowingDistance;
@@ -89,7 +98,6 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return accFollowingDistance;
     }
 
-    private boolean parkingPilotStatus;
 
     public void setParkingPilotStatus(boolean parkingPilotStatus) {
         this.parkingPilotStatus = parkingPilotStatus;
@@ -100,7 +108,6 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return parkingPilotStatus;
     }
 
-    private boolean laneKeepingAssistantStatus;
 
     public void setLaneKeepingAssistantStatus(boolean laneKeepingAssistantStatus) {
         this.laneKeepingAssistantStatus = laneKeepingAssistantStatus;
@@ -111,7 +118,6 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return laneKeepingAssistantStatus;
     }
 
-    private boolean debugSwitch;
 
     public void setDebugSwitch(boolean debugSwitch) {
         this.debugSwitch = debugSwitch;
@@ -122,7 +128,6 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return debugSwitch;
     }
 
-    private boolean helpMenuSwitch;
 
     public void setHelpMenuSwitch(boolean helpMenuSwitch) {
         this.helpMenuSwitch = helpMenuSwitch;

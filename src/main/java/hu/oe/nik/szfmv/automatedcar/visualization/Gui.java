@@ -2,15 +2,12 @@ package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.HMIKeyListener;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.SamplePacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Gui extends JFrame {
@@ -58,27 +55,9 @@ public class Gui extends JFrame {
         setVisible(true);
 
         keysPressed = new ArrayList<>();
-       // loop();
 
     }
-    public void loop()
-    {
-        Thread looping = new Thread(() ->{
-            while(true){
-                System.out.println("Gas pedal value: " +virtualFunctionBus.toPowerTrainPacket.getGasPedalValue());
-                System.out.println("Break pedal value" +virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue());
-                System.out.println("Steering wheel value: " +virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue());
-                System.out.println("Shifter value: " + virtualFunctionBus.toPowerTrainPacket.getShiftChangeRequest());
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
 
-        });
-        looping.start();
-    }
 
     public VirtualFunctionBus getVirtualFunctionBus() {
         return virtualFunctionBus;
