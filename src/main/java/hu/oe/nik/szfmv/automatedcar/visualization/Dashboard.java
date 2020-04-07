@@ -17,10 +17,8 @@ public class Dashboard extends JPanel {
 
     private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
-    private JOptionPane jOptionPane = new JOptionPane();
     private  JOptionPane optionPane;
     private  JDialog dialog;
-
     private  JLabel gear = new JLabel("gear: P");
     private JLabel leftIndex = new JLabel("");
     private JLabel rightIndex = new JLabel("");
@@ -29,11 +27,12 @@ public class Dashboard extends JPanel {
     private JLabel steeringWheel = new JLabel("steering wheel: " + virtualFunctionBus.guiInputPacket.getSteeringWheelValue());
     private JLabel debug = new JLabel("debug:" + virtualFunctionBus.guiInputPacket.getDebugSwitch());
     private JLabel speedLimit = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
-    JLabel accSpeed = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
-    JLabel accDistance = new JLabel("Acc Distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
-    JCheckBox pp = new JCheckBox("PP");
-    JCheckBox lka = new JCheckBox("LKA");
-    JCheckBox acc = new JCheckBox("ACC");
+    private JPanel indexPanel = new JPanel();
+    private JLabel accSpeed = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
+    private JLabel accDistance = new JLabel("Acc Distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
+    private JCheckBox pp = new JCheckBox("PP");
+    private JCheckBox lka = new JCheckBox("LKA");
+    private JCheckBox acc = new JCheckBox("ACC");
 
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
@@ -84,7 +83,6 @@ public class Dashboard extends JPanel {
         add(meterPanel);
     }
 
-    private  JPanel indexPanel = new JPanel();
     private void drawIndexGridLayout(){
         GridLayout indexGridLayout = new GridLayout(1,3,8,8);
 
@@ -103,7 +101,7 @@ public class Dashboard extends JPanel {
 
     private JPanel pedalPanel = new JPanel();
     private void drawPedalGridLayout(){
-        GridLayout pedalGridLayout = new GridLayout(4,1,8,8);
+        GridLayout pedalGridLayout = new GridLayout(4, 1, 8, 8);
 
 
 
@@ -133,7 +131,7 @@ public class Dashboard extends JPanel {
     public void drawAccGridLayout(){
         GridLayout compactLayout = new GridLayout(1,2,0,0);
         GridLayout accGridLayout = new GridLayout(4, 2, 4,4);
-        GridLayout optsGridLayout = new GridLayout(4, 2, 4, 4);
+        GridLayout optsGridLayout = new GridLayout(4, 2,  4, 4);
         GridLayout signGridLayout = new GridLayout(3,1,0,0);
 
 
@@ -232,12 +230,12 @@ public class Dashboard extends JPanel {
     {
         Thread popUpWindow = new Thread(()->{
             UIManager um = new UIManager();
-            um.put("OptionPane.messageForeground", Color.WHITE);
-            um.put("Panel.background", Color.BLUE);
+            UIManager.put("OptionPane.messageForeground", Color.WHITE);
+            UIManager.put("Panel.background", Color.BLUE);
 
-            optionPane =new JOptionPane("a - bal"+"\n"+"d - jobb"+"\n"+"w - gáz"+"\n"+"s - fék"+"\n"+"q - bal index"+"\n"+"e - jobb index"+"\n"+
-                    "k - levele váltás"+"\n"+"l - lefele váltás"+"\n"+"i - tempomat csökkentés"+ "\n"+"o - tempomat nővelése"+"\n"+"ctr+0 - debug mód"+"\n"+
-                    "t-tempomat be/ki"+"\n"+"j - sáv tartó" + "\n"+"p - parkolás pilota be/ki"+"\n"+"u - követési távolság nővelése" +"\n h - help menü");
+            optionPane =new JOptionPane("a - bal" + "\n" + "d - jobb" + "\n" + "w - gáz" + "\n" + "s - fék" + "\n" + "q - bal index" + "\n" + "e - jobb index" + "\n" +
+                    "k - levele váltás" + "\n" + "l - lefele váltás" + "\n" + "i - tempomat csökkentés" + "\n" + "o - tempomat nővelése" + "\n" + "ctr+0 - debug mód" + "\n" +
+                    "t-tempomat be/ki" + "\n" + "j - sáv tartó" + "\n" + "p - parkolás pilota be/ki" + "\n" + "u - követési távolság nővelése" + "\n h - help menü");
             optionPane.setOptionType(JOptionPane.DEFAULT_OPTION);
             optionPane.setIcon(null);
             optionPane.setOptions(new Object[]{});
