@@ -24,12 +24,16 @@ public class Dashboard extends JPanel {
     private JLabel rightIndex = new JLabel("");
     private JProgressBar gasBar = new JProgressBar(0, 100);
     private JProgressBar breakBar = new JProgressBar(0, 100);
-    private JLabel steeringWheel = new JLabel("steering wheel: " + virtualFunctionBus.guiInputPacket.getSteeringWheelValue());
+    private JLabel steeringWheel = new JLabel("steering wheel: "
+            + virtualFunctionBus.guiInputPacket.getSteeringWheelValue());
     private JLabel debug = new JLabel("debug:" + virtualFunctionBus.guiInputPacket.getDebugSwitch());
-    private JLabel speedLimit = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
+    private JLabel speedLimit = new JLabel("speed limit: "
+            + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
     private JPanel indexPanel = new JPanel();
-    private JLabel accSpeed = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
-    private JLabel accDistance = new JLabel("Acc Distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
+    private JLabel accSpeed = new JLabel("speed limit: "
+            + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
+    private JLabel accDistance = new JLabel("Acc Distance: "
+            + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
     private JCheckBox pp = new JCheckBox("PP");
     private JCheckBox lka = new JCheckBox("LKA");
     private JCheckBox acc = new JCheckBox("ACC");
