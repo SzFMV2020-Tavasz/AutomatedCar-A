@@ -15,6 +15,9 @@ import java.awt.event.KeyListener;
  */
 public class Dashboard extends JPanel {
 
+    private OMeter speedMeter;
+    private OMeter rpmMeter;
+
     private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
     private JOptionPane jOptionPane = new JOptionPane();
@@ -34,6 +37,19 @@ public class Dashboard extends JPanel {
     JCheckBox pp = new JCheckBox("PP");
     JCheckBox lka = new JCheckBox("LKA");
     JCheckBox acc = new JCheckBox("ACC");
+
+   /*private JLabel pedalExplainerText=new JLabel("W/S : Throttle/Break  ");
+    private JLabel steeringExplainerText=new JLabel(" A/D :Turn Left/Right");
+    private JLabel gearChangeExplainerText=new JLabel("Q/E : Index Left/Right");
+    private JLabel indicatorExplainerText=new JLabel("L/R Arrow: Indicator L/R");
+    private JLabel parkingIndicatorExplainerText=new JLabel("P : Parking mode");
+    private JLabel accIndicatorExplainerText=new JLabel("B : Automated Cruise Control");
+    private JLabel laneKeepingIndicatorExplainerText=new JLabel("J : LaneKeeping");
+    private JLabel timeGapExplainerText=new JLabel("T: Tempomat on/off");
+    private JLabel referenceSpeedExplainer=new JLabel("I/O  : Change ACC speed");
+    private JLabel setFollowerGap=new JLabel(" U : Change Follower gap");
+    private JLabel debugMode=new JLabel(" CTR+0 : Debug mode on");
+    private JLabel gearShift=new JLabel("K/L : Gear up/down");*/
 
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
@@ -204,6 +220,7 @@ public class Dashboard extends JPanel {
         drawPedalGridLayout();
         drawAccGridLayout();
         drawDebugGridLayout();
+        OMeterPlacing();
         //drawMenuWindow();
 
     }
@@ -227,6 +244,32 @@ public class Dashboard extends JPanel {
         pp.setSelected(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());
         lka.setSelected(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
     }
+
+
+    private void CreateSpeedometer() {
+        speedMeter = new OMeter();
+        speedMeter.setPosition(new Point(0, 0));
+        speedMeter.setSize(new Point(100, 100));
+        speedMeter.setPerf_Percentage(0);
+        speedMeter.setBounds(10, 15, 110, 100);
+    }
+
+    private void CreateRPMmeter() {
+        rpmMeter = new OMeter();
+        rpmMeter.setPosition(new Point(0, 0));
+        rpmMeter.setSize(new Point(80, 80));
+        rpmMeter.setPerf_Percentage(0);
+        rpmMeter.setBounds(120, 25, 110, 100);
+    }
+
+    private void OMeterPlacing() {
+        CreateRPMmeter();
+        CreateSpeedometer();
+
+        add(speedMeter);
+        add(rpmMeter);
+    }
+
 
     public  void drawMenuWindow( )
     {
