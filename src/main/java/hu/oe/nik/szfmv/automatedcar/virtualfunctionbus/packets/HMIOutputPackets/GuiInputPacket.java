@@ -17,9 +17,11 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     }
 
     private double gasPedalValue;//0-100
-    public void setGasPedalValue(double gasPedalValue){
-        this.gasPedalValue=gasPedalValue;
+
+    public void setGasPedalValue(double gasPedalValue) {
+        this.gasPedalValue = gasPedalValue;
     }
+
     @Override
     public double getGasPedalValue() {
         return gasPedalValue;
@@ -27,9 +29,11 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
 
     private double breakPedalValue;//0-100
-    public void setBreakPedalValue(double breakPedalValue){
-        this.breakPedalValue=breakPedalValue;
+
+    public void setBreakPedalValue(double breakPedalValue) {
+        this.breakPedalValue = breakPedalValue;
     }
+
     @Override
     public double getBreakPedalValue() {
         return breakPedalValue;
@@ -37,9 +41,11 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
 
     private double steeringWheelValue;//not determined yet, probably -180-180
-    public void setSteeringWheelValue(double steeringWheelValue){
-        this.steeringWheelValue=steeringWheelValue;
+
+    public void setSteeringWheelValue(double steeringWheelValue) {
+        this.steeringWheelValue = steeringWheelValue;
     }
+
     @Override
     public double getSteeringWheelValue() {
         return steeringWheelValue;
@@ -47,6 +53,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
 
     private shitfer.ShiftPos shiftChangeRequest = shitfer.ShiftPos.P;//P-R-N-D
+
     public void setShifterPos(shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
@@ -67,7 +74,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return accSwitch;
     }
 
-    private int accSpeedValue=30;
+    private int accSpeedValue = 30;
 
     public void setAccSpeedValue(int accSpeedValue) {
         this.accSpeedValue = accSpeedValue;

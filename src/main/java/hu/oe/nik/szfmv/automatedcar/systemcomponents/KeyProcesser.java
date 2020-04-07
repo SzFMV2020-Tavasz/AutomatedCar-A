@@ -56,12 +56,6 @@ public class KeyProcesser {
         virtualFunctionBus.guiInputPacket.setHelpMenuSwitch(helpMenuSwitch);
     }
 
-
-    public int KeyPressed(int keyCode) {
-
-        return keyCode;
-    }
-
     public void gasPedalPressed() {
         pedalPos.gasPedalDown();
 
@@ -117,11 +111,11 @@ public class KeyProcesser {
     }
 
 
-    public void GrowShift() {
+    public void growShift() {
         shiftManager.Increment();
     }
 
-    public void LowerShift() {
+    public void lowerShift() {
         shiftManager.Decrement();
     }
 
