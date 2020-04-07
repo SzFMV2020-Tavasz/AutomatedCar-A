@@ -66,7 +66,7 @@ public class Gui extends JFrame {
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
         listener.setVirtualFunctionBus(virtualFunctionBus);
-        dashboard.setVirtualFunctionBus(virtualFunctionBus);
+        //dashboard.setVirtualFunctionBus(virtualFunctionBus);
     }
 
     public CourseDisplay getCourseDisplay() {
