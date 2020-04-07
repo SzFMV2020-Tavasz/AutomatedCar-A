@@ -168,9 +168,9 @@ public class Dashboard extends JPanel {
         add(referenceSpeedExplainer);
     }
 
-    public void turnIndexPlaceing(){
-        leftTurn = new TurnIndex(10,140,true);
-        rightTurn = new TurnIndex(190,140,false);
+    public void turnIndexPlaceing() {
+        leftTurn = new TurnIndex(10, 140, true);
+        rightTurn = new TurnIndex(190, 140, false);
 
         add(leftTurn);
         add(rightTurn);
@@ -215,20 +215,18 @@ public class Dashboard extends JPanel {
 
     }
 
-    private boolean rightIndex(Index.IndexStatus status){
-        if(status == Index.IndexStatus.RIGHT){
+    private boolean rightIndex(Index.IndexStatus status) {
+        if (status == Index.IndexStatus.RIGHT) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    private boolean leftIndex(Index.IndexStatus status){
-        if(status == Index.IndexStatus.LEFT){
+    private boolean leftIndex(Index.IndexStatus status) {
+        if (status == Index.IndexStatus.LEFT) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
