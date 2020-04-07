@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 
 import javax.swing.*;
@@ -16,6 +17,9 @@ public class Dashboard extends JPanel {
     private final int backgroundColor = 0x888888;
 
     Gui parent;
+
+    private TurnIndex leftTurn;
+    private TurnIndex rightTurn;
 
     private JLabel currentSpeedText = new JLabel("0 KM/h");
     private JLabel currentRpmText = new JLabel("0");
@@ -164,8 +168,16 @@ public class Dashboard extends JPanel {
         add(referenceSpeedExplainer);
     }
 
+    public void turnIndexPlaceing(){
+        leftTurn = new TurnIndex(10,140,true);
+        rightTurn = new TurnIndex(190,140,false);
 
-    private void ProgressBarPlacing() {
+        add(leftTurn);
+        add(rightTurn);
+    }
+
+
+    private void progressBarPlacing() {
         gasProgressBar.setBounds(10, 405, 200, 15);
         breakProgressBar.setBounds(10, 435, 200, 15);
         gasProgressBar.setStringPainted(true);
@@ -176,98 +188,12 @@ public class Dashboard extends JPanel {
     }
 
     private void placeElements() {
-        //Turn_SignalPlacing();
-        ProgressBarPlacing();
+        turnIndexPlaceing();
+        progressBarPlacing();
         TextPlacing();
         OMeterPlacing();
         MarkerPlacing();
     }
-
-/*
-    private void inputEventHandling(InputPacket inputPacket) {
-        gasProgressBar.setValue(inputPacket.getGasPedalValue());
-        breakProgressBar.setValue(inputPacket.getBreakPedalValue());
-        steeringWheelValueText.setText(String.valueOf(inputPacket.getSteeringWheelValue()));
-        left_Turn_Signal.setOn(inputPacket.getLeftSignalValue());
-        right_Turn_Signal.setOn(inputPacket.getRightSignalValue());
-        TimeGapMarker.setText(String.valueOf(inputPacket.getAccSpeed()));
-        ReferenceSpeedMarker.setText(String.valueOf(inputPacket.getAccSpeed()));
-        currentGearText.setText(String.valueOf(inputPacket.getShiftValue()));
-        AccMarker.switchIt(inputPacket.getAccState());
-        PPMarker.switchIt(inputPacket.getParkingPilotSwitch());
-        LKAMarker.switchIt(inputPacket.getLaneKeepingAssistantSwitch());
-*/
-   /* private void OtherEventHandling(PowertrainPacket packet) {
-        speedoMeter.setPerf_Percentage(packet.getVelocity());
-        RPMmeter.setPerf_Percentage(packet.getRPM());
-        AutomatedCar car = parent.getAutomatedCar();
-
-        xCoordValueText.setText(String.valueOf(car.getPosX()));
-        yCoordValueText.setText(String.valueOf(car.getPosY()));
-        currentSpeedText.setText(String.valueOf(packet.getVelocity()) + " KM/H");
-        currentRpmText.setText(String.valueOf(packet.getRPM()));
-    }*/
-
-    /*public void RoadSignEventHandling() {
-        AutomatedCar car = parent.getAutomatedCar();
-        WorldManager manager = parent.getManager();
-
-        int width = parent.getCourseDisplay().getWidth();
-        int height = parent.getCourseDisplay().getHeight();
-        int offsetX = (width / 2) - (car.getPosX() - car.getReferenceX() + (car.getWidth() / 2));
-        int offsetY = (height / 2) - (car.getPosY() - car.getReferenceY() + (car.getHeight() / 2));
-
-        List<IObject> sensedObjects = car.getCamera().loop(manager, car, offsetX, offsetY, car.getRotation());
-
-        if (sensedObjects.isEmpty()) {
-            roadSign = null;
-        } else {
-            Point closestPoint = null;
-            Map<Point, IObject> signPoints = new HashMap<>();
-            for (IObject object : sensedObjects) {
-                if (object instanceof Sign) {
-                    signPoints.put(new Point(object.getPosX(), object.getPosY()), object);
-                }
-            }
-            closestPoint = Collections.min(signPoints.keySet(),
-                    (final Point p1, final Point p2) -> (int)p1.distanceSq(p2));
-            roadSign = (Sign)signPoints.get(closestPoint);
-        }
-
-    private void drawDebugGridLayout() {
-        GridLayout debugGridLayout = new GridLayout(4, 1, 8, 8);
-
-
-        if (roadSign != null) {
-            ImageIcon i=new ImageIcon(roadSign.getImage());
-
-
-            lastRoadSign.setIcon(i);
-            lastRoadSign.setText(null);
-            speedLimitValueText.setText(roadSign.getSpeedLimit());
-    }*/
-
-   /* private void AEBEventHandling(AEBPacket packet){
-        if(packet.getState()== AEBState.COLLISION_AVOIDABLE)
-            AEBWARNIndicator.switchIt(true);
-        else{
-            AEBWARNIndicator.switchIt(false);
-        }
-        RRWARNIndicator.switchIt(packet.isAebNotOptimal());
-    }
-    private void EventHandling() {
-        VirtualFunctionBus virtualFunctionBus = parent.getVirtualFunctionBus();
-        if (virtualFunctionBus != null) {
-            if(virtualFunctionBus.inputPacket != null)
-                inputEventHandling(virtualFunctionBus.inputPacket);
-            if(virtualFunctionBus.powertrainPacket != null)
-                OtherEventHandling(virtualFunctionBus.powertrainPacket);
-            if(virtualFunctionBus.samplePacket != null)
-                RoadSignEventHandling();
-            if(virtualFunctionBus.emergencyBrakePacket!=null)
-                AEBEventHandling(virtualFunctionBus.emergencyBrakePacket);
-        }
-    }*/
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
@@ -284,8 +210,28 @@ public class Dashboard extends JPanel {
         accMarker.switchIt(virtualFunctionBus.guiInputPacket.getACCStatus());
         ppmarker.switchIt(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());
         lkamarker.switchIt(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
+        leftTurn.setOn(leftIndex(virtualFunctionBus.guiInputPacket.getIndexStatus()));
+        rightTurn.setOn(rightIndex(virtualFunctionBus.guiInputPacket.getIndexStatus()));
+
     }
 
+    private boolean rightIndex(Index.IndexStatus status){
+        if(status == Index.IndexStatus.RIGHT){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private boolean leftIndex(Index.IndexStatus status){
+        if(status == Index.IndexStatus.LEFT){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
     public Dashboard(Gui pt) {
         // Not using any layout manager, but fixed coordinates
