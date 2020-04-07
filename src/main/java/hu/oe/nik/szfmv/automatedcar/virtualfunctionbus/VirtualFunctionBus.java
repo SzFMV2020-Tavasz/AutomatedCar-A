@@ -25,8 +25,6 @@ import java.util.List;
  * getters respectively.
  */
 public class VirtualFunctionBus {
-
-    public InputPacket inputPacket = new InputPacket();
     public ToPowerTrainPacket toPowerTrainPacket = new ToPowerTrainPacket();
     public GuiInputPacket guiInputPacket = new GuiInputPacket();
 
@@ -43,7 +41,6 @@ public class VirtualFunctionBus {
     public List<WorldObject> worldObjects = new ArrayList<>();
 
     private List<SystemComponent> components = new ArrayList<>();
-
 
 
     /**
