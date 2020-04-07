@@ -185,26 +185,7 @@ public class Dashboard extends JPanel {
         MarkerPlacing();
     }
 
-
-
-        public void run() {
-            while (true) {
-
-
-                try {
-                    EventHandling();
-                    Thread.sleep(40);
-                } catch (InterruptedException ex) {
-                }
-
-        aeb.setEnabled(false);
-        rrWarn.setEnabled(false);
-
-
-            }
-        }
-    };*/
-
+/*
     private void inputEventHandling(InputPacket inputPacket) {
         gasProgressBar.setValue(inputPacket.getGasPedalValue());
         breakProgressBar.setValue(inputPacket.getBreakPedalValue());
@@ -217,12 +198,7 @@ public class Dashboard extends JPanel {
         AccMarker.switchIt(inputPacket.getAccState());
         PPMarker.switchIt(inputPacket.getParkingPilotSwitch());
         LKAMarker.switchIt(inputPacket.getLaneKeepingAssistantSwitch());
-
-
-    }
-
-
-
+*/
    /* private void OtherEventHandling(PowertrainPacket packet) {
         speedoMeter.setPerf_Percentage(packet.getVelocity());
         RPMmeter.setPerf_Percentage(packet.getRPM());
@@ -295,10 +271,6 @@ public class Dashboard extends JPanel {
         }
     }*/
 
-
-    /**
-     * Initialize the dashboard
-     */
     public Dashboard(Gui pt) {
         // Not using any layout manager, but fixed coordinates
         setLayout(null);
@@ -309,6 +281,4 @@ public class Dashboard extends JPanel {
         placeElements();
         //timer.start();
     }
-
-
 }
