@@ -51,7 +51,7 @@ public class Main {
             try {
                 car.drive();
                 window.getCourseDisplay().drawWorld(displayWorld);
-                //window.getDashboard().refreshDrawing();
+                window.getDashboard().refresh();
 //                window.getCourseDisplay().refreshFrame();
                 Thread.sleep(CYCLE_PERIOD);
             } catch (InterruptedException e) {

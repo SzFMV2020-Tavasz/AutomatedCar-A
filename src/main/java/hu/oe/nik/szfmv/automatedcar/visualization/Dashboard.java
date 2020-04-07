@@ -1,19 +1,16 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
-import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+
 /**
  * Dashboard shows the state of the ego car, thus helps in debugging.
  */
 public class Dashboard extends JPanel {
 
-
+    private VirtualFunctionBus virtualFunctionBus;
     private final int width = 250;
     private final int height = 700;
     private final int backgroundColor = 0x888888;
@@ -31,17 +28,17 @@ public class Dashboard extends JPanel {
     private JLabel steeringWheelText = new JLabel("Steering Wheel:");
     private JLabel speedLimitText = new JLabel("Speed Limit:");
 
-    private JLabel pedalExplainerText=new JLabel("W/S : Throttle/Break  ");
-    private JLabel steeringExplainerText=new JLabel(" A/D :Turn Left/Right");
-    private JLabel gearChangeExplainerText=new JLabel("K/L : Gear Up/Down");
-    private JLabel parkingIndicatorExplainerText=new JLabel("P : Parking mode");
-    private JLabel accIndicatorExplainerText=new JLabel("B : Automated Cruise Control");
-    private JLabel laneKeepingIndicatorExplainerText=new JLabel("J : LaneKeeping");
-    private JLabel timeGapExplainerText=new JLabel("U: Set time Gap");
-    private JLabel referenceSpeedExplainer=new JLabel("I/O: Change ACC speed");
-    private JLabel setIndex=new JLabel("Q/E : Left/Right");
+    private JLabel pedalExplainerText = new JLabel("W/S : Throttle/Break  ");
+    private JLabel steeringExplainerText = new JLabel(" A/D :Turn Left/Right");
+    private JLabel gearChangeExplainerText = new JLabel("K/L : Gear Up/Down");
+    private JLabel parkingIndicatorExplainerText = new JLabel("P : Parking mode");
+    private JLabel accIndicatorExplainerText = new JLabel("B : Automated Cruise Control");
+    private JLabel laneKeepingIndicatorExplainerText = new JLabel("J : LaneKeeping");
+    private JLabel timeGapExplainerText = new JLabel("U: Set time Gap");
+    private JLabel referenceSpeedExplainer = new JLabel("I/O: Change ACC speed");
+    private JLabel setIndex = new JLabel("Q/E : Left/Right");
 
-    private JLabel lastRoadSign=new JLabel("No sign");
+    private JLabel lastRoadSign = new JLabel("No sign");
     private JLabel currentGearText = new JLabel("P");
     private JLabel speedLimitValueText = new JLabel("No limit");
     private JLabel steeringWheelValueText = new JLabel("0");
@@ -54,18 +51,19 @@ public class Dashboard extends JPanel {
     private OMeter speedoMeter;
     private OMeter RPMometer;
 
-    private StatusMarker AccMarker;
-    private StatusMarker PPMarker;
-    private StatusMarker LKAMarker;
-    private StatusMarker LKWARNMarker;
-    private StatusMarker AEBWARNMarker;
-    private StatusMarker RRWARNMArker;
+    private StatusMarker accMarker;
+    private StatusMarker ppmarker;
+    private StatusMarker lkamarker;
+    private StatusMarker lkwarnmarker;
+    private StatusMarker aebwarnmarker;
+    private StatusMarker rrwarnmarker;
 
-    private StatusMarker TimeGapMarker;
-    private StatusMarker ReferenceSpeedMarker;
+    private StatusMarker timeGapMarker;
+    private StatusMarker referenceSpeedMarker;
 
 
     private void CreateSpeedometer() {
+
         speedoMeter = new OMeter();
         speedoMeter.setPosition(new Point(0, 0));
         speedoMeter.setSize(new Point(100, 100));
@@ -90,23 +88,23 @@ public class Dashboard extends JPanel {
     }
 
     private void MarkerPlacing() {
-        ReferenceSpeedMarker = new StatusMarker(10, 205, 50, 40, "0.0");
-        TimeGapMarker = new StatusMarker(60, 205, 50, 40, "0.8");
-        AccMarker = new StatusMarker(10, 250, 50, 40, "ACC");
-        PPMarker = new StatusMarker(60, 250, 50, 40, "PP");
-        LKAMarker = new StatusMarker(10, 300, 50, 40, "LKA");
-        LKWARNMarker = new StatusMarker(10, 350, 100, 40, "LKA WARN");
-        AEBWARNMarker = new StatusMarker(120, 310, 100, 40, "AEB WARN");
-        RRWARNMArker = new StatusMarker(120, 350, 100, 40, "RR WARN");
+        referenceSpeedMarker = new StatusMarker(10, 205, 50, 40, "0.0");
+        timeGapMarker = new StatusMarker(60, 205, 50, 40, "0.8");
+        accMarker = new StatusMarker(10, 250, 50, 40, "ACC");
+        ppmarker = new StatusMarker(60, 250, 50, 40, "PP");
+        lkamarker = new StatusMarker(10, 300, 50, 40, "LKA");
+        lkwarnmarker = new StatusMarker(10, 350, 100, 40, "LKA WARN");
+        aebwarnmarker = new StatusMarker(120, 310, 100, 40, "AEB WARN");
+        rrwarnmarker = new StatusMarker(120, 350, 100, 40, "RR WARN");
 
-        add(AccMarker);
-        add(PPMarker);
-        add(LKAMarker);
-        add(LKWARNMarker);
-        add(AEBWARNMarker);
-        add(RRWARNMArker);
-        add(TimeGapMarker);
-        add(ReferenceSpeedMarker);
+        add(accMarker);
+        add(ppmarker);
+        add(lkamarker);
+        add(lkwarnmarker);
+        add(aebwarnmarker);
+        add(rrwarnmarker);
+        add(timeGapMarker);
+        add(referenceSpeedMarker);
     }
 
     private void TextPlacing() {
@@ -124,19 +122,19 @@ public class Dashboard extends JPanel {
         yCoordText.setBounds(80, 635, 30, 15);
         yCoordValueText.setBounds(110, 635, 40, 15);
         currentSpeedText.setBounds(50, 125, 50, 15);
-        currentRpmText.setBounds(150, 125, 50,15);
+        currentRpmText.setBounds(150, 125, 50, 15);
 
-        pedalExplainerText.setBounds(10,485,200,15);
-        steeringExplainerText.setBounds(10,500,200,15);
-        gearChangeExplainerText.setBounds(10,515,200,15);
-        setIndex.setBounds(10,530,200,15);
-        laneKeepingIndicatorExplainerText.setBounds(10,560,200,15);
-        parkingIndicatorExplainerText.setBounds(10,545,200,15);
-        accIndicatorExplainerText.setBounds(10,575,220,15);
-        timeGapExplainerText.setBounds(10,590,220,15);
-        referenceSpeedExplainer.setBounds(10,605,220,15);
+        pedalExplainerText.setBounds(10, 485, 200, 15);
+        steeringExplainerText.setBounds(10, 500, 200, 15);
+        gearChangeExplainerText.setBounds(10, 515, 200, 15);
+        setIndex.setBounds(10, 530, 200, 15);
+        laneKeepingIndicatorExplainerText.setBounds(10, 560, 200, 15);
+        parkingIndicatorExplainerText.setBounds(10, 545, 200, 15);
+        accIndicatorExplainerText.setBounds(10, 575, 220, 15);
+        timeGapExplainerText.setBounds(10, 590, 220, 15);
+        referenceSpeedExplainer.setBounds(10, 605, 220, 15);
 
-        lastRoadSign.setBounds(120,205,110,110);
+        lastRoadSign.setBounds(120, 205, 110, 110);
 
         add(lastRoadSign);
         add(gearShiftText);
@@ -178,7 +176,7 @@ public class Dashboard extends JPanel {
     }
 
     private void placeElements() {
-      // Turn_SignalPlacing();
+        //Turn_SignalPlacing();
         ProgressBarPlacing();
         TextPlacing();
         OMeterPlacing();
@@ -190,8 +188,8 @@ public class Dashboard extends JPanel {
         gasProgressBar.setValue(inputPacket.getGasPedalValue());
         breakProgressBar.setValue(inputPacket.getBreakPedalValue());
         steeringWheelValueText.setText(String.valueOf(inputPacket.getSteeringWheelValue()));
-        //left_Turn_Signal.setOn(inputPacket.getLeftSignalValue());
-        //right_Turn_Signal.setOn(inputPacket.getRightSignalValue());
+        left_Turn_Signal.setOn(inputPacket.getLeftSignalValue());
+        right_Turn_Signal.setOn(inputPacket.getRightSignalValue());
         TimeGapMarker.setText(String.valueOf(inputPacket.getAccSpeed()));
         ReferenceSpeedMarker.setText(String.valueOf(inputPacket.getAccSpeed()));
         currentGearText.setText(String.valueOf(inputPacket.getShiftValue()));
@@ -270,6 +268,24 @@ public class Dashboard extends JPanel {
                 AEBEventHandling(virtualFunctionBus.emergencyBrakePacket);
         }
     }*/
+
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
+        this.virtualFunctionBus = virtualFunctionBus;
+    }
+
+    public void refresh() {
+        gasProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
+        breakProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getBreakPedalValue());
+        steeringWheelValueText.setText(Double.toString(virtualFunctionBus.guiInputPacket.getSteeringWheelValue()));
+        currentGearText.setText(virtualFunctionBus.guiInputPacket.getShifterPos().toString());
+        speedoMeter.setPerf_Percentage((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
+        referenceSpeedMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccSpeedValue()));
+        timeGapMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue()));
+        accMarker.switchIt(virtualFunctionBus.guiInputPacket.getACCStatus());
+        ppmarker.switchIt(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());
+        lkamarker.switchIt(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
+    }
+
 
     public Dashboard(Gui pt) {
         // Not using any layout manager, but fixed coordinates
