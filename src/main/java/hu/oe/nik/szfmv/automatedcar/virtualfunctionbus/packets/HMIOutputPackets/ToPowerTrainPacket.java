@@ -1,6 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets;
 
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
 
 public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
@@ -34,12 +34,12 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
     }
 
 
-    private Shitfer.ShiftPos shiftChangeRequest;//P-R-N-D
-    public void setShiftChangeRequest(Shitfer.ShiftPos shiftChangeRequest) {
+    private shitfer.ShiftPos shiftChangeRequest;//P-R-N-D
+    public void setShiftChangeRequest(shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
     @Override
-    public Shitfer.ShiftPos getShiftChangeRequest() {
+    public shitfer.ShiftPos getShiftChangeRequest() {
         return shiftChangeRequest;
     }
 

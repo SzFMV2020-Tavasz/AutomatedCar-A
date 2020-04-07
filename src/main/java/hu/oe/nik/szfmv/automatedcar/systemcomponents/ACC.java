@@ -31,7 +31,7 @@ public class ACC {
         virtualFunctionBus.guiInputPacket.setLaneKeepingAssistantStatus(laneKeepingAssistantSwitch);
     }
 
-    private int accSpeed =30;
+    private int accSpeed = 30;
 
     public void increaseAccSpeed() {
         if (accSpeed <= 150) {
@@ -47,12 +47,12 @@ public class ACC {
         virtualFunctionBus.guiInputPacket.setAccSpeedValue(accSpeed);
     }
 
-    private double[] accDistance = new double[]{0.8,1.0,1.2,1.4};
+    private double[] accDistance = new double[]{0.8, 1.0, 1.2, 1.4};
 
     private int accDistanceIndex;
 
-    public void turnAccDistance(){
-        accDistanceIndex = (accDistanceIndex+1) % 4;
+    public void turnAccDistance() {
+        accDistanceIndex = (accDistanceIndex + 1) % 4;
         virtualFunctionBus.guiInputPacket.setAccFollowingDistance(accDistance[accDistanceIndex]);
     }
 
