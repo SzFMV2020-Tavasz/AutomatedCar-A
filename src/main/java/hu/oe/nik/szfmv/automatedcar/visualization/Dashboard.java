@@ -199,7 +199,7 @@ public class Dashboard extends JPanel {
         this.virtualFunctionBus = virtualFunctionBus;
     }
 
-    public void refresh() {
+    public void refresh(int yCoord, int xCoord) {
         gasProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
         breakProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getBreakPedalValue());
         steeringWheelValueText.setText(Double.toString(virtualFunctionBus.guiInputPacket.getSteeringWheelValue()));
@@ -212,6 +212,8 @@ public class Dashboard extends JPanel {
         lkamarker.switchIt(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
         leftTurn.setOn(leftIndex(virtualFunctionBus.guiInputPacket.getIndexStatus()));
         rightTurn.setOn(rightIndex(virtualFunctionBus.guiInputPacket.getIndexStatus()));
+        yCoordValueText.setText(Integer.toString(yCoord));
+        xCoordValueText.setText(Integer.toString(xCoord));
 
     }
 
@@ -236,7 +238,6 @@ public class Dashboard extends JPanel {
         setLayout(null);
         setBackground(new Color(backgroundColor));
         setBounds(770, 0, width, height);
-
         parent = pt;
         placeElements();
         //timer.start();
