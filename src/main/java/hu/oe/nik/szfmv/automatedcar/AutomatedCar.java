@@ -3,6 +3,7 @@ package hu.oe.nik.szfmv.automatedcar;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
+import hu.oe.nik.szfmv.automatedcar.sensors.Radar;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,12 +20,14 @@ public class AutomatedCar extends WorldObject {
         super(x, y, imageFileName);
 
         new Driver(virtualFunctionBus);
+
+
     }
 
     public void drive() {
         virtualFunctionBus.loop();
-
         calculatePositionAndOrientation();
+
     }
 
     public VirtualFunctionBus getVirtualFunctionBus() {
@@ -34,6 +37,8 @@ public class AutomatedCar extends WorldObject {
     public PowerTrain getPowerTrain() {
         return powerTrain;
     }
+
+    //public Radar getRadar() {return radar}
 
     private void calculatePositionAndOrientation() {
         //TODO it is just a fake implementation
@@ -51,8 +56,7 @@ public class AutomatedCar extends WorldObject {
             case 3:
                 x -= 5;
                 break;
-            default:
-                break;
         }
     }
+
 }

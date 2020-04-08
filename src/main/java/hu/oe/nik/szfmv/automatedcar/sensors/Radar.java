@@ -17,7 +17,6 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -47,6 +46,8 @@ public class Radar extends SystemComponent {
     private AutomatedCar automatedCar;
     private World world;
 
+    private List<MovingWorldObject> elementsSeenByRadar;
+
     private Polygon radarPolygon;
 
     public Radar(VirtualFunctionBus virtualFunctionBus, AutomatedCar automatedCar, World world) {
@@ -60,6 +61,7 @@ public class Radar extends SystemComponent {
 
         this.automatedCar = automatedCar;
         this.world = world;
+        this.elementsSeenByRadar = new ArrayList<>();
     }
 
     /**
@@ -75,7 +77,8 @@ public class Radar extends SystemComponent {
 
         // get elements in triangle
         List<WorldObject> selectedInTriangle = getCollideableElementsInRadarTriangle(source, corner1, corner2);
-        showElementsInTriangle(selectedDebugListPacket, selectedInTriangle);
+        updateElementsSeenByRadar(selectedInTriangle);
+        showElementsInTriangle(selectedDebugListPacket);
 
         // send radar display data
         radarVisualizationPacket.setSensorTriangle(source, corner1, corner2, RADAR_SENSOR_BG_COLOUR);
@@ -84,15 +87,73 @@ public class Radar extends SystemComponent {
     }
 
     /**
+     * Keepst the list of elements seen by radar up to date
+     * by comparing it to the freshly requested elements
+     * @param elementsInRadarTriangle the fresh list of the elements seen by radar
+     */
+    private void updateElementsSeenByRadar(List<WorldObject> elementsInRadarTriangle) {
+        for (WorldObject object : elementsInRadarTriangle) {
+            // check if element is already stored with that id;
+            MovingWorldObject mo = elementsSeenByRadarlistContainsObject(object);
+            if (mo != null) {
+                // if yes, update data
+                mo.setX(object.getX());
+                mo.setY(object.getY());
+            } else {
+                // if no, add
+                MovingWorldObject moveObject = new MovingWorldObject(object, virtualFunctionBus);
+                elementsSeenByRadar.add(moveObject);
+            }
+        }
+
+        // check if there are any elements that have gotten outside the radar triangle and needs to be removed
+        for (int i = elementsSeenByRadar.size()-1; i >= 0; i--) {
+            MovingWorldObject mo = elementsSeenByRadar.get(i);
+            if (!elementInNewRadarTriangleList(elementsInRadarTriangle, mo)) {
+                elementsSeenByRadar.remove(mo);
+            }
+        }
+
+    }
+
+    /**
+     * Checks if an object is already in the elements seeen by radar list
+     * @param object the object to check
+     * @return the object reference in the list if found; null otherwise
+     */
+    private MovingWorldObject elementsSeenByRadarlistContainsObject(WorldObject object) {
+        for (MovingWorldObject mo : elementsSeenByRadar) {
+            if (object.getId() == mo.getId()) {
+                return mo;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Checks if a {@link MovingWorldObject} is in the list of {@link WorldObject}
+     * @param selectedInTriangle The list of object to check against
+     * @param movingWorldObject The object to search for in the list
+     * @return true if the objects id is found in the list; false otherwise
+     */
+    private boolean elementInNewRadarTriangleList(List<WorldObject> selectedInTriangle,
+                                                  MovingWorldObject movingWorldObject){
+        for (WorldObject object : selectedInTriangle) {
+            if (object.getId() == movingWorldObject.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Sets the list of elements that are shown with different color inside the radar triangle
      * @param selectedDebugListPacket the packet that will pass o the list
-     * @param selectedInTriangle the list to be passed on
      */
-    private void showElementsInTriangle(SelectedDebugListPacket selectedDebugListPacket,
-                                        List<WorldObject> selectedInTriangle) {
+    private void showElementsInTriangle(SelectedDebugListPacket selectedDebugListPacket) {
         // select elemets for debugpolygons that are collideable and in the triangle
         List<String> selectedIds = new ArrayList<>();
-        for (WorldObject object : selectedInTriangle) {
+        for (WorldObject object : elementsSeenByRadar) {
             selectedIds.add(object.getId());
         }
         selectedDebugListPacket.setDebugListElements(selectedIds);
@@ -107,6 +168,7 @@ public class Radar extends SystemComponent {
      */
     private List<WorldObject> getCollideableElementsInRadarTriangle(Point source, Point corner1, Point corner2) {
         List<WorldObject> elementsInTriangle = world.getObjectsInsideTriangle(source, corner1, corner2);
+
         List<WorldObject> collideableElementsInTriangle = new ArrayList<>();
         for (WorldObject object : elementsInTriangle) {
             if (isCollideable(object)) {
@@ -150,7 +212,7 @@ public class Radar extends SystemComponent {
      * @return The calculated second point
      */
     private Point2D getCorner1() {
-        // get the x and y components of the segment line between the egocar's rotation origo
+        // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
         int corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
         int corner1DiffY = -(RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
@@ -166,7 +228,7 @@ public class Radar extends SystemComponent {
      * @return The calculated third point
      */
     private Point2D getCorner2() {
-        // get the x and y components of the segment line between the egocar's rotation origo
+        // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
         int corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
         int corner2DiffY = -(RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
@@ -178,25 +240,13 @@ public class Radar extends SystemComponent {
     }
 
     /**
-     * Checks whether an element is collideable by checking it against a list of  not collideable elemnents.
+     * Checks whether an element is collideable by checking its Z value.
      *
-     * The list is given here as literals. The method will be replacesd later if WorldObject will contain data about
-     * beeing collideable or not.
+     * Everything with a Z value higher than 0 is collidable
      * @param object The {@link WorldObject} to check
      * @return True if the object is not on the not collideable element's list.
      */
     private boolean isCollideable(WorldObject object) {
-        List<String> noCollideableTypes = Arrays.asList("2_crossroad_1", "2_crossroad_2", "crosswalk",
-            "parking_90", "parking_space_parallel",
-            "parking_90", "parking_space_parallel",
-            "road_2lane_6left", "road_2lane_6right", "road_2lane_45left", "road_2lane_45right",
-            "road_2lane_90left", "road_2lane_90right", "road_2lane_rotary",
-            "road_2lane_straight", "road_2lane_tjunctionleft", "road_2lane_tjunctionright");
-
-        if (noCollideableTypes.contains(object.getType())) {
-            return false;
-        } else {
-            return true;
-        }
+        return object.getZ() >= 1;
     }
 }

@@ -26,6 +26,7 @@ public class RadarTest {
      * Mock class for controling the passed on data
      */
     class MockWorld extends World {
+        int calledNumber = 0;
 
         MockWorld(int width, int height) {
             super(width, height);
@@ -33,11 +34,14 @@ public class RadarTest {
 
         @Override
         public List<WorldObject> getObjectsInsideTriangle(Point a, Point b, Point c) {
+            calledNumber++;
             List<WorldObject> returnlist = new ArrayList<>();
+
             // the collideable object
-            WorldObject object1 = new WorldObject(10, 10, "woman.png");
-            object1.setType("woman");
-            object1.setId("woman_1");
+            WorldObject object1 = new WorldObject(10, 10, "roadsign_speed_40.png");
+            object1.setType("roadsign_speed_40");
+            object1.setId("roadsign_speed_40_1");
+            object1.setZ(1);
             returnlist.add(object1);
 
             // the not collideable object
@@ -45,7 +49,22 @@ public class RadarTest {
             object2.setType("parking_90");
             object2.setId("parking_2");
             returnlist.add(object2);
+
+            addRemoved(returnlist);
+
             return returnlist;
+        }
+
+        private void addRemoved(List<WorldObject> returnlist){
+            if (calledNumber == 1) {
+
+                // the collideable object
+                WorldObject object1 = new WorldObject(10, 10, "tree.png");
+                object1.setType("tree");
+                object1.setId("tree_3");
+                object1.setZ(1);
+                returnlist.add(object1);
+            }
         }
     }
 
@@ -72,8 +91,19 @@ public class RadarTest {
     @Test
     public void collidableObjects() {
         radar.loop();
-        assertTrue(virtualFunctionBus.selectedDebugListPacket.getDebugList().contains("woman_1"));
+        assertTrue(virtualFunctionBus.selectedDebugListPacket.getDebugList().contains("roadsign_speed_40_1"));
         assertFalse(virtualFunctionBus.selectedDebugListPacket.getDebugList().contains("parking_2"));
+    }
+
+    /**
+     * Checks whether object is removed from the selectedDebugListPacket if no longer seen by radar
+     */
+    @Test
+    public void collidableRemoved() {
+        radar.loop();
+        assertTrue(virtualFunctionBus.selectedDebugListPacket.getDebugList().contains("tree_3"));
+        radar.loop();
+        assertFalse(virtualFunctionBus.selectedDebugListPacket.getDebugList().contains("tree_3"));
     }
 
     /**
