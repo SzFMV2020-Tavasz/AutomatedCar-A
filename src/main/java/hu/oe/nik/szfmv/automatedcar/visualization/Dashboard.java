@@ -36,9 +36,9 @@ public class Dashboard extends JPanel {
     private JLabel steeringExplainerText = new JLabel(" A/D :Turn Left/Right");
     private JLabel gearChangeExplainerText = new JLabel("K/L : Gear Up/Down");
     private JLabel parkingIndicatorExplainerText = new JLabel("P : Parking mode");
-    private JLabel accIndicatorExplainerText = new JLabel("B : Automated Cruise Control");
+    private JLabel accIndicatorExplainerText = new JLabel("R : Automated Cruise Control");
     private JLabel laneKeepingIndicatorExplainerText = new JLabel("J : LaneKeeping");
-    private JLabel timeGapExplainerText = new JLabel("U: Set time Gap");
+    private JLabel timeGapExplainerText = new JLabel("T: Set time Gap");
     private JLabel referenceSpeedExplainer = new JLabel("I/O: Change ACC speed");
     private JLabel setIndex = new JLabel("Q/E : Index Left/Right");
 
