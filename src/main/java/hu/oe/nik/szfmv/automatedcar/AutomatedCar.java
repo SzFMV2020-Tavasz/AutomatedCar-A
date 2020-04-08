@@ -3,7 +3,6 @@ package hu.oe.nik.szfmv.automatedcar;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
-import hu.oe.nik.szfmv.automatedcar.sensors.Radar;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,6 +55,7 @@ public class AutomatedCar extends WorldObject {
             case 3:
                 x -= 5;
                 break;
+            default:
         }
     }
 

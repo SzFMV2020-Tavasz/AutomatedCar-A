@@ -7,8 +7,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -29,7 +27,7 @@ public final class VisualizationConfig {
     // with 0 degrees rotation relative to the x axis
     public static final int DISPLAY_EGOCAR_CENTER_POSITION_X = DISPLAY_WIDTH / 2;
     public static final int DISPLAY_EGOCAR_CENTER_POSITION_Y = DISPLAY_HEIGHT / 2;
-    public static final float DISPLAY_EGOCAR_ROTATION = 0;//-(float) Math.PI / 6;
+    public static final float DISPLAY_EGOCAR_ROTATION = 0; //-(float) Math.PI / 6;
 
     // set sensor polygon defaults
     public static final Stroke SENSOR_CENTER_LINE = new BasicStroke(2,

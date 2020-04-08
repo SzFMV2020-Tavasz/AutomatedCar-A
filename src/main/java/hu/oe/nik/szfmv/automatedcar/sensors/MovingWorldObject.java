@@ -3,11 +3,10 @@ package hu.oe.nik.szfmv.automatedcar.sensors;
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.CarPositionPacket;
 
 import java.awt.*;
 
-public class MovingWorldObject extends WorldObject{
+public class MovingWorldObject extends WorldObject {
     VirtualFunctionBus virtualFunctionBus;
     AutomatedCar automatedCar;
     private Integer lastPosX;
@@ -54,8 +53,8 @@ public class MovingWorldObject extends WorldObject{
      *
      * @return the x component of the relative movement vector.
      */
-    public int getRelativeMovementVectorX(){
-           return (int)virtualFunctionBus.carPositionPacket.getMoveVector().getXDiff() + movementVectorX;
+    public int getRelativeMovementVectorX() {
+        return (int)virtualFunctionBus.carPositionPacket.getMoveVector().getXDiff() + movementVectorX;
     }
 
     /**
@@ -63,7 +62,7 @@ public class MovingWorldObject extends WorldObject{
      *
      * @return the y component of the relative movement vector.
      */
-    public int getRelativeMovementVectorY(){
+    public int getRelativeMovementVectorY() {
         return (int)virtualFunctionBus.carPositionPacket.getMoveVector().getYDiff() + movementVectorY;
     }
 

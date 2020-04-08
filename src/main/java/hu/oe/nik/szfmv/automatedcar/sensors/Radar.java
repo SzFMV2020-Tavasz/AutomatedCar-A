@@ -107,7 +107,7 @@ public class Radar extends SystemComponent {
         }
 
         // check if there are any elements that have gotten outside the radar triangle and needs to be removed
-        for (int i = elementsSeenByRadar.size()-1; i >= 0; i--) {
+        for (int i = elementsSeenByRadar.size() - 1; i >= 0; i--) {
             MovingWorldObject mo = elementsSeenByRadar.get(i);
             if (!elementInNewRadarTriangleList(elementsInRadarTriangle, mo)) {
                 elementsSeenByRadar.remove(mo);
@@ -137,7 +137,7 @@ public class Radar extends SystemComponent {
      * @return true if the objects id is found in the list; false otherwise
      */
     private boolean elementInNewRadarTriangleList(List<WorldObject> selectedInTriangle,
-                                                  MovingWorldObject movingWorldObject){
+                                                  MovingWorldObject movingWorldObject) {
         for (WorldObject object : selectedInTriangle) {
             if (object.getId() == movingWorldObject.getId()) {
                 return true;
