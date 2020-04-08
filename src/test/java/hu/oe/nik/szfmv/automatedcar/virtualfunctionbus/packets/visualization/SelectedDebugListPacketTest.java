@@ -3,6 +3,7 @@ package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -55,5 +56,17 @@ public class SelectedDebugListPacketTest {
         selectedDebugListPacket.removeDebugElement("ez");
         List<String> list = selectedDebugListPacket.getDebugList();
         assertEquals("az", list.get(0));
+    }
+
+    /**
+     * Checks whether the elements are changed when setting the whole list
+     */
+    @Test
+    public void replaceList() {
+        List<String> replacingList = Arrays.asList("amaz", "emez");
+        selectedDebugListPacket.setDebugListElements(replacingList);
+        assertEquals("amaz", selectedDebugListPacket.getDebugList().get(0));
+        assertEquals("emez", selectedDebugListPacket.getDebugList().get(1));
+
     }
 }
