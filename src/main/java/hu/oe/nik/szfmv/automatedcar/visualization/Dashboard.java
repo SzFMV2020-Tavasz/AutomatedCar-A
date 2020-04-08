@@ -40,7 +40,7 @@ public class Dashboard extends JPanel {
     private JLabel laneKeepingIndicatorExplainerText = new JLabel("J : LaneKeeping");
     private JLabel timeGapExplainerText = new JLabel("U: Set time Gap");
     private JLabel referenceSpeedExplainer = new JLabel("I/O: Change ACC speed");
-    private JLabel setIndex = new JLabel("Q/E : Left/Right");
+    private JLabel setIndex = new JLabel("Q/E : Index Left/Right");
 
     private JLabel lastRoadSign = new JLabel("No sign");
     private JLabel currentGearText = new JLabel("P");
