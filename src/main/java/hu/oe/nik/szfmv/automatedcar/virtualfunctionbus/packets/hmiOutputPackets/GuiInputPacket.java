@@ -18,19 +18,13 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     private boolean debugSwitch;
     private boolean helpMenuSwitch;
 
-
-    public void setIndexStatus(Index.IndexStatus indexStatus) {
-        this.indexStatus = indexStatus;
-    }
-
     @Override
     public Index.IndexStatus getIndexStatus() {
         return indexStatus;
     }
 
-
-    public void setGasPedalValue(double gasPedalValue) {
-        this.gasPedalValue = gasPedalValue;
+    public void setIndexStatus(Index.IndexStatus indexStatus) {
+        this.indexStatus = indexStatus;
     }
 
     @Override
@@ -38,9 +32,8 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return gasPedalValue;
     }
 
-
-    public void setBreakPedalValue(double breakPedalValue) {
-        this.breakPedalValue = breakPedalValue;
+    public void setGasPedalValue(double gasPedalValue) {
+        this.gasPedalValue = gasPedalValue;
     }
 
     @Override
@@ -48,9 +41,8 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return breakPedalValue;
     }
 
-
-    public void setSteeringWheelValue(double steeringWheelValue) {
-        this.steeringWheelValue = steeringWheelValue;
+    public void setBreakPedalValue(double breakPedalValue) {
+        this.breakPedalValue = breakPedalValue;
     }
 
     @Override
@@ -58,9 +50,8 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return steeringWheelValue;
     }
 
-
-    public void setShifterPos(shitfer.ShiftPos shiftChangeRequest) {
-        this.shiftChangeRequest = shiftChangeRequest;
+    public void setSteeringWheelValue(double steeringWheelValue) {
+        this.steeringWheelValue = steeringWheelValue;
     }
 
     @Override
@@ -68,6 +59,9 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return shiftChangeRequest;
     }
 
+    public void setShifterPos(shitfer.ShiftPos shiftChangeRequest) {
+        this.shiftChangeRequest = shiftChangeRequest;
+    }
 
     public void setAccSwitch(boolean accSwitch) {
         this.accSwitch = accSwitch;
@@ -78,16 +72,14 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return accSwitch;
     }
 
-
-    public void setAccSpeedValue(int accSpeedValue) {
-        this.accSpeedValue = accSpeedValue;
-    }
-
     @Override
     public int getAccSpeedValue() {
         return accSpeedValue;
     }
 
+    public void setAccSpeedValue(int accSpeedValue) {
+        this.accSpeedValue = accSpeedValue;
+    }
 
     public void setAccFollowingDistance(double accFollowingDistance) {
         this.accFollowingDistance = accFollowingDistance;
@@ -98,16 +90,14 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return accFollowingDistance;
     }
 
-
-    public void setParkingPilotStatus(boolean parkingPilotStatus) {
-        this.parkingPilotStatus = parkingPilotStatus;
-    }
-
     @Override
     public boolean getParkingPilotStatus() {
         return parkingPilotStatus;
     }
 
+    public void setParkingPilotStatus(boolean parkingPilotStatus) {
+        this.parkingPilotStatus = parkingPilotStatus;
+    }
 
     public void setLaneKeepingAssistantStatus(boolean laneKeepingAssistantStatus) {
         this.laneKeepingAssistantStatus = laneKeepingAssistantStatus;
@@ -118,23 +108,21 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         return laneKeepingAssistantStatus;
     }
 
+    @Override
+    public boolean getDebugSwitch() {
+        return debugSwitch;
+    }
 
     public void setDebugSwitch(boolean debugSwitch) {
         this.debugSwitch = debugSwitch;
     }
 
     @Override
-    public boolean getDebugSwitch() {
-        return debugSwitch;
+    public boolean getHelpMenuSwitch() {
+        return helpMenuSwitch;
     }
-
 
     public void setHelpMenuSwitch(boolean helpMenuSwitch) {
         this.helpMenuSwitch = helpMenuSwitch;
-    }
-
-    @Override
-    public boolean getHelpMenuSwitch() {
-        return helpMenuSwitch;
     }
 }

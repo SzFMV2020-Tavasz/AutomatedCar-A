@@ -11,13 +11,11 @@ import java.awt.*;
  */
 public class Dashboard extends JPanel {
 
-    private VirtualFunctionBus virtualFunctionBus;
     private final int width = 250;
     private final int height = 700;
     private final int backgroundColor = 0x888888;
-
     Gui parent;
-
+    private VirtualFunctionBus virtualFunctionBus;
     private TurnIndex leftTurn;
     private TurnIndex rightTurn;
 
@@ -65,6 +63,16 @@ public class Dashboard extends JPanel {
     private StatusMarker timeGapMarker;
     private StatusMarker referenceSpeedMarker;
 
+
+    public Dashboard(Gui pt) {
+        // Not using any layout manager, but fixed coordinates
+        setLayout(null);
+        setBackground(new Color(backgroundColor));
+        setBounds(770, 0, width, height);
+        parent = pt;
+        placeElements();
+        //timer.start();
+    }
 
     private void CreateSpeedometer() {
 
@@ -176,7 +184,6 @@ public class Dashboard extends JPanel {
         add(rightTurn);
     }
 
-
     private void progressBarPlacing() {
         gasProgressBar.setBounds(10, 405, 200, 15);
         breakProgressBar.setBounds(10, 435, 200, 15);
@@ -231,15 +238,5 @@ public class Dashboard extends JPanel {
         } else {
             return false;
         }
-    }
-
-    public Dashboard(Gui pt) {
-        // Not using any layout manager, but fixed coordinates
-        setLayout(null);
-        setBackground(new Color(backgroundColor));
-        setBounds(770, 0, width, height);
-        parent = pt;
-        placeElements();
-        //timer.start();
     }
 }

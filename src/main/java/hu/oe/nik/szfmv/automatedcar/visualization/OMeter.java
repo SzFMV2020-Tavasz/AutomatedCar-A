@@ -22,7 +22,6 @@ public class OMeter extends JPanel {
         this.position = position;
     }
 
-
     @Override
     protected void paintComponent(Graphics g) {
 

@@ -117,6 +117,7 @@ public class HMIKeyListener {
                     keyProcesser.turnAccDistance();
                     break;
 
+
                 case KeyEvent.VK_0:
                     keyProcesser.zeroPressed();
                     break;

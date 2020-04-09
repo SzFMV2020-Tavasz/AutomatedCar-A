@@ -6,13 +6,6 @@ public class Index {
     private VirtualFunctionBus virtualFunctionBus;
     private IndexStatus status;
 
-    public enum IndexStatus {
-        RIGHT,
-        LEFT,
-        NONE
-    }
-
-
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
     }
@@ -33,5 +26,11 @@ public class Index {
             status = IndexStatus.LEFT;
         }
         virtualFunctionBus.guiInputPacket.setIndexStatus(status);
+    }
+
+    public enum IndexStatus {
+        RIGHT,
+        LEFT,
+        NONE
     }
 }

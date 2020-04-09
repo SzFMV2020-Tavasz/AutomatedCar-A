@@ -11,17 +11,8 @@ public class TurnIndex extends JPanel {
     private int[] x;
     private int[] y;
     private Color currentColor = Signal_OFF;
-
-    public void setOn(boolean on) {
-        isOn = on;
-        if(isOn)
-            currentColor = Signal_ON;
-        else
-            currentColor = Signal_OFF;
-        repaint();
-    }
-
     private boolean isOn;
+
 
     public TurnIndex(int x_pos, int y_pos, boolean isLeft) {
         setBounds(x_pos, y_pos, 40, 40);
@@ -32,6 +23,16 @@ public class TurnIndex extends JPanel {
             x = new int[]{0, 15, 15, 30, 15, 15, 0};
             y = new int[]{10, 10, 0, 15, 30, 20, 20};
         }
+    }
+
+    public void setOn(boolean on) {
+        isOn = on;
+        if (isOn) {
+            currentColor = Signal_ON;
+        } else {
+            currentColor = Signal_OFF;
+        }
+        repaint();
     }
 
     public void ChangeSignal() {

@@ -4,6 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 
 public class KeyProcesser {
 
+    protected shitfer shiftManager = new shitfer();
     private VirtualFunctionBus virtualFunctionBus;
     private Index index = new Index();
     private boolean zeroIsPressed;
@@ -12,8 +13,6 @@ public class KeyProcesser {
     private boolean debugMode;
     private PedalPosition pedalPos = new PedalPosition();
     private ACC accManager = new ACC();
-    protected shitfer shiftManager = new shitfer();
-
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
@@ -22,6 +21,7 @@ public class KeyProcesser {
         shiftManager.setVirtualFunctionBus(virtualFunctionBus);
         index.setVirtualFunctionBus(virtualFunctionBus);
     }
+
 
     public void zeroPressed() {
         zeroIsPressed = true;

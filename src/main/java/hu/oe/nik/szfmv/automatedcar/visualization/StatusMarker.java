@@ -5,24 +5,11 @@ import java.awt.*;
 
 public class StatusMarker extends JPanel {
     int x, y, width, height;
-
-    public void setText(String text) {
-        this.text = text;
-        repaint();
-    }
-
     String text;
     Font font;
-
-    public void switchIt(boolean value) {
-        isItOn = value;
-
-        repaint();
-    }
-
     boolean isItOn = false;
-
     Color myColor;
+
 
     public StatusMarker(int x, int y, int width, int height, String text) {
         this.x = x;
@@ -32,6 +19,17 @@ public class StatusMarker extends JPanel {
         this.text = text;
         font = new Font(Font.MONOSPACED, Font.BOLD, width / text.length());
         setBounds(this.x, this.y, this.width, this.height);
+    }
+
+    public void setText(String text) {
+        this.text = text;
+        repaint();
+    }
+
+    public void switchIt(boolean value) {
+        isItOn = value;
+
+        repaint();
     }
 
     @Override
