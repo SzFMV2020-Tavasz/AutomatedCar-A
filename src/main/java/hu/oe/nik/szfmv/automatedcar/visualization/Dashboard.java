@@ -16,8 +16,8 @@ public class Dashboard extends JPanel {
     private final int backgroundColor = 0x888888;
     Gui parent;
     private VirtualFunctionBus virtualFunctionBus;
-    private TurnIndex leftTurn;
-    private TurnIndex rightTurn;
+    private turnIndex leftTurn;
+    private turnIndex rightTurn;
 
     private JLabel currentSpeedText = new JLabel("0 KM/h");
     private JLabel currentRpmText = new JLabel("0");
@@ -51,7 +51,7 @@ public class Dashboard extends JPanel {
     private JProgressBar breakProgressBar = new JProgressBar(0, 100);
 
     private OMeter speedoMeter;
-    private OMeter RPMometer;
+    private OMeter rpmometer;
 
     private StatusMarker accMarker;
     private StatusMarker ppmarker;
@@ -74,32 +74,32 @@ public class Dashboard extends JPanel {
         //timer.start();
     }
 
-    private void CreateSpeedometer() {
+    private void createSpeedometer() {
 
         speedoMeter = new OMeter();
         speedoMeter.setPosition(new Point(0, 0));
         speedoMeter.setSize(new Point(100, 100));
-        speedoMeter.setPerf_Percentage(0);
+        speedoMeter.setPerfPercentage(0);
         speedoMeter.setBounds(10, 15, 110, 100);
     }
 
-    private void CreateRPMmeter() {
-        RPMometer = new OMeter();
-        RPMometer.setPosition(new Point(0, 0));
-        RPMometer.setSize(new Point(80, 80));
-        RPMometer.setPerf_Percentage(0);
-        RPMometer.setBounds(120, 25, 110, 100);
+    private void createRPMmeter() {
+        rpmometer = new OMeter();
+        rpmometer.setPosition(new Point(0, 0));
+        rpmometer.setSize(new Point(80, 80));
+        rpmometer.setPerfPercentage(0);
+        rpmometer.setBounds(120, 25, 110, 100);
     }
 
-    private void OMeterPlacing() {
-        CreateRPMmeter();
-        CreateSpeedometer();
+    private void oMeterPlacing() {
+        createRPMmeter();
+        createSpeedometer();
 
         add(speedoMeter);
-        add(RPMometer);
+        add(rpmometer);
     }
 
-    private void MarkerPlacing() {
+    private void markerPlacing() {
         referenceSpeedMarker = new StatusMarker(10, 205, 50, 40, "0.0");
         timeGapMarker = new StatusMarker(60, 205, 50, 40, "0.8");
         accMarker = new StatusMarker(10, 250, 50, 40, "ACC");
@@ -119,7 +119,7 @@ public class Dashboard extends JPanel {
         add(referenceSpeedMarker);
     }
 
-    private void TextPlacing() {
+    private void textPlacing() {
         gearShiftText.setBounds(100, 150, 40, 15);
         currentGearText.setBounds(135, 150, 10, 15);
         accMenuText.setBounds(10, 190, 80, 15);
@@ -177,8 +177,8 @@ public class Dashboard extends JPanel {
     }
 
     public void turnIndexPlaceing() {
-        leftTurn = new TurnIndex(10, 140, true);
-        rightTurn = new TurnIndex(190, 140, false);
+        leftTurn = new turnIndex(10, 140, true);
+        rightTurn = new turnIndex(190, 140, false);
 
         add(leftTurn);
         add(rightTurn);
@@ -197,9 +197,9 @@ public class Dashboard extends JPanel {
     private void placeElements() {
         turnIndexPlaceing();
         progressBarPlacing();
-        TextPlacing();
-        OMeterPlacing();
-        MarkerPlacing();
+        textPlacing();
+        oMeterPlacing();
+        markerPlacing();
     }
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
@@ -211,7 +211,7 @@ public class Dashboard extends JPanel {
         breakProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getBreakPedalValue());
         steeringWheelValueText.setText(Double.toString(virtualFunctionBus.guiInputPacket.getSteeringWheelValue()));
         currentGearText.setText(virtualFunctionBus.guiInputPacket.getShifterPos().toString());
-        speedoMeter.setPerf_Percentage((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
+        speedoMeter.setPerfPercentage((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
         referenceSpeedMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccSpeedValue()));
         timeGapMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue()));
         accMarker.switchIt(virtualFunctionBus.guiInputPacket.getACCStatus());

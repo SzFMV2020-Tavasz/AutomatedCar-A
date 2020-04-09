@@ -10,7 +10,7 @@ public class shitfer {
         this.virtualFunctionBus = virtualFunctionBus;
     }
 
-    public void Increment() {
+    public void increment() {
         ShiftPos[] pos = ShiftPos.values();
         if (acttuallyValue < pos.length - 1) {
             acttuallyValue++;
@@ -19,7 +19,7 @@ public class shitfer {
         }
     }
 
-    public void Decrement() {
+    public void decrement() {
         if (acttuallyValue > 0) {
             acttuallyValue--;
             virtualFunctionBus.toPowerTrainPacket.setShiftChangeRequest(ShiftPos.values()[acttuallyValue]);
@@ -27,7 +27,7 @@ public class shitfer {
         }
     }
 
-    public ShiftPos GetCurrentState() {
+    public ShiftPos getCurrentState() {
         ShiftPos[] curr = ShiftPos.values();
         return curr[acttuallyValue];
     }

@@ -3,7 +3,7 @@ package hu.oe.nik.szfmv.automatedcar.visualization;
 import javax.swing.*;
 import java.awt.*;
 
-public class TurnIndex extends JPanel {
+public class turnIndex extends JPanel {
 
     private static final Color Signal_OFF = Color.white;
     private static final Color Signal_ON = Color.green;
@@ -14,7 +14,7 @@ public class TurnIndex extends JPanel {
     private boolean isOn;
 
 
-    public TurnIndex(int x_pos, int y_pos, boolean isLeft) {
+    public turnIndex(int x_pos, int y_pos, boolean isLeft) {
         setBounds(x_pos, y_pos, 40, 40);
         if (isLeft) {
             x = new int[]{0, 15, 15, 30, 30, 15, 15};
@@ -35,7 +35,7 @@ public class TurnIndex extends JPanel {
         repaint();
     }
 
-    public void ChangeSignal() {
+    public void changeSignal() {
         if (currentColor == Signal_OFF) {
             currentColor = Signal_ON;
         } else {

@@ -112,11 +112,11 @@ public class KeyProcesser {
 
 
     public void growShift() {
-        shiftManager.Increment();
+        shiftManager.increment();
     }
 
     public void lowerShift() {
-        shiftManager.Decrement();
+        shiftManager.decrement();
     }
 
 
