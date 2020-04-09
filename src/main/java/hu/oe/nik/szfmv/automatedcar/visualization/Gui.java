@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.HMIKeyListener;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.SamplePacket;
 import org.apache.logging.log4j.LogManager;
@@ -9,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Gui extends JFrame {
@@ -20,6 +22,7 @@ public class Gui extends JFrame {
     private CourseDisplay courseDisplay;
     private Dashboard dashboard;
     private VirtualFunctionBus virtualFunctionBus;
+    private HMIKeyListener listener = new HMIKeyListener();
 
 
     /**
@@ -46,68 +49,35 @@ public class Gui extends JFrame {
         courseDisplay = new CourseDisplay(this);
         add(courseDisplay);
 
+        KeyListener listen = listener.getHMIListener();
+        this.addKeyListener(listen);
+
         dashboard = new Dashboard(this);
         add(dashboard);
 
         setVisible(true);
 
         keysPressed = new ArrayList<>();
+       // loop();
 
-        KeyListener listen = new KeyListener() {
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                int keyCode = e.getKeyCode();
-
-                // Release turning and pedal pressing so the back positioning can run.
-                if (keyCode == KeyEvent.VK_RIGHT) {
-                    LOGGER.info(">");
-                    SamplePacket p = new SamplePacket();
-                    p.setKey(1);
-                    virtualFunctionBus.samplePacket = p;
-                }
-                if (keyCode == KeyEvent.VK_LEFT) {
-                    LOGGER.info("<");
-                    SamplePacket p = new SamplePacket();
-                    p.setKey(3);
-                    virtualFunctionBus.samplePacket = p;
-                }
-                if (keyCode == KeyEvent.VK_UP) {
-                    LOGGER.info("^");
-                    SamplePacket p = new SamplePacket();
-                    p.setKey(0);
-                    virtualFunctionBus.samplePacket = p;
-                }
-                if (keyCode == KeyEvent.VK_DOWN) {
-                    LOGGER.info("v");
-                    SamplePacket p = new SamplePacket();
-                    p.setKey(2);
-                    virtualFunctionBus.samplePacket = p;
-                }
-
-                if (keysPressed.contains(keyCode)) {
-                    keysPressed.remove(keysPressed.indexOf(keyCode));
+    }
+    public void loop()
+    {
+        Thread looping = new Thread(() ->{
+            while(true){
+                System.out.println("Gas pedal value: " +virtualFunctionBus.toPowerTrainPacket.getGasPedalValue());
+                System.out.println("Break pedal value" +virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue());
+                System.out.println("Steering wheel value: " +virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue());
+                System.out.println("Shifter value: " + virtualFunctionBus.toPowerTrainPacket.getShiftChangeRequest());
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-                if (!keysPressed.contains(e.getKeyCode())) {
-                    keysPressed.add(e.getKeyCode());
-                }
-
-            }
-        };
-
-        this.addKeyListener(listen);
-
+        });
+        looping.start();
     }
 
     public VirtualFunctionBus getVirtualFunctionBus() {
@@ -116,6 +86,8 @@ public class Gui extends JFrame {
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
+        listener.setVirtualFunctionBus(virtualFunctionBus);
+        dashboard.setVirtualFunctionBus(virtualFunctionBus);
     }
 
     public CourseDisplay getCourseDisplay() {
