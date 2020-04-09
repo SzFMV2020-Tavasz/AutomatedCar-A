@@ -188,13 +188,15 @@ public class PedalPosition {
     }
 
     private int increaseNumber(int counter) {
+        int numberToIncrease;
         if (counter < 5) {
-            return 5;
+            numberToIncrease = 5;
         } else if (counter < 10) {
-            return 10;
+            numberToIncrease = 10;
         } else {
-            return 15;
+            numberToIncrease = 15;
         }
+        return numberToIncrease;
     }
 
     private void sleep() {
@@ -224,7 +226,6 @@ public class PedalPosition {
     private int steeringWheelToZero(double value, int counter) {
 
         int outputValue;
-
         if (counter < 5) {
             outputValue = 5;
         } else if (counter < 10) {
@@ -235,16 +236,17 @@ public class PedalPosition {
 
         if (value < 0) {
             if (value + outputValue > 0) {
-                return (int) -value;
+                outputValue = (int) -value;
             } else {
-                return outputValue;
+                outputValue = outputValue;
             }
         } else {
             if (value - outputValue < 0) {
-                return (int) -value;
+                outputValue = (int) -value;
             } else {
-                return -outputValue;
+                outputValue = -outputValue;
             }
         }
+        return outputValue;
     }
 }

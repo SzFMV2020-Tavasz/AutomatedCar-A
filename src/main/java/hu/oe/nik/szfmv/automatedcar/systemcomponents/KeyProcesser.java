@@ -4,7 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 
 public class KeyProcesser {
 
-    protected shitfer shiftManager = new shitfer();
+    protected Shitfer shiftManager = new Shitfer();
     private VirtualFunctionBus virtualFunctionBus;
     private Index index = new Index();
     private boolean zeroIsPressed;

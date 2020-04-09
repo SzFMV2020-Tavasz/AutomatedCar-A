@@ -1,13 +1,13 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets;
 
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
     private double gasPedalValue;
     private double breakPedalValue;
     private double steeringWheelValue;
-    private shitfer.ShiftPos shiftChangeRequest;
+    private Shitfer.ShiftPos shiftChangeRequest;
     private int tempomatValue;
     private boolean tempomatSwitch;
     private double trackingDistanceValue;
@@ -41,11 +41,11 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
     }
 
     @Override
-    public shitfer.ShiftPos getShiftChangeRequest() {
+    public Shitfer.ShiftPos getShiftChangeRequest() {
         return shiftChangeRequest;
     }
 
-    public void setShiftChangeRequest(shitfer.ShiftPos shiftChangeRequest) {
+    public void setShiftChangeRequest(Shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
 

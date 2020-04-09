@@ -1,6 +1,6 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets;
 
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 public interface BaseInputPacket {
 
@@ -12,7 +12,7 @@ public interface BaseInputPacket {
 
     int getIndexValue(/*negatív -> balra, pozitív -> jobbra, 0 -> kikapcsolva */);
 
-    shitfer.ShiftPos getShiftValue();
+    Shitfer.ShiftPos getShiftValue();
 
     int getTempomatValue();
 

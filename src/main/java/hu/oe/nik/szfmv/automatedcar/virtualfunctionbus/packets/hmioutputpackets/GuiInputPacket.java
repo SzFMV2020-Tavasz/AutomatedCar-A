@@ -1,7 +1,7 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 public class GuiInputPacket implements ReadOnlyGuiInputPacket {
 
@@ -9,7 +9,7 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     private double gasPedalValue;
     private double breakPedalValue;
     private double steeringWheelValue;
-    private shitfer.ShiftPos shiftChangeRequest = shitfer.ShiftPos.P;
+    private Shitfer.ShiftPos shiftChangeRequest = Shitfer.ShiftPos.P;
     private boolean accSwitch;
     private int accSpeedValue = 30;
     private double accFollowingDistance = 0.8;
@@ -55,11 +55,11 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
     }
 
     @Override
-    public shitfer.ShiftPos getShifterPos() {
+    public Shitfer.ShiftPos getShifterPos() {
         return shiftChangeRequest;
     }
 
-    public void setShifterPos(shitfer.ShiftPos shiftChangeRequest) {
+    public void setShifterPos(Shitfer.ShiftPos shiftChangeRequest) {
         this.shiftChangeRequest = shiftChangeRequest;
     }
 

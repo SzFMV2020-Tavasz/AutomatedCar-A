@@ -44,13 +44,13 @@ public class Main {
         window = new Gui();
         window.setVirtualFunctionBus(car.getVirtualFunctionBus());
     }
-
+    
     private void loop() {
         while (true) {
             try {
                 car.drive();
                 window.getCourseDisplay().drawWorld(displayWorld);
-                window.getDashboard().refresh(car.getX(),car.getY());
+                window.getDashboard().refresh(car.getX(), car.getY());
 //                window.getCourseDisplay().refreshFrame();
                 Thread.sleep(CYCLE_PERIOD);
             } catch (InterruptedException e) {

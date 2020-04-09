@@ -14,10 +14,10 @@ public class Dashboard extends JPanel {
     private final int width = 250;
     private final int height = 700;
     private final int backgroundColor = 0x888888;
-    Gui parent;
+    private Gui parent;
     private VirtualFunctionBus virtualFunctionBus;
-    private turnIndex leftTurn;
-    private turnIndex rightTurn;
+    private TurnIndex leftTurn;
+    private TurnIndex rightTurn;
 
     private JLabel currentSpeedText = new JLabel("0 KM/h");
     private JLabel currentRpmText = new JLabel("0");
@@ -177,8 +177,8 @@ public class Dashboard extends JPanel {
     }
 
     public void turnIndexPlaceing() {
-        leftTurn = new turnIndex(10, 140, true);
-        rightTurn = new turnIndex(190, 140, false);
+        leftTurn = new TurnIndex(10, 140, true);
+        rightTurn = new TurnIndex(190, 140, false);
 
         add(leftTurn);
         add(rightTurn);

@@ -3,8 +3,8 @@ package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets.GuiInputPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets.ToPowerTrainPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.GuiInputPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.*;
 
 import java.util.ArrayList;

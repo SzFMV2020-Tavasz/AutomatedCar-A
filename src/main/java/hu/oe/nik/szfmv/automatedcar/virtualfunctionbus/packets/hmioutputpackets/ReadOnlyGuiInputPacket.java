@@ -1,10 +1,10 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 public interface ReadOnlyGuiInputPacket {
-    shitfer.ShiftPos getShifterPos();
+    Shitfer.ShiftPos getShifterPos();
 
     Index.IndexStatus getIndexStatus();
 

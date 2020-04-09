@@ -1,6 +1,6 @@
-package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmiOutputPackets;
+package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets;
 
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.shitfer;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 public interface ReadOnlyToPowerTrainPacket {
 
@@ -10,7 +10,7 @@ public interface ReadOnlyToPowerTrainPacket {
 
     double getSteeringWheelValue();
 
-    shitfer.ShiftPos getShiftChangeRequest();
+    Shitfer.ShiftPos getShiftChangeRequest();
 
     int getTempomatValue();
 

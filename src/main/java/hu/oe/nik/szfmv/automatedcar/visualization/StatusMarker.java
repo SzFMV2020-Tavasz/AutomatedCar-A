@@ -4,7 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class StatusMarker extends JPanel {
-    int x, y, width, height;
+    int x;
+    int y;
+    int width;
+    int height;
     String text;
     Font font;
     boolean isItOn = false;
