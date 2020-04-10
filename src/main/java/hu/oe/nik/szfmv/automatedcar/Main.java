@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar;
 
 import hu.oe.nik.szfmv.automatedcar.model.World;
+import hu.oe.nik.szfmv.automatedcar.sensors.Radar;
 import hu.oe.nik.szfmv.automatedcar.visualization.DisplayWorld;
 import hu.oe.nik.szfmv.automatedcar.visualization.Gui;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,7 @@ public class Main {
     private AutomatedCar car;
     private World world;
     private DisplayWorld displayWorld;
+    private  Radar radar;
 
     public static void main(String[] args) {
 
@@ -37,6 +39,8 @@ public class Main {
         // car = new AutomatedCar(474, 669, "car_2_white.png");
         // car = new AutomatedCar(540, 1850, "car_2_white.png");
         car.setRotation(0);
+
+        radar = new Radar(car.getVirtualFunctionBus(), car, world);
 
         // create the displayworld
         displayWorld = new DisplayWorld(world, car);

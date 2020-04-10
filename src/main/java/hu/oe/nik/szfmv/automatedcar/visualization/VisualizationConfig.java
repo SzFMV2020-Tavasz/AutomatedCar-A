@@ -7,8 +7,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
@@ -29,24 +27,12 @@ public final class VisualizationConfig {
     // with 0 degrees rotation relative to the x axis
     public static final int DISPLAY_EGOCAR_CENTER_POSITION_X = DISPLAY_WIDTH / 2;
     public static final int DISPLAY_EGOCAR_CENTER_POSITION_Y = DISPLAY_HEIGHT / 2;
-    public static final float DISPLAY_EGOCAR_ROTATION = 0;//-(float) Math.PI / 6;
+    public static final float DISPLAY_EGOCAR_ROTATION = 0; //-(float) Math.PI / 6;
 
-    // set senzor polygons
-
+    // set sensor polygon defaults
     public static final Stroke SENSOR_CENTER_LINE = new BasicStroke(2,
         BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
     public static final int METER_IN_PIXELS = 50; // A car is 240 px, an average car is a little shorter than 5 m....
-
-    // radar sensors
-    public static final int RADAR_SENSOR_DX = 0;
-    public static final int RADAR_SENSOR_DY = -104;
-
-    public static final int RADAR_SENSOR_X = DISPLAY_EGOCAR_CENTER_POSITION_X + RADAR_SENSOR_DX;
-    public static final int RADAR_SENSOR_Y = DISPLAY_EGOCAR_CENTER_POSITION_Y + RADAR_SENSOR_DY;
-
-    public static final double RADAR_SENSOR_ANGLE = Math.PI / 6;  // 60 /2 - half angle
-    public static final int RADAR_SENSOR_RANGE = 200 * METER_IN_PIXELS;
-    public static final Color RADAR_SENSOR_BG_COLOUR = new Color(121, 0, 0, 125);
 
     // ultrasound sensors
     public static final int ULTRASOUND_SENSORS_COUNT = 8;
@@ -79,28 +65,8 @@ public final class VisualizationConfig {
     }
 
 
-    private static void calculateRadarSensorPolygon() {
-        // sensor triangle A corner
-        double sensorAX = -RADAR_SENSOR_RANGE * Math.tan(RADAR_SENSOR_ANGLE);
-        double sensorAY = -RADAR_SENSOR_RANGE;
-        // sensor triangle B corner
-        double sensorBX = RADAR_SENSOR_RANGE * Math.tan(RADAR_SENSOR_ANGLE);
-        double sensorBY = -RADAR_SENSOR_RANGE;
 
-        AffineTransform aT = AffineTransform.getRotateInstance(DISPLAY_EGOCAR_ROTATION, -sensorAX, -sensorAY);
-        AffineTransform bT = AffineTransform.getRotateInstance(DISPLAY_EGOCAR_ROTATION, -sensorBX, -sensorBY);
-        AffineTransform sT =
-            AffineTransform.getRotateInstance(DISPLAY_EGOCAR_ROTATION, -RADAR_SENSOR_DX, -RADAR_SENSOR_DY);
-
-        int[] xPoly = {(int) (RADAR_SENSOR_X + sT.getTranslateX()),
-            (int) (RADAR_SENSOR_X + sT.getTranslateX() + sensorAX + aT.getTranslateX()),
-            (int) (RADAR_SENSOR_X + sT.getTranslateX() + sensorBX + bT.getTranslateX())};
-
-        int[] yPoly = {RADAR_SENSOR_Y + (int) (sT.getTranslateY()),
-            (int) (RADAR_SENSOR_Y + +sT.getTranslateY() + sensorAY + aT.getTranslateY()),
-            (int) (RADAR_SENSOR_Y + +sT.getTranslateY() + sensorBY + bT.getTranslateY())};
-        radar_sensor_polygon = new Polygon(xPoly, yPoly, xPoly.length);
-    }
+   /* }
 
     private static void calculateRadarCenterLine() {
         // sensor triangle centerline endpoint
@@ -116,27 +82,29 @@ public final class VisualizationConfig {
             (float) (RADAR_SENSOR_X + sensorTX + tT.getTranslateX()),
             (float) (RADAR_SENSOR_Y + sensorTY + tT.getTranslateY()));
     }
-
+*/
     /**
      * Parse the xml file containing the reference points (rotation origos) of the image files
      */
     public static void loadReferencePoints(String fileName) {
-        try {
-            // initialize the dictionary
-            my_dict = new Hashtable<String, Point2D>();
+        if (my_dict == null) {
+            try {
+                // initialize the dictionary
+                my_dict = new Hashtable<String, Point2D>();
 
-            File xmlFile = new File(ClassLoader.getSystemResource(fileName).getFile());
-            DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document xmlDoc = docBuilder.parse(xmlFile);
+                File xmlFile = new File(ClassLoader.getSystemResource(fileName).getFile());
+                DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                Document xmlDoc = docBuilder.parse(xmlFile);
 
-            NodeList imageNodes = xmlDoc.getElementsByTagName("Image");
-            for (int i = 0; i < imageNodes.getLength(); i++) {
-                Node imageNode = imageNodes.item(i);
-                storeRefPoints(imageNode);
+                NodeList imageNodes = xmlDoc.getElementsByTagName("Image");
+                for (int i = 0; i < imageNodes.getLength(); i++) {
+                    Node imageNode = imageNodes.item(i);
+                    storeRefPoints(imageNode);
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-
-            e.printStackTrace();
         }
     }
 
@@ -175,5 +143,23 @@ public final class VisualizationConfig {
             refPoint = new Point2D.Float(0, 0);
         }
         return refPoint;
+    }
+
+    /**
+     * Calulates the rotation angle from the rotation matrix
+     * @param matrix the rotationmatrix
+     * @return the clockwise angle
+     */
+    public static float getAngleFromRotationMatrix(float[][] matrix) {
+        double angle1 = Math.acos(matrix[0][0]);
+        float sinValue = matrix[1][0];
+        double angleFinal;
+
+        if (sinValue >= 0) {
+            angleFinal = angle1;
+        } else {
+            angleFinal = Math.PI * 2 - angle1;
+        }
+        return (float) -angleFinal;
     }
 }
