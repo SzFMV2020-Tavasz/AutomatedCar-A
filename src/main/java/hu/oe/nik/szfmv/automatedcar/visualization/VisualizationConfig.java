@@ -87,22 +87,24 @@ public final class VisualizationConfig {
      * Parse the xml file containing the reference points (rotation origos) of the image files
      */
     public static void loadReferencePoints(String fileName) {
-        try {
-            // initialize the dictionary
-            my_dict = new Hashtable<String, Point2D>();
+        if (my_dict == null) {
+            try {
+                // initialize the dictionary
+                my_dict = new Hashtable<String, Point2D>();
 
-            File xmlFile = new File(ClassLoader.getSystemResource(fileName).getFile());
-            DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document xmlDoc = docBuilder.parse(xmlFile);
+                File xmlFile = new File(ClassLoader.getSystemResource(fileName).getFile());
+                DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                Document xmlDoc = docBuilder.parse(xmlFile);
 
-            NodeList imageNodes = xmlDoc.getElementsByTagName("Image");
-            for (int i = 0; i < imageNodes.getLength(); i++) {
-                Node imageNode = imageNodes.item(i);
-                storeRefPoints(imageNode);
+                NodeList imageNodes = xmlDoc.getElementsByTagName("Image");
+                for (int i = 0; i < imageNodes.getLength(); i++) {
+                    Node imageNode = imageNodes.item(i);
+                    storeRefPoints(imageNode);
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-
-            e.printStackTrace();
         }
     }
 
@@ -141,5 +143,23 @@ public final class VisualizationConfig {
             refPoint = new Point2D.Float(0, 0);
         }
         return refPoint;
+    }
+
+    /**
+     * Calulates the rotation angle from the rotation matrix
+     * @param matrix the rotationmatrix
+     * @return the clockwise angle
+     */
+    public static float getAngleFromRotationMatrix(float[][] matrix) {
+        double angle1 = Math.acos(matrix[0][0]);
+        float sinValue = matrix[1][0];
+        double angleFinal;
+
+        if (sinValue >= 0) {
+            angleFinal = angle1;
+        } else {
+            angleFinal = Math.PI * 2 - angle1;
+        }
+        return (float) -angleFinal;
     }
 }
