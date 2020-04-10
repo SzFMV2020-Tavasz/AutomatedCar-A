@@ -176,23 +176,6 @@ public class Radar extends SystemComponent {
         return nearestObject != null ? nearestObject : null;
     }
 
-    /**
-     * Transforms the polygon to its correct place.
-     *
-     * This is needed because the polygon is given relative to the containing WorldObject x, y (reference) point.
-     * @param object the object whose polygon should be transformed
-     * @return the transformed shape. Pay attention, there are more points in the returned Shape
-     * than in the original polygon. This is a transformation bug.
-     * In this case, the actual correct number of points should be gotten from the original polygon.
-     */
-    private Shape transformPolygon(WorldObject object) {
-        AffineTransform aT = new AffineTransform();
-        aT.rotate(object.getRotation());
-        aT.translate(object.getX(), object.getY());
-
-        return aT.createTransformedShape(object.getPolygon());
-    }
-
     private double calculateMinimumDistance(Shape poly1, int poly1N, Shape poly2, int poly2N) {
         double distance = Double.MAX_VALUE;
 
@@ -244,18 +227,6 @@ public class Radar extends SystemComponent {
             }
         }
         return false;
-    }
-
-    /**
-     * Sets the list of elements that are shown with different color inside the radar triangle
-     */
-    private void showElementsInTriangle() {
-        // select elemets for debugpolygons that are collideable and in the triangle
-        List<String> selectedIds = new ArrayList<>();
-        for (WorldObject object : elementsSeenByRadar) {
-            selectedIds.add(object.getId());
-        }
-        selectedDebugListPacket.setDebugListElements(selectedIds);
     }
 
     /**
