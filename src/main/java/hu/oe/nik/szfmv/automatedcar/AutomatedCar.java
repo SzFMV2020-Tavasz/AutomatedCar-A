@@ -42,21 +42,25 @@ public class AutomatedCar extends WorldObject {
     private void calculatePositionAndOrientation() {
         //TODO it is just a fake implementation
 
-        switch (virtualFunctionBus.samplePacket.getKey()) {
-            case 0:
-                y -= 5;
-                break;
-            case 1:
-                x += 5;
-                break;
-            case 2:
-                y += 5;
-                break;
-            case 3:
-                x -= 5;
-                break;
-            default:
-        }
+//        switch (virtualFunctionBus.samplePacket.getKey()) {
+//            case 0:
+//                y -= 5;
+//                break;
+//            case 1:
+//                x += 5;
+//                break;
+//            case 2:
+//                y += 5;
+//                break;
+//            case 3:
+//                x -= 5;
+//                break;
+//            default:
+//        }
+
+        y -= virtualFunctionBus.toPowerTrainPacket.getGasPedalValue()/10;
+        y +=virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue()/10;
+        x +=virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue()/10;
     }
 
 }
