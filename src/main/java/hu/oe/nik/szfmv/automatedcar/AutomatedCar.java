@@ -14,15 +14,6 @@ public class AutomatedCar extends WorldObject {
 
     private static final Logger LOGGER = LogManager.getLogger(AutomatedCar.class);
 
-    // will be replaced later: control elements
-    private static final int STEP = 5;
-    private static final int UP = 0;
-    private static final int RIGHT = 1;
-    private static final int DOWN = 2;
-    private static final int LEFT = 3;
-    private static final int ROTATE_LEFT = 4;
-    private static final int ROTATE_RIGHT = 5;
-
     private final VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
     private final PowerTrain powerTrain = new PowerTrain(virtualFunctionBus);
@@ -62,23 +53,27 @@ public class AutomatedCar extends WorldObject {
 
     private void calculatePositionAndOrientation() {
         //TODO it is just a fake implementation
-        rotateCar();
-        switch (virtualFunctionBus.samplePacket.getKey()) {
-            case UP:
-                y -= STEP;
-                break;
-            case RIGHT:
-                x += STEP;
-                break;
-            case DOWN:
-                y += STEP;
-                break;
-            case LEFT:
-                x -= STEP;
-                break;
-            default:
-                break;
-        }
+
+
+//        switch (virtualFunctionBus.samplePacket.getKey()) {
+//            case 0:
+//                y -= 5;
+//                break;
+//            case 1:
+//                x += 5;
+//                break;
+//            case 2:
+//                y += 5;
+//                break;
+//            case 3:
+//                x -= 5;
+//                break;
+//            default:
+//        }
+
+        y -= virtualFunctionBus.toPowerTrainPacket.getGasPedalValue()/10;
+        y +=virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue()/10;
+        x +=virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue()/10;
     }
 
     /**
