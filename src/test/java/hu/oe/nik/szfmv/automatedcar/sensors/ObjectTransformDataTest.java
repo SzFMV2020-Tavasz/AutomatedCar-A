@@ -1,6 +1,5 @@
 package hu.oe.nik.szfmv.automatedcar.sensors;
 
-import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,7 @@ public class ObjectTransformDataTest {
         worldObject.setRotationMatrix(new float[][]{{1, 0}, {0, 1}}); // 0
         Polygon poly = ObjectTransform.transformPolygon(worldObject);
         assertEquals(-91, poly.xpoints[0]);
-        assertEquals( -104, poly.ypoints[0]);
+        assertEquals(-104, poly.ypoints[0]);
     }
 
     @Test
@@ -49,8 +48,8 @@ public class ObjectTransformDataTest {
         MockWorldObject worldObject = new MockWorldObject(10, 50);
         worldObject.setRotationMatrix(new float[][]{{0, 1}, {-1, 0}}); // 90 CW
         Polygon poly = ObjectTransform.transformPolygon(worldObject);
-        assertEquals(9, poly.xpoints[1]);
-        assertEquals( -4, poly.ypoints[1]);
+        assertEquals(164, poly.xpoints[0]);
+        assertEquals(-51, poly.ypoints[0]);
     }
 
     @Test

@@ -73,14 +73,23 @@ public final class ObjectTransform {
         VisualizationConfig.loadReferencePoints("reference_points.xml");
         Point2D refPoint = VisualizationConfig.getReferencePoint(object.getImageFileName());
 
+        // move polygon to its right place relative to the reference point of the object
+        // needs to be done this way to rotate around the right point
+        Polygon origPolygon = object.getPolygon();
+        Polygon refPointPolygon = new Polygon();
+        for (int i = 0; i < origPolygon.npoints; i++) {
+            refPointPolygon.addPoint((int)(origPolygon.xpoints[i] - refPoint.getX()),
+                (int)(origPolygon.ypoints[i] - refPoint.getY()));
+        }
+
         AffineTransform at = new AffineTransform();
 
-        at.translate(object.getX() - refPoint.getX(), object.getY() - refPoint.getY());
+        at.translate(object.getX() , object.getY());
         if (object.getRotationMatrix() != null) {
             at.rotate(VisualizationConfig.getAngleFromRotationMatrix(object.getRotationMatrix()));
         }
 
-        return at.createTransformedShape((Shape) object.getPolygon());
+        return at.createTransformedShape((Shape) refPointPolygon);
     }
 
 }
