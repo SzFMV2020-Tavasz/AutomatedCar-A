@@ -48,7 +48,7 @@ public class DisplayObject extends WorldObject {
         this.worldObject = worldObject;
         this.automatedCar = automatedCar;
         if (worldObject.getRotationMatrix() != null) {
-            worldObject.setRotation(getAngleFromRotationMatrix(worldObject.getRotationMatrix()));
+            worldObject.setRotation(VisualizationConfig.getAngleFromRotationMatrix(worldObject.getRotationMatrix()));
         }
         this.z = worldObject.getZ();
         calculatePosition();
@@ -106,16 +106,4 @@ public class DisplayObject extends WorldObject {
             worldObject.getRotation(), worldObject.getImageFileName(), automatedCar);
     }
 
-    private float getAngleFromRotationMatrix(float[][] matrix) {
-        double angle1 = Math.acos(matrix[0][0]);
-        float sinValue = matrix[1][0];
-        double angleFinal;
-
-        if (sinValue >= 0) {
-            angleFinal = angle1;
-        } else {
-            angleFinal = Math.PI * 2 - angle1;
-        }
-        return (float) -angleFinal;
-    }
 }
