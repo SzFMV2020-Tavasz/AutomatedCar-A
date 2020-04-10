@@ -48,8 +48,8 @@ public class ObjectTransformDataTest {
         MockWorldObject worldObject = new MockWorldObject(10, 50);
         worldObject.setRotationMatrix(new float[][]{{0, 1}, {-1, 0}}); // 90 CW
         Polygon poly = ObjectTransform.transformPolygon(worldObject);
-        assertEquals(-51, poly.xpoints[0]);
-        assertEquals(164, poly.ypoints[0]);
+        assertEquals(164, poly.xpoints[0]);
+        assertEquals(-51, poly.ypoints[0]);
     }
 
     @Test
