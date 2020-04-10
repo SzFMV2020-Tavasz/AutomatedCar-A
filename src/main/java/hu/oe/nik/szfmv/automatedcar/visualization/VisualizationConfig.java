@@ -87,7 +87,7 @@ public final class VisualizationConfig {
      * Parse the xml file containing the reference points (rotation origos) of the image files
      */
     public static void loadReferencePoints(String fileName) {
-        if (my_dict == null ) {
+        if (my_dict == null) {
             try {
                 // initialize the dictionary
                 my_dict = new Hashtable<String, Point2D>();

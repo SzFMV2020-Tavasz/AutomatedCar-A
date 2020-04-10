@@ -76,7 +76,7 @@ public final class ObjectTransform {
         AffineTransform at = new AffineTransform();
 
         at.translate(object.getX() - refPoint.getX(), object.getY() - refPoint.getY());
-        if (object.getRotationMatrix() != null ) {
+        if (object.getRotationMatrix() != null) {
             at.rotate(VisualizationConfig.getAngleFromRotationMatrix(object.getRotationMatrix()));
         }
 
