@@ -148,6 +148,7 @@ public class RadarTest {
         assertTrue(radar.getNearestCollideableElement().getId().equals("roadsign_speed_40_1"));
     }
 
+    @Test
     public void updateSeenByRadar(){
         radar.loop();
         radar.loop();
