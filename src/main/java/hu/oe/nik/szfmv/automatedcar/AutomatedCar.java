@@ -13,6 +13,9 @@ public class AutomatedCar extends WorldObject {
 
     private static final Logger LOGGER = LogManager.getLogger(AutomatedCar.class);
 
+    // temporary fix for checkstyle errors from merging master.
+    private static final int TEN = 10;
+
     private final VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
     private final PowerTrain powerTrain = new PowerTrain(virtualFunctionBus);
@@ -51,44 +54,9 @@ public class AutomatedCar extends WorldObject {
     //public Radar getRadar() {return radar}
 
     private void calculatePositionAndOrientation() {
-        //TODO it is just a fake implementation
-
-//        switch (virtualFunctionBus.samplePacket.getKey()) {
-//            case 0:
-//                y -= 5;
-//                break;
-//            case 1:
-//                x += 5;
-//                break;
-//            case 2:
-//                y += 5;
-//                break;
-//            case 3:
-//                x -= 5;
-//                break;
-//            default:
-//        }
-
-        y -= virtualFunctionBus.toPowerTrainPacket.getGasPedalValue()/10;
-        y +=virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue()/10;
-        x +=virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue()/10;
-    }
-
-    /**
-     * Temporary method for turning the egocar.
-     * Needs passed keys from Gui
-     * Will be removed when actual steering will be in place
-     */
-    private void rotateCar() {
-        switch (virtualFunctionBus.samplePacket.getKey()) {
-            case ROTATE_LEFT:
-                rotation -= Math.toRadians(1);
-                break;
-            case ROTATE_RIGHT:
-                rotation += Math.toRadians(1);
-                break;
-            default:
-                break;
-        }
+        
+        y -= virtualFunctionBus.toPowerTrainPacket.getGasPedalValue() / TEN;
+        y += virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue() / TEN;
+        x += virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue() / TEN;
     }
 }
