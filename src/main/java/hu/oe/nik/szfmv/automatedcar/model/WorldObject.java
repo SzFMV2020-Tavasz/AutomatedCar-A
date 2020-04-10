@@ -40,6 +40,9 @@ public class WorldObject {
         this.rotationMatrix = new float[2][2];
     }
 
+    public WorldObject() {
+
+    }
 
     public int getX() {
         return x;

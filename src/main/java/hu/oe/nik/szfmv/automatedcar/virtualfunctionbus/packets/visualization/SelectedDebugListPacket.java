@@ -21,6 +21,14 @@ public class SelectedDebugListPacket implements ISelectedDebugListPacket {
     }
 
     /**
+     * Replaces the whole list of WorldObject elements whose debug polygons need to be displayed
+     * @param elementIDs List of Id strings identifyint the elements
+     */
+    public void setDebugListElements(List<String> elementIDs) {
+        debugList = elementIDs;
+    }
+
+    /**
      * Removes an element from the list of WorldObject elements whose debug polygons need to be displayed
      * @param elementID Id strings identifying the element
      */
