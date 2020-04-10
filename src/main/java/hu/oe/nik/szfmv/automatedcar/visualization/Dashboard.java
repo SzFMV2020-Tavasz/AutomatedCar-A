@@ -2,259 +2,241 @@ package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyListener;
 
 /**
  * Dashboard shows the state of the ego car, thus helps in debugging.
  */
 public class Dashboard extends JPanel {
 
-    private VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
+    private final int width = 250;
+    private final int height = 700;
+    private final int backgroundColor = 0x888888;
+    private Gui parent;
+    private VirtualFunctionBus virtualFunctionBus;
+    private TurnIndex leftTurn;
+    private TurnIndex rightTurn;
 
-    private  JLabel gear = new JLabel("gear: P");
-    private JLabel leftIndex = new JLabel("");
-    private JLabel rightIndex = new JLabel("");
-    private JProgressBar gasBar = new JProgressBar(0,100);
-    private JProgressBar breakBar = new JProgressBar(0, 100);
-    private JLabel steeringWheel = new JLabel("steering wheel: " + virtualFunctionBus.guiInputPacket.getSteeringWheelValue());
-    private JLabel debug = new JLabel("debug:" + virtualFunctionBus.guiInputPacket.getDebugSwitch());
-    private JLabel speedLimit = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
-    JLabel accSpeed = new JLabel("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
-    JLabel accDistance = new JLabel("Acc Distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
+    private JLabel currentSpeedText = new JLabel("0 KM/h");
+    private JLabel currentRpmText = new JLabel("0");
+    private JLabel gearShiftText = new JLabel("Gear:");
+    private JLabel gasPedalText = new JLabel("Gas Pedal");
+    private JLabel accMenuText = new JLabel("ACC opts:");
+    private JLabel breakPedalText = new JLabel("Break Pedal");
+    private JLabel xCoordText = new JLabel("X: ");
+    private JLabel yCoordText = new JLabel("Y: ");
+    private JLabel steeringWheelText = new JLabel("Steering Wheel:");
+    private JLabel speedLimitText = new JLabel("Speed Limit:");
 
+    private JLabel pedalExplainerText = new JLabel("W/S : Throttle/Break  ");
+    private JLabel steeringExplainerText = new JLabel(" A/D :Turn Left/Right");
+    private JLabel gearChangeExplainerText = new JLabel("K/L : Gear Up/Down");
+    private JLabel parkingIndicatorExplainerText = new JLabel("P : Parking mode");
+    private JLabel accIndicatorExplainerText = new JLabel("R : Automated Cruise Control");
+    private JLabel laneKeepingIndicatorExplainerText = new JLabel("J : LaneKeeping");
+    private JLabel timeGapExplainerText = new JLabel("T: Set time Gap");
+    private JLabel referenceSpeedExplainer = new JLabel("I/O: Change ACC speed");
+    private JLabel setIndex = new JLabel("Q/E : Index Left/Right");
+
+    private JLabel lastRoadSign = new JLabel("No sign");
+    private JLabel currentGearText = new JLabel("P");
+    private JLabel speedLimitValueText = new JLabel("No limit");
+    private JLabel steeringWheelValueText = new JLabel("0");
+    private JLabel xCoordValueText = new JLabel("0");
+    private JLabel yCoordValueText = new JLabel("0");
+
+    private JProgressBar gasProgressBar = new JProgressBar(0, 100);
+    private JProgressBar breakProgressBar = new JProgressBar(0, 100);
+
+    private OMeter speedoMeter;
+    private OMeter rpmometer;
+
+    private StatusMarker accMarker;
+    private StatusMarker ppmarker;
+    private StatusMarker lkamarker;
+    private StatusMarker lkwarnmarker;
+    private StatusMarker aebwarnmarker;
+    private StatusMarker rrwarnmarker;
+
+    private StatusMarker timeGapMarker;
+    private StatusMarker referenceSpeedMarker;
+
+
+    public Dashboard(Gui pt) {
+        // Not using any layout manager, but fixed coordinates
+        setLayout(null);
+        setBackground(new Color(backgroundColor));
+        setBounds(770, 0, width, height);
+        parent = pt;
+        placeElements();
+        //timer.start();
+    }
+
+    private void createSpeedometer() {
+
+        speedoMeter = new OMeter();
+        speedoMeter.setPosition(new Point(0, 0));
+        speedoMeter.setSize(new Point(100, 100));
+        speedoMeter.setPerfPercentage(0);
+        speedoMeter.setBounds(10, 15, 110, 100);
+    }
+
+    private void createRPMmeter() {
+        rpmometer = new OMeter();
+        rpmometer.setPosition(new Point(0, 0));
+        rpmometer.setSize(new Point(80, 80));
+        rpmometer.setPerfPercentage(0);
+        rpmometer.setBounds(120, 25, 110, 100);
+    }
+
+    private void oMeterPlacing() {
+        createRPMmeter();
+        createSpeedometer();
+
+        add(speedoMeter);
+        add(rpmometer);
+    }
+
+    private void markerPlacing() {
+        referenceSpeedMarker = new StatusMarker(10, 205, 50, 40, "0.0");
+        timeGapMarker = new StatusMarker(60, 205, 50, 40, "0.8");
+        accMarker = new StatusMarker(10, 250, 50, 40, "ACC");
+        ppmarker = new StatusMarker(60, 250, 50, 40, "PP");
+        lkamarker = new StatusMarker(10, 300, 50, 40, "LKA");
+        lkwarnmarker = new StatusMarker(10, 350, 100, 40, "LKA WARN");
+        aebwarnmarker = new StatusMarker(120, 310, 100, 40, "AEB WARN");
+        rrwarnmarker = new StatusMarker(120, 350, 100, 40, "RR WARN");
+
+        add(accMarker);
+        add(ppmarker);
+        add(lkamarker);
+        add(lkwarnmarker);
+        add(aebwarnmarker);
+        add(rrwarnmarker);
+        add(timeGapMarker);
+        add(referenceSpeedMarker);
+    }
+
+    private void textPlacing() {
+        gearShiftText.setBounds(100, 150, 40, 15);
+        currentGearText.setBounds(135, 150, 10, 15);
+        accMenuText.setBounds(10, 190, 80, 15);
+        gasPedalText.setBounds(10, 390, 100, 15);
+        breakPedalText.setBounds(10, 420, 100, 15);
+        speedLimitText.setBounds(10, 450, 120, 15);
+        speedLimitValueText.setBounds(90, 450, 60, 15);
+        steeringWheelText.setBounds(10, 620, 120, 15);
+        steeringWheelValueText.setBounds(130, 620, 40, 15);
+        xCoordText.setBounds(10, 635, 30, 15);
+        xCoordValueText.setBounds(40, 635, 40, 15);
+        yCoordText.setBounds(80, 635, 30, 15);
+        yCoordValueText.setBounds(110, 635, 40, 15);
+        currentSpeedText.setBounds(50, 125, 50, 15);
+        currentRpmText.setBounds(150, 125, 50, 15);
+
+        pedalExplainerText.setBounds(10, 485, 200, 15);
+        steeringExplainerText.setBounds(10, 500, 200, 15);
+        gearChangeExplainerText.setBounds(10, 515, 200, 15);
+        setIndex.setBounds(10, 530, 200, 15);
+        laneKeepingIndicatorExplainerText.setBounds(10, 560, 200, 15);
+        parkingIndicatorExplainerText.setBounds(10, 545, 200, 15);
+        accIndicatorExplainerText.setBounds(10, 575, 220, 15);
+        timeGapExplainerText.setBounds(10, 590, 220, 15);
+        referenceSpeedExplainer.setBounds(10, 605, 220, 15);
+
+        lastRoadSign.setBounds(120, 205, 110, 110);
+
+        add(lastRoadSign);
+        add(gearShiftText);
+        add(currentGearText);
+        add(accMenuText);
+        add(gasPedalText);
+        add(breakPedalText);
+        add(speedLimitText);
+        add(speedLimitValueText);
+        add(steeringWheelText);
+        add(steeringWheelValueText);
+        add(xCoordText);
+        add(xCoordValueText);
+        add(yCoordText);
+        add(yCoordValueText);
+        add(currentSpeedText);
+        add(currentRpmText);
+
+        add(pedalExplainerText);
+        add(steeringExplainerText);
+        add(gearChangeExplainerText);
+        add(setIndex);
+        add(accIndicatorExplainerText);
+        add(parkingIndicatorExplainerText);
+        add(laneKeepingIndicatorExplainerText);
+        add(timeGapExplainerText);
+        add(referenceSpeedExplainer);
+    }
+
+    public void turnIndexPlaceing() {
+        leftTurn = new TurnIndex(10, 140, true);
+        rightTurn = new TurnIndex(190, 140, false);
+
+        add(leftTurn);
+        add(rightTurn);
+    }
+
+    private void progressBarPlacing() {
+        gasProgressBar.setBounds(10, 405, 200, 15);
+        breakProgressBar.setBounds(10, 435, 200, 15);
+        gasProgressBar.setStringPainted(true);
+        breakProgressBar.setStringPainted(true);
+
+        add(gasProgressBar);
+        add(breakProgressBar);
+    }
+
+    private void placeElements() {
+        turnIndexPlaceing();
+        progressBarPlacing();
+        textPlacing();
+        oMeterPlacing();
+        markerPlacing();
+    }
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
     }
 
-    private static final Logger LOGGER = LogManager.getLogger(Dashboard.class);
+    public void refresh(int yCoord, int xCoord) {
+        gasProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
+        breakProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getBreakPedalValue());
+        steeringWheelValueText.setText(Double.toString(virtualFunctionBus.guiInputPacket.getSteeringWheelValue()));
+        currentGearText.setText(virtualFunctionBus.guiInputPacket.getShifterPos().toString());
+        speedoMeter.setPerfPercentage((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
+        referenceSpeedMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccSpeedValue()));
+        timeGapMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue()));
+        accMarker.switchIt(virtualFunctionBus.guiInputPacket.getACCStatus());
+        ppmarker.switchIt(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());
+        lkamarker.switchIt(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
+        leftTurn.setOn(leftIndex(virtualFunctionBus.guiInputPacket.getIndexStatus()));
+        rightTurn.setOn(rightIndex(virtualFunctionBus.guiInputPacket.getIndexStatus()));
+        yCoordValueText.setText(Integer.toString(yCoord));
+        xCoordValueText.setText(Integer.toString(xCoord));
 
-    private final int width = 250;
-    private final int height = 700;
-    private final int backgroundColor = 0x888888;
+    }
 
-    private Gui parent;
-
-    private Gauge kmhGauge;
-    private Gauge rpmGauge;
-
-    private Thread timer = new Thread() {
-        int difference;
-
-        public void run() {
-            while (true) {
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ex) {
-                    LOGGER.error(ex.getMessage());
-                }
-
-            }
+    private boolean rightIndex(Index.IndexStatus status) {
+        if (status == Index.IndexStatus.RIGHT) {
+            return true;
+        } else {
+            return false;
         }
-    };
-    /**
-     * Initialize the dashboard
-     */
-    public Dashboard(Gui pt) {
-        // Not using any layout manager, but fixed coordinates
-
-        FlowLayout dashboardLayout = new FlowLayout();
-        dashboardLayout.setVgap(16);
-        setLayout(dashboardLayout);
-
-        setBackground(new Color(backgroundColor));
-        setBounds(770, 0, width, height);
-        setDoubleBuffered(true);
-        parent = pt;
-        // example
-        drawEverything();
-
-        rpmGauge = new Gauge(0, 15, 117, 118, "rpm", 0, 8000, 1000);
-        kmhGauge = new Gauge(115, 15, 117, 118, "km / h", 0, 200, 20);
-        add(rpmGauge);
-        add(kmhGauge);
-
-        kmhGauge.setValue(40);
     }
 
-    private void drawMeterGridLayout(){
-        GridLayout meterGridLayout = new GridLayout(1,2,8,8);
-
-        JPanel meterPanel = new JPanel();
-        meterPanel.setLayout(meterGridLayout);
-        meterPanel.setBounds(100,100, 250,100);
-        meterPanel.setBackground(Color.MAGENTA);
-        meterPanel.setVisible(true);
-        // need vars from bus
-        JLabel leftMeter = new JLabel( 2624 + " rpm");
-        JLabel rightMeter = new JLabel(130 + " km/h");
-
-        meterPanel.add(leftMeter);
-        meterPanel.add(rightMeter);
-
-        add(meterPanel);
-    }
-
-    private  JPanel indexPanel = new JPanel();
-    private void drawIndexGridLayout(){
-        GridLayout indexGridLayout = new GridLayout(1,3,8,8);
-
-        indexPanel.setVisible(true);
-        indexPanel.setLayout(indexGridLayout);
-        indexPanel.setBackground(Color.GREEN);
-
-
-
-
-        indexPanel.add(leftIndex);
-        indexPanel.add(gear);
-        indexPanel.add(rightIndex);
-        add(indexPanel);
-    }
-
-    private JPanel pedalPanel = new JPanel();
-    private void drawPedalGridLayout(){
-        GridLayout pedalGridLayout = new GridLayout(4,1,8,8);
-
-
-
-        pedalPanel.setVisible(true);
-        pedalPanel.setLayout(pedalGridLayout);
-        pedalPanel.setBackground(Color.ORANGE);
-
-        JLabel gasLabel = new JLabel("gas pedal");
-
-        gasBar.setValue((int)virtualFunctionBus.guiInputPacket.getGasPedalValue());
-        gasBar.setStringPainted(true);
-
-        JLabel breakLabel = new JLabel("break pedal");
-
-        breakBar.setStringPainted(true);
-        breakBar.setValue((int)virtualFunctionBus.guiInputPacket.getBreakPedalValue());
-
-        pedalPanel.add(gasLabel);
-        pedalPanel.add(gasBar);
-        pedalPanel.add(breakLabel);
-        pedalPanel.add(breakBar);
-
-        add(pedalPanel);
-    }
-
-    private  JPanel compactPanel  = new JPanel();
-    public void drawAccGridLayout(){
-        GridLayout compactLayout = new GridLayout(1,2,0,0);
-        GridLayout accGridLayout = new GridLayout(4, 2, 4,4);
-        GridLayout optsGridLayout = new GridLayout(4, 2, 4, 4);
-        GridLayout signGridLayout = new GridLayout(3,1,0,0);
-
-
-        compactPanel.setLayout(compactLayout);
-
-        JPanel accPanel = new JPanel();
-        accPanel.setLayout(accGridLayout);
-
-        JPanel optsPanel = new JPanel();
-        optsPanel.setLayout(optsGridLayout);
-
-        JPanel signPanel = new JPanel();
-        signPanel.setLayout(signGridLayout);
-
-        compactPanel.add(accPanel);
-        compactPanel.add(optsPanel);
-
-        JCheckBox acc = new JCheckBox("ACC");
-        acc.setSelected(true);
-        JCheckBox pp = new JCheckBox("PP");
-        JCheckBox lka = new JCheckBox("LKA");
-        JCheckBox lkaWarning = new JCheckBox("LKA WARNING");
-
-        acc.setEnabled(false);
-        pp.setEnabled(false);
-        lka.setEnabled(false);
-        lkaWarning.setEnabled(false);
-
-        accPanel.add(accSpeed);
-        accPanel.add(accDistance);
-        accPanel.add(acc);
-        accPanel.add(lka);
-        accPanel.add(lkaWarning);
-
-        JLabel lastSign = new JLabel("last road sign");
-        JCheckBox aeb = new JCheckBox("AEB WARN");
-        JCheckBox rrWarn = new JCheckBox("RR WARN");
-
-        aeb .setEnabled(false);
-        rrWarn.setEnabled(false);
-
-        accPanel.add(lastSign);
-        accPanel.add(aeb);
-        accPanel.add(rrWarn);
-
-        add(accPanel);
-
-    }
-
-    JPanel debugPanel = new JPanel();
-
-    private void drawDebugGridLayout(){
-        GridLayout debugGridLayout = new GridLayout(4, 1, 8, 8);
-
-        debugPanel.setLayout(debugGridLayout);
-        JLabel pos = new JLabel("x: " + 350 + "y: " + 500);
-
-        debugPanel.add(speedLimit);
-        debugPanel.add(debug);
-        debugPanel.add(steeringWheel);
-        debugPanel.add(pos);
-
-
-
-        add(debugPanel);
-    }
-    private void drawEverything() {
-        drawMeterGridLayout();
-        drawIndexGridLayout();
-        drawPedalGridLayout();
-        drawAccGridLayout();
-        drawDebugGridLayout();
-    }
-
-    public void refreshDrawing(){
-        gear.setText("gear: " + virtualFunctionBus.guiInputPacket.getShifterPos());
-        indexStatus();
-        indexPanel.revalidate();
-
-        gasBar.setValue((int)virtualFunctionBus.guiInputPacket.getGasPedalValue());
-        breakBar.setValue((int)virtualFunctionBus.guiInputPacket.getBreakPedalValue());
-        pedalPanel.revalidate();
-
-        steeringWheel.setText("steering wheel: " + virtualFunctionBus.guiInputPacket.getSteeringWheelValue());
-        debug.setText("debug:" + virtualFunctionBus.guiInputPacket.getDebugSwitch());
-        debugPanel.revalidate();
-
-        accSpeed.setText("speed limit: " + virtualFunctionBus.guiInputPacket.getAccSpeedValue());
-        accDistance.setText("Acc distance: " + virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue());
-    }
-
-    private void indexStatus(){
-        if(virtualFunctionBus.guiInputPacket.getIndexStatus()== Index.IndexStatus.LEFT) {
-            leftIndex.setText("LEFT");
-            rightIndex.setText("");
-        }
-        else if(virtualFunctionBus.guiInputPacket.getIndexStatus()== Index.IndexStatus.RIGHT){
-            leftIndex.setText("");
-            rightIndex.setText("RIGHT");
-        }
-        else {
-            leftIndex.setText("");
-            rightIndex.setText("");
+    private boolean leftIndex(Index.IndexStatus status) {
+        if (status == Index.IndexStatus.LEFT) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

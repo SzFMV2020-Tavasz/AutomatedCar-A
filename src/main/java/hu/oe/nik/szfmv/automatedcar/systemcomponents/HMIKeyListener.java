@@ -1,9 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
 
-
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -11,11 +9,7 @@ import java.awt.event.KeyListener;
 
 public class HMIKeyListener {
 
-    KeyProcesser Processer = new KeyProcesser();
-
-    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus){
-        Processer.setVirtualFunctionBus(virtualFunctionBus);
-    }
+    KeyProcesser keyProcesser = new KeyProcesser();
 
     java.awt.event.KeyListener listen = new java.awt.event.KeyListener() {
 
@@ -27,31 +21,33 @@ public class HMIKeyListener {
         public void keyReleased(KeyEvent e) {
 
             int keyCode = e.getKeyCode();
-            switch(keyCode)
-            {
+            switch (keyCode) {
                 case KeyEvent.VK_W:
-                    Processer.gasPedalReleased();
+                    keyProcesser.gasPedalReleased();
 
                     break;
 
                 case KeyEvent.VK_S:
-                    Processer.breakPedalReleased();
+                    keyProcesser.breakPedalReleased();
                     break;
 
                 case KeyEvent.VK_D:
-                    Processer.steeringReleased();
+                    keyProcesser.steeringReleased();
                     break;
 
                 case KeyEvent.VK_A:
-                    Processer.steeringReleased();
+                    keyProcesser.steeringReleased();
                     break;
 
                 case KeyEvent.VK_0:
-                    Processer.zeroReleased();
+                    keyProcesser.zeroReleased();
                     break;
 
                 case KeyEvent.VK_CONTROL:
-                    Processer.controlReleased();
+                    keyProcesser.controlReleased();
+                    break;
+
+                default:
                     break;
             }
         }
@@ -60,78 +56,87 @@ public class HMIKeyListener {
         public void keyPressed(KeyEvent e) {
 
             int keyCode = e.getKeyCode();
-            switch(keyCode)
-            {
+            switch (keyCode) {
+                case KeyEvent.VK_H:
+                    keyProcesser.helpButtonPressed();
+                    break;
+
                 case KeyEvent.VK_W:
-                    Processer.gasPedalPressed();
+                    keyProcesser.gasPedalPressed();
                     break;
 
                 case KeyEvent.VK_S:
-                    Processer.breakPedalPressed();
+                    keyProcesser.breakPedalPressed();
                     break;
 
                 case KeyEvent.VK_D:
-                    Processer.steeringRightPressed();
+                    keyProcesser.steeringRightPressed();
                     break;
 
                 case KeyEvent.VK_A:
-                    Processer.steeringLeftPressed();
+                    keyProcesser.steeringLeftPressed();
                     break;
 
                 case KeyEvent.VK_Q:
-                    Processer.indexLeft();
+                    keyProcesser.indexLeft();
                     break;
 
                 case KeyEvent.VK_E:
-                    Processer.indexRight();
+                    keyProcesser.indexRight();
                     break;
 
                 case KeyEvent.VK_K:
-                    Processer.LowerShift();
+                    keyProcesser.lowerShift();
                     break;
 
                 case KeyEvent.VK_L:
-                    Processer.GrowShift();
+                    keyProcesser.growShift();
                     break;
 
                 case KeyEvent.VK_I:
-                    Processer.decreaseAccSpeed();
+                    keyProcesser.decreaseAccSpeed();
                     break;
 
                 case KeyEvent.VK_O:
-                    Processer.increaseAccSpeed();
+                    keyProcesser.increaseAccSpeed();
                     break;
 
                 case KeyEvent.VK_R:
-                   Processer.turnAccSwitch();
+                    keyProcesser.turnAccSwitch();
                     break;
 
                 case KeyEvent.VK_J:
-                    Processer.turnLaneKeepingSwitch();
+                    keyProcesser.turnLaneKeepingSwitch();
                     break;
 
                 case KeyEvent.VK_P:
-                    Processer.turnParkingPilotSwitch();
+                    keyProcesser.turnParkingPilotSwitch();
                     break;
 
                 case KeyEvent.VK_T:
-                    Processer.turnAccDistance();
+                    keyProcesser.turnAccDistance();
                     break;
 
+
                 case KeyEvent.VK_0:
-                    Processer.zeroPressed();
+                    keyProcesser.zeroPressed();
                     break;
 
                 case KeyEvent.VK_CONTROL:
-                    Processer.controlPressed();
+                    keyProcesser.controlPressed();
+                    break;
+                default:
                     break;
             }
 
         }
     };
 
-    public KeyListener getHMIListener()
-    {
+    public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
+        keyProcesser.setVirtualFunctionBus(virtualFunctionBus);
+    }
+
+    public KeyListener getHMIListener() {
 
         return listen;
     }

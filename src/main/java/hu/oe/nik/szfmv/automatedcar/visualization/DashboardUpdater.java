@@ -1,7 +1,5 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.HMIOutputPackets.InputPacket;
-
 public class DashboardUpdater implements Updater {
 
     int rpmMeter;
