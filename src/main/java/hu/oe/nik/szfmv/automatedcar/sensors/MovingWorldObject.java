@@ -18,12 +18,23 @@ public class MovingWorldObject extends WorldObject {
     //oldpos
     //newpos
     public MovingWorldObject(WorldObject worldObject, VirtualFunctionBus virtualFunctionBus) {
+        // copy the whole WorldObject int the class so it could be passed as one if needed
+        // with WorldObject information intact
         this.x = worldObject.getX();
         this.y = worldObject.getY();
+        this.rotation = worldObject.getRotation();
+        this.height = worldObject.getHeight();
+        this.width = worldObject.getWidth();
+        this.type = worldObject.getType();
+        this.image = worldObject.getImage();
+        this.rotationMatrix = worldObject.getRotationMatrix();
+        this.imageFileName = worldObject.getImageFileName();
         this.id = worldObject.getId();
+        this.polygon = worldObject.getPolygon();
         this.virtualFunctionBus = virtualFunctionBus;
         this.movementVectorX = 0;
         this.movementVectorY = 0;
+
     }
 
     /**

@@ -6,6 +6,7 @@ import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.SelectedDebugListPacket;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +37,14 @@ public class Radar extends SystemComponent {
     // when the egocar is looking north
     private static final int RADAR_SENSOR_DX = 0;
     private static final int RADAR_SENSOR_DY = -104;
-    private static final int RADAR_TRIANGLE_HALF_X = (int)(Math.tan(RADAR_SENSOR_ANGLE) * RADAR_SENSOR_RANGE);
+    private static final int RADAR_TRIANGLE_HALF_X = (int) (Math.tan(RADAR_SENSOR_ANGLE) * RADAR_SENSOR_RANGE);
 
     // packets for sending data
     private final RadarVisualizationPacket radarVisualizationPacket;
     private final RadarDisplayStatePacket radarDisplayStatePacket;
     private final SelectedDebugListPacket selectedDebugListPacket;
+    // will be removed later when HMI will be setting this switch
+    private final DebugModePacket debugModePacket;
 
     // objects references for reference(eh...)
     private AutomatedCar automatedCar;
@@ -58,6 +62,8 @@ public class Radar extends SystemComponent {
         virtualFunctionBus.radarDisplayStatePacket = radarDisplayStatePacket;
         selectedDebugListPacket = new SelectedDebugListPacket();
         virtualFunctionBus.selectedDebugListPacket = selectedDebugListPacket;
+        debugModePacket = new DebugModePacket();
+        virtualFunctionBus.debugModePacket = debugModePacket;
 
         this.automatedCar = automatedCar;
         this.world = world;
@@ -71,24 +77,29 @@ public class Radar extends SystemComponent {
     public void loop() {
         // calculate radar polygon's current position
         calculateDefaultPolygon();
-        Point source = new Point((int)radarPolygon.xpoints[0], (int)radarPolygon.ypoints[0]);
-        Point corner1 = new Point((int)radarPolygon.xpoints[1], (int)radarPolygon.ypoints[1]);
-        Point corner2 = new Point((int)radarPolygon.xpoints[2], (int)radarPolygon.ypoints[2]);
+        Point source = new Point((int) radarPolygon.xpoints[0], (int) radarPolygon.ypoints[0]);
+        Point corner1 = new Point((int) radarPolygon.xpoints[1], (int) radarPolygon.ypoints[1]);
+        Point corner2 = new Point((int) radarPolygon.xpoints[2], (int) radarPolygon.ypoints[2]);
 
         // get elements in triangle
         List<WorldObject> selectedInTriangle = getCollideableElementsInRadarTriangle(source, corner1, corner2);
         updateElementsSeenByRadar(selectedInTriangle);
-        showElementsInTriangle(selectedDebugListPacket);
+        //showElementsInTriangle();
+        showNearesElementInTriangle();
+
 
         // send radar display data
         radarVisualizationPacket.setSensorTriangle(source, corner1, corner2, RADAR_SENSOR_BG_COLOUR);
         radarDisplayStatePacket.setRadarDisplayState(true);
 
+        // turn on debug mode - left here for debugging purposes
+        virtualFunctionBus.debugModePacket.setDebuggingState(false);
     }
 
     /**
-     * Keepst the list of elements seen by radar up to date
+     * Keeps the list of elements seen by radar up to date
      * by comparing it to the freshly requested elements
+     *
      * @param elementsInRadarTriangle the fresh list of the elements seen by radar
      */
     private void updateElementsSeenByRadar(List<WorldObject> elementsInRadarTriangle) {
@@ -118,6 +129,7 @@ public class Radar extends SystemComponent {
 
     /**
      * Checks if an object is already in the elements seeen by radar list
+     *
      * @param object the object to check
      * @return the object reference in the list if found; null otherwise
      */
@@ -131,9 +143,80 @@ public class Radar extends SystemComponent {
     }
 
     /**
+     * Returns the list of {@link MovingWorldObject} that is collideable and seen by the radar.
+     * Collideable means that the object's Z value is bigger than 0.
+     * @return The list of objects.
+     */
+    public List<MovingWorldObject> getObjectsSeenByRadar() {
+        return elementsSeenByRadar;
+    }
+
+    /**
+     * Calculates the nearest collideable element. No lateral offset, just the geometically nearest object
+     * based on the debug polygons
+     *
+     * @return the nearest object if exists, null if none seen by radar
+     */
+    public WorldObject getNearestCollideableElement() {
+        WorldObject nearestObject = null;
+        double distance = Double.MAX_VALUE;
+        for (WorldObject mo : elementsSeenByRadar) {
+            if (mo.getPolygon() != null) {
+                Shape moPolyInplace = ObjectTransform.transformPolygon(mo);
+                Shape egocarPolyInPlace = ObjectTransform.transformPolygon(automatedCar);
+                double moDistance = calculateMinimumDistance(moPolyInplace, mo.getPolygon().npoints,
+                    egocarPolyInPlace, automatedCar.getPolygon().npoints);
+                if (moDistance < Double.MAX_VALUE && moDistance < distance) {
+                    distance = moDistance;
+                    nearestObject = mo;
+                }
+            }
+        }
+
+        return nearestObject != null ? nearestObject : null;
+    }
+
+    private double calculateMinimumDistance(Shape poly1, int poly1N, Shape poly2, int poly2N) {
+        double distance = Double.MAX_VALUE;
+
+        // check all poly1 points against all poly points and select the smallest distance
+        PathIterator it1 = poly1.getPathIterator(null);
+        int it1Index = 0;
+        while (it1Index < poly1N && !it1.isDone()) {
+            float[] p1 = new float[2];
+            it1.currentSegment(p1);
+            double tempDistance = getShapeMinimumDistanceFromPoint(poly2, poly2N, p1);
+            if ( tempDistance < distance) {
+                distance = tempDistance;
+            }
+            it1.next();
+            it1Index++;
+        }
+        return distance;
+    }
+
+    private double getShapeMinimumDistanceFromPoint(Shape poly, int polyN, float[] p1) {
+        double distance = Double.MAX_VALUE;
+        PathIterator it2 = poly.getPathIterator(null);
+        int it2Index = 0;
+        while (it2Index < polyN && !it2.isDone()) {
+            float[] p2 = new float[2];
+            it2.currentSegment(p2);
+            double tempDistance = Point2D.distance(p1[0], p1[1], p2[0], p2[0]);
+            if (tempDistance < distance) {
+                distance = tempDistance;
+            }
+            it2.next();
+            it2Index++;
+        }
+        return distance;
+    }
+
+    /**
      * Checks if a {@link MovingWorldObject} is in the list of {@link WorldObject}
+     *
      * @param selectedInTriangle The list of object to check against
-     * @param movingWorldObject The object to search for in the list
+     * @param movingWorldObject  The object to search for in the list
      * @return true if the objects id is found in the list; false otherwise
      */
     private boolean elementInNewRadarTriangleList(List<WorldObject> selectedInTriangle,
@@ -147,21 +230,22 @@ public class Radar extends SystemComponent {
     }
 
     /**
-     * Sets the list of elements that are shown with different color inside the radar triangle
-     * @param selectedDebugListPacket the packet that will pass o the list
+     * Gets the geometrically nearest element and passes it to the selectedDebuglistpacket
      */
-    private void showElementsInTriangle(SelectedDebugListPacket selectedDebugListPacket) {
-        // select elemets for debugpolygons that are collideable and in the triangle
-        List<String> selectedIds = new ArrayList<>();
-        for (WorldObject object : elementsSeenByRadar) {
-            selectedIds.add(object.getId());
+    private void showNearesElementInTriangle() {
+        // show nearest element in triangle
+        WorldObject nearestElement = getNearestCollideableElement();
+        List<String> selectedElements = new ArrayList<>();
+        if (nearestElement != null) {
+            selectedElements.add(nearestElement.getId());
         }
-        selectedDebugListPacket.setDebugListElements(selectedIds);
+        selectedDebugListPacket.setDebugListElements(selectedElements);
     }
 
     /**
      * Gets the collideable objects inside the triangle defined by the 3 points
-     * @param source source point of the triangle
+     *
+     * @param source  source point of the triangle
      * @param corner1 second point of the triangle
      * @param corner2 third point of the triangle
      * @return the list of objects that are collideable and inside the triangle.
@@ -185,16 +269,17 @@ public class Radar extends SystemComponent {
      */
     private void calculateDefaultPolygon() {
         // source point
-        Point2D source =  getSource();
+        Point2D source = getSource();
         Point2D corner1 = getCorner1();
         Point2D corner2 = getCorner2();
 
-        radarPolygon = new Polygon(new int[]{(int)source.getX(), (int)corner1.getX(), (int)corner2.getX()},
-            new int[]{(int)source.getY(), (int)corner1.getY(), (int)corner2.getY()}, TRIANGLE_POLYGON_POINTS);
+        radarPolygon = new Polygon(new int[]{(int) source.getX(), (int) corner1.getX(), (int) corner2.getX()},
+            new int[]{(int) source.getY(), (int) corner1.getY(), (int) corner2.getY()}, TRIANGLE_POLYGON_POINTS);
     }
 
     /**
      * Calculates the world position of the radar sensor polygon's source point
+     *
      * @return The calculated source point
      */
     private Point2D getSource() {
@@ -209,6 +294,7 @@ public class Radar extends SystemComponent {
 
     /**
      * Calculates the world position of the radar sensor polygon's second point
+     *
      * @return The calculated second point
      */
     private Point2D getCorner1() {
@@ -225,6 +311,7 @@ public class Radar extends SystemComponent {
 
     /**
      * Calculates the world position of the radar sensor polygon's third point
+     *
      * @return The calculated third point
      */
     private Point2D getCorner2() {
@@ -241,8 +328,9 @@ public class Radar extends SystemComponent {
 
     /**
      * Checks whether an element is collideable by checking its Z value.
-     *
+     * <p>
      * Everything with a Z value higher than 0 is collidable
+     *
      * @param object The {@link WorldObject} to check
      * @return True if the object is not on the not collideable element's list.
      */

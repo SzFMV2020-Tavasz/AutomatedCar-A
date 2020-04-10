@@ -139,7 +139,7 @@ public class WorldObject {
 
     // will be added later by team 2 but needed for
     public Polygon getPolygon() {
-        return null;
+        return polygon;
     }
 
     public void initImage() {
