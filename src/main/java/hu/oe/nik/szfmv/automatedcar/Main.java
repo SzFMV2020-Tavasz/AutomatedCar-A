@@ -1,6 +1,8 @@
 package hu.oe.nik.szfmv.automatedcar;
 
 import hu.oe.nik.szfmv.automatedcar.model.World;
+import hu.oe.nik.szfmv.automatedcar.sensors.Radar;
+import hu.oe.nik.szfmv.automatedcar.visualization.DisplayWorld;
 import hu.oe.nik.szfmv.automatedcar.visualization.Gui;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +15,8 @@ public class Main {
     private Gui window;
     private AutomatedCar car;
     private World world;
+    private DisplayWorld displayWorld;
+    private  Radar radar;
 
     public static void main(String[] args) {
 
@@ -29,19 +33,28 @@ public class Main {
     private void init() {
         // create the world
         world = new World(5000, 3000);
+
         // create an automated car
-        car = new AutomatedCar(20, 20, "car_2_white.png");
-        world.addObjectToWorld(car);
+        car = new AutomatedCar(3522, 2316, "car_2_white.png");
+        // car = new AutomatedCar(474, 669, "car_2_white.png");
+        // car = new AutomatedCar(540, 1850, "car_2_white.png");
+        car.setRotation(0);
+
+        radar = new Radar(car.getVirtualFunctionBus(), car, world);
+
+        // create the displayworld
+        displayWorld = new DisplayWorld(world, car);
 
         window = new Gui();
         window.setVirtualFunctionBus(car.getVirtualFunctionBus());
     }
-
+    
     private void loop() {
         while (true) {
             try {
                 car.drive();
-                window.getCourseDisplay().drawWorld(world);
+                window.getCourseDisplay().drawWorld(displayWorld);
+                window.getDashboard().refresh(car.getX(), car.getY());
 //                window.getCourseDisplay().refreshFrame();
                 Thread.sleep(CYCLE_PERIOD);
             } catch (InterruptedException e) {
