@@ -4,7 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.CarPositionPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarPositionPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraVisualizationPacket;
@@ -16,7 +16,6 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IUl
 
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.GuiInputPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.*;
 
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class VirtualFunctionBus {
     public GuiInputPacket guiInputPacket = new GuiInputPacket();
 
     public ReadOnlySamplePacket samplePacket;
-    public CarPositionPacket carPositionPacket;
+    public ICarPositionPacket carPositionPacket;
     public IRadarVisualizationPacket radarVisualizationPacket;
     public ICameraVisualizationPacket cameraVisualizationPacket;
     public IUltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;

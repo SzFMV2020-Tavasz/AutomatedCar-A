@@ -2,8 +2,8 @@ package hu.oe.nik.szfmv.automatedcar.sensors;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.CarPositionPacket;
 
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarPositionPacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +17,9 @@ public class MovingWorldObjectTest {
     /**
      * implementing interfaces for testing
      */
-    class MockCarPostionPacketData implements CarPositionPacket{
+    class MockCarPostionPacketData implements ICarPositionPacket{
         int calledNumber = 0;
-        MockCarPostionPacketData( ){ };
+        MockCarPostionPacketData( ){ }
 
         @Override
         public double getX() {
@@ -47,7 +47,7 @@ public class MovingWorldObjectTest {
         MockVector(int xDiff, int yDiff){
             this.xDiff = xDiff;
             this.yDiff = yDiff;
-        };
+        }
 
         @Override
         public double getXDiff() {
@@ -75,14 +75,14 @@ public class MovingWorldObjectTest {
     public void init() {
         WorldObject worldObject = new WorldObject(10, 20, "tree.png");
         virtualFunctionBus = new VirtualFunctionBus();
-        CarPositionPacket carPositionPacket = new MockCarPostionPacketData();
+        ICarPositionPacket carPositionPacket = new MockCarPostionPacketData();
         virtualFunctionBus.carPositionPacket = carPositionPacket;
 
         movingWorldObject = new MovingWorldObject(worldObject, virtualFunctionBus);
     }
 
     /**
-     * Check whether the class gets instantiatied when new Radar() called.
+     * Check whether the class gets instantiated when new Radar() called.
      */
     @Test
     public void classInstantiated() {
@@ -90,7 +90,7 @@ public class MovingWorldObjectTest {
     }
 
     /**
-     * Checks if the movement vector of the object is calulated right
+     * Checks if the movement vector of the object is calculated right
      */
     @Test
     public void movementVector(){

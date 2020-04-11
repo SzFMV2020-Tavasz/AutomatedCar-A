@@ -1,9 +1,9 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.CarPositionPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarPositionPacket;
 
-class CarPositionPacketData implements CarPositionPacket {
+class CarPositionPacketData implements ICarPositionPacket {
 
     private final double x;
 
