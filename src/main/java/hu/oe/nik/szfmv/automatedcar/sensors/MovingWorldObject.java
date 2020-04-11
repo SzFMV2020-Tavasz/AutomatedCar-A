@@ -13,6 +13,7 @@ public class MovingWorldObject extends WorldObject {
     private Integer lastPosY;
     private int movementVectorX;
     private int movementVectorY;
+    private WorldObject worldObject; // storing the reference
 
     // calculate new  position and old position?
     //oldpos
@@ -34,7 +35,18 @@ public class MovingWorldObject extends WorldObject {
         this.virtualFunctionBus = virtualFunctionBus;
         this.movementVectorX = 0;
         this.movementVectorY = 0;
+        this.worldObject = worldObject;
+        // set the radar highlight false
+        this.worldObject.setHighlightedWhenRadarIsOn(false);
 
+    }
+
+    /**
+     * Gets the original worldObject stored
+     * @return the referenc to the original worldObject
+     */
+    public WorldObject getWorldObject() {
+        return worldObject;
     }
 
     /**
