@@ -9,7 +9,6 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.SelectedDebugListPacket;
 import hu.oe.nik.szfmv.automatedcar.visualization.VisualizationConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +41,6 @@ public class Radar extends SystemComponent {
     // packets for sending data
     private final RadarVisualizationPacket radarVisualizationPacket;
     private final RadarDisplayStatePacket radarDisplayStatePacket;
-    private final SelectedDebugListPacket selectedDebugListPacket;
     // will be removed later when HMI will be setting this switch
     private final DebugModePacket debugModePacket;
 
@@ -60,11 +58,8 @@ public class Radar extends SystemComponent {
         virtualFunctionBus.radarVisualizationPacket = radarVisualizationPacket;
         radarDisplayStatePacket = new RadarDisplayStatePacket();
         virtualFunctionBus.radarDisplayStatePacket = radarDisplayStatePacket;
-        selectedDebugListPacket = new SelectedDebugListPacket();
-        virtualFunctionBus.selectedDebugListPacket = selectedDebugListPacket;
         debugModePacket = new DebugModePacket();
         virtualFunctionBus.debugModePacket = debugModePacket;
-
         this.automatedCar = automatedCar;
         this.world = world;
         this.elementsSeenByRadar = new ArrayList<>();
@@ -84,9 +79,7 @@ public class Radar extends SystemComponent {
         // get elements in triangle
         List<WorldObject> selectedInTriangle = getCollideableElementsInRadarTriangle(source, corner1, corner2);
         updateElementsSeenByRadar(selectedInTriangle);
-        //showElementsInTriangle();
-        showNearesElementInTriangle();
-
+        showNearestElementInTriangle();
 
         // send radar display data
         radarVisualizationPacket.setSensorTriangle(source, corner1, corner2, RADAR_SENSOR_BG_COLOUR);
@@ -94,6 +87,15 @@ public class Radar extends SystemComponent {
 
         // turn on debug mode - left here for debugging purposes
         virtualFunctionBus.debugModePacket.setDebuggingState(false);
+    }
+
+    private void setRadarHighglightOffOnElements() {
+        for (WorldObject object : world.getWorldObjects()) {
+            object.setHighlightedWhenRadarIsOn(false);
+        }
+        for (WorldObject object : world.getDynamics()) {
+            object.setHighlightedWhenRadarIsOn(false);
+        }
     }
 
     /**
@@ -112,8 +114,10 @@ public class Radar extends SystemComponent {
                 mo.setY(object.getY());
             } else {
                 // if no, add
-                MovingWorldObject moveObject = new MovingWorldObject(object, virtualFunctionBus);
-                elementsSeenByRadar.add(moveObject);
+                if (isCollideable(object)) {
+                    MovingWorldObject moveObject = new MovingWorldObject(object, virtualFunctionBus);
+                    elementsSeenByRadar.add(moveObject);
+                }
             }
         }
 
@@ -124,7 +128,6 @@ public class Radar extends SystemComponent {
                 elementsSeenByRadar.remove(mo);
             }
         }
-
     }
 
     /**
@@ -157,10 +160,10 @@ public class Radar extends SystemComponent {
      *
      * @return the nearest object if exists, null if none seen by radar
      */
-    public WorldObject getNearestCollideableElement() {
-        WorldObject nearestObject = null;
+    public MovingWorldObject getNearestCollideableElement() {
+        MovingWorldObject nearestObject = null;
         double distance = Double.MAX_VALUE;
-        for (WorldObject mo : elementsSeenByRadar) {
+        for (MovingWorldObject mo : elementsSeenByRadar) {
             if (mo.getPolygon() != null) {
                 Shape moPolyInplace = ObjectTransform.transformPolygon(mo);
                 Shape egocarPolyInPlace = ObjectTransform.transformPolygon(automatedCar);
@@ -186,7 +189,7 @@ public class Radar extends SystemComponent {
             float[] p1 = new float[2];
             it1.currentSegment(p1);
             double tempDistance = getShapeMinimumDistanceFromPoint(poly2, poly2N, p1);
-            if ( tempDistance < distance) {
+            if (tempDistance < distance) {
                 distance = tempDistance;
             }
             it1.next();
@@ -202,7 +205,7 @@ public class Radar extends SystemComponent {
         while (it2Index < polyN && !it2.isDone()) {
             float[] p2 = new float[2];
             it2.currentSegment(p2);
-            double tempDistance = Point2D.distance(p1[0], p1[1], p2[0], p2[0]);
+            double tempDistance = Point2D.distance(p1[0], p1[1], p2[0], p2[1]);
             if (tempDistance < distance) {
                 distance = tempDistance;
             }
@@ -222,7 +225,7 @@ public class Radar extends SystemComponent {
     private boolean elementInNewRadarTriangleList(List<WorldObject> selectedInTriangle,
                                                   MovingWorldObject movingWorldObject) {
         for (WorldObject object : selectedInTriangle) {
-            if (object.getId() == movingWorldObject.getId()) {
+            if (object.getId().equals(movingWorldObject.getId())) {
                 return true;
             }
         }
@@ -232,14 +235,14 @@ public class Radar extends SystemComponent {
     /**
      * Gets the geometrically nearest element and passes it to the selectedDebuglistpacket
      */
-    private void showNearesElementInTriangle() {
+    private void showNearestElementInTriangle() {
+        // turn off highlight on all world elements to avoid stuck highlights
+        setRadarHighglightOffOnElements();
         // show nearest element in triangle
-        WorldObject nearestElement = getNearestCollideableElement();
-        List<String> selectedElements = new ArrayList<>();
+        MovingWorldObject nearestElement = getNearestCollideableElement();
         if (nearestElement != null) {
-            selectedElements.add(nearestElement.getId());
+            nearestElement.getWorldObject().setHighlightedWhenRadarIsOn(true);
         }
-        selectedDebugListPacket.setDebugListElements(selectedElements);
     }
 
     /**

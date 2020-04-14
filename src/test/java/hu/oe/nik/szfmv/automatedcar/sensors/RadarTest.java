@@ -3,7 +3,6 @@ package hu.oe.nik.szfmv.automatedcar.sensors;
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
-import hu.oe.nik.szfmv.automatedcar.model.WorldObjectTest;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,47 +28,51 @@ public class RadarTest {
      */
     class MockWorld extends World {
         int calledNumber = 0;
+        List<WorldObject> passlist;
 
         MockWorld(int width, int height) {
             super(width, height, new ArrayList<WorldObject>());
+            passlist = new ArrayList<>();
+        }
+
+        public List<WorldObject> getPasslist() {
+            return passlist;
         }
 
         @Override
         public List<WorldObject> getObjectsInsideTriangle(Point a, Point b, Point c) {
             calledNumber++;
-            List<WorldObject> returnlist = new ArrayList<>();
-            Polygon testPoly = new Polygon(new int[]{0, 1, 0}, new int[]{0, 0, 1}, 3);
+            passlist = new ArrayList<>();
+            if (calledNumber < 5) {
+                Polygon testPoly = new Polygon(new int[]{0, 1, 0}, new int[]{0, 0, 1}, 3);
 
-            // the collideable object
-            MockWorldObject object1 = new MockWorldObject(-100, -100, "roadsign_speed_40.png");
-            object1.setType("roadsign_speed_40");
-            object1.setId("roadsign_speed_40_1");
-            object1.setZ(1);
-            object1.setPolygon(testPoly);
-            returnlist.add((WorldObject) object1);
+                // the collideable object
+                MockWorldObject object1 = new MockWorldObject(-100, -100, "roadsign_speed_40.png");
+                object1.setId("roadsign_speed_40_1");
+                object1.setZ(1);
+                object1.setPolygon(testPoly);
+                passlist.add((WorldObject) object1);
 
-            // the not collideable object
-            MockWorldObject object2 = new MockWorldObject(200, 400, "parking_space_parallel.png");
-            object2.setType("parking_space_parallel");
-            object2.setId("parking_space_parallel_2");
-            object2.setZ(0);
-            object2.setPolygon(testPoly);
-            returnlist.add((WorldObject) object2);
+                // the not collideable object
+                MockWorldObject object2 = new MockWorldObject(200, 400, "parking_space_parallel.png");
+                object2.setId("parking_space_parallel_2");
+                object2.setZ(0);
+                object2.setPolygon(testPoly);
+                passlist.add((WorldObject) object2);
 
-            addRemoved(returnlist, testPoly);
-
-            return returnlist;
+                addRemoved(testPoly);
+            }
+            return passlist;
         }
 
-        private void addRemoved(List<WorldObject> returnlist, Polygon testPoly) {
+        private void addRemoved(Polygon testPoly) {
             if (calledNumber == 1 || calledNumber == 3) {
                 // a collideable object
                 MockWorldObject object1 = new MockWorldObject(600, 200, "tree.png");
-                object1.setType("tree");
                 object1.setId("tree_3");
                 object1.setZ(1);
                 object1.setPolygon(testPoly);
-                returnlist.add((WorldObject) object1);
+                passlist.add((WorldObject) object1);
             }
         }
     }
@@ -142,18 +145,50 @@ public class RadarTest {
         assertEquals(-5673, virtualFunctionBus.radarVisualizationPacket.getSensorCorner2().getY());
     }
 
+    /**
+     * Checks whether the nearest collideable object is the right one
+     */
     @Test
     public void nearestCollidableElement() {
         radar.loop();
         assertTrue(radar.getNearestCollideableElement().getId().equals("roadsign_speed_40_1"));
     }
 
+    /**
+     * Checks whether the list of elements seen by radar is updated right
+     */
     @Test
-    public void updateSeenByRadar(){
+    public void updateSeenByRadar() {
         radar.loop();
         radar.loop();
         radar.loop();
         assertTrue(radar.getObjectsSeenByRadar().stream()
             .filter(t -> t.getId().equals("tree_3")).findFirst().isPresent());
+    }
+
+    /**
+     * Checks whether the nearest object is highlihgted in the World class instance
+     */
+    @Test
+    public void nearestObjectHighlighted() {
+        radar.loop();
+        assertTrue(world.getPasslist().get(0).isHighlightedWhenRadarIsOn());
+    }
+
+    /**
+     * Checks whether the highlighted elements of the world instance are cleared on every loop
+     */
+    @Test
+    public void highlightedElementsCleared() {
+        radar.loop();
+        radar.loop();
+        radar.loop();
+        radar.loop();
+        radar.loop();
+        MovingWorldObject obj = radar.getNearestCollideableElement();
+        assertFalse(world.getWorldObjects().stream()
+            .filter(t -> t.isHighlightedWhenRadarIsOn() == true).findAny().isPresent());
+        assertFalse(world.getDynamics().stream()
+            .filter(t -> t.isHighlightedWhenRadarIsOn() == true).findAny().isPresent());
     }
 }

@@ -27,12 +27,18 @@ public class WorldObject {
     protected BufferedImage image;
     protected Polygon polygon;
     protected boolean isStatic;
+    protected boolean highlightedWhenCameraIsOn;
+    protected boolean highlightedWhenRadarIsOn;
+    protected boolean highlightedWhenUltrasoundIsOn;
 
     public WorldObject(int x, int y, String imageFileName) {
         this.x = x;
         this.y = y;
         this.imageFileName = imageFileName;
         initImage();
+        this.highlightedWhenCameraIsOn = false;
+        this.highlightedWhenRadarIsOn = false;
+        this.highlightedWhenUltrasoundIsOn = false;
     }
 
     public WorldObject(String id) {
@@ -159,5 +165,53 @@ public class WorldObject {
         }
         setImageFileName(this.type + ".png");
         initImage();
+    }
+
+    /**
+     * Gets whether the object is highlighted when radar sensor triangle is shown
+     * @return true if it is highlighted; false otherwise
+     */
+    public boolean isHighlightedWhenRadarIsOn() {
+        return highlightedWhenRadarIsOn;
+    }
+
+    /**
+     * Sets whether the object is highlighted when radar sensor triangle is shown
+     * @param highlightedWhenRadarIsOn true if the object should be hightlighted; false otherwise
+     */
+    public void setHighlightedWhenRadarIsOn(boolean highlightedWhenRadarIsOn) {
+        this.highlightedWhenRadarIsOn = highlightedWhenRadarIsOn;
+    }
+
+    /**
+     * Gets whether the object is highlighted when camera sensor triangle is shown
+     * @return true if it is highlighted; false otherwise
+     */
+    public boolean isHighlightedWhenCameraIsOn() {
+        return highlightedWhenCameraIsOn;
+    }
+
+    /**
+     * Sets whether the object is highlighted when camera sensor triangle is shown
+     * @param highlightedWhenCameraIsOn true if the object should be hightlighted; false otherwise
+     */
+    public void setHighlightedWhenCameraIsOn(boolean highlightedWhenCameraIsOn) {
+        this.highlightedWhenCameraIsOn = highlightedWhenCameraIsOn;
+    }
+
+    /**
+     * Gets whether the object is highlighted when ultrasound sensor triangle is shown
+     * @return true if it is highlighted; false otherwise
+     */
+    public boolean isHighlightedWhenUltrasoundIsOn() {
+        return highlightedWhenUltrasoundIsOn;
+    }
+
+    /**
+     * Sets whether the object is highlighted when ultrasound sensor triangle is shown
+     * @param highlightedWhenUltrasoundIsOn true if the object should be hightlighted; false otherwise
+     */
+    public void setHighlightedWhenUltrasoundIsOn(boolean highlightedWhenUltrasoundIsOn) {
+        this.highlightedWhenUltrasoundIsOn = highlightedWhenUltrasoundIsOn;
     }
 }
