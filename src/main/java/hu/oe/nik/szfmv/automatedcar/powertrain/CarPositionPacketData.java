@@ -11,7 +11,7 @@ class CarPositionPacketData implements ICarPositionPacket {
 
     private final IVector moveVector;
 
-    private CarPositionPacketData(double x, double y, IVector moveVector) {
+    public CarPositionPacketData(double x, double y, IVector moveVector) {
         this.x = x;
         this.y = y;
         this.moveVector = moveVector;

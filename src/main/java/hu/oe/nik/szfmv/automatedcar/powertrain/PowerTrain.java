@@ -9,14 +9,20 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.
 public class PowerTrain extends SystemComponent {
 
     private ToPowerTrainPacket input;
+    private CarPositionPacketData output;
 
     public PowerTrain(VirtualFunctionBus virtualFunctionBus) {
         super(virtualFunctionBus);
         input = virtualFunctionBus.toPowerTrainPacket;
+        output = new CarPositionPacketData(540,1450, null);
+        virtualFunctionBus.carPositionPacket = output;
     }
 
     @Override public void loop() {
-
+        int x = (int)output.getX();
+        int y = (int)output.getY();
+        output = new CarPositionPacketData(x,y, null);
+        virtualFunctionBus.carPositionPacket = output;
     }
 
 }
