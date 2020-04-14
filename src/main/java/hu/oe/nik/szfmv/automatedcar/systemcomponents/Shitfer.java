@@ -14,7 +14,7 @@ public class Shitfer {
         ShiftPos[] pos = ShiftPos.values();
         if (acttuallyValue < pos.length - 1) {
             acttuallyValue++;
-            virtualFunctionBus.toPowerTrainPacket.setShiftChangeRequest(pos[acttuallyValue]);
+            virtualFunctionBus.inputPacket.setShiftChangeRequest(pos[acttuallyValue]);
             virtualFunctionBus.guiInputPacket.setShifterPos(pos[acttuallyValue]);
         }
     }
@@ -22,7 +22,7 @@ public class Shitfer {
     public void decrement() {
         if (acttuallyValue > 0) {
             acttuallyValue--;
-            virtualFunctionBus.toPowerTrainPacket.setShiftChangeRequest(ShiftPos.values()[acttuallyValue]);
+            virtualFunctionBus.inputPacket.setShiftChangeRequest(ShiftPos.values()[acttuallyValue]);
             virtualFunctionBus.guiInputPacket.setShifterPos(ShiftPos.values()[acttuallyValue]);
         }
     }

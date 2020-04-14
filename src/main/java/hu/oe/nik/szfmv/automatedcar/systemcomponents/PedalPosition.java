@@ -35,7 +35,7 @@ public class PedalPosition {
                 } else {
                     steeringWheelValue = 180;
                 }
-                virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                virtualFunctionBus.inputPacket.setSteeringWheelValue(steeringWheelValue);
                 virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
                 counter++;
                 sleep();
@@ -62,7 +62,7 @@ public class PedalPosition {
                 } else {
                     steeringWheelValue = -180;
                 }
-                virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                virtualFunctionBus.inputPacket.setSteeringWheelValue(steeringWheelValue);
                 virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
                 counter++;
                 sleep();
@@ -79,7 +79,7 @@ public class PedalPosition {
             while (!steeringWheelRight && !steeringWheelLeft && !(steeringWheelValue == 0.0)) {
                 counter++;
                 steeringWheelValue += steeringWheelToZero(steeringWheelValue, counter);
-                virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                virtualFunctionBus.inputPacket.setSteeringWheelValue(steeringWheelValue);
                 virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
                 sleep();
             }
@@ -104,7 +104,7 @@ public class PedalPosition {
                 } else {
                     gasPedalValue = 100;
                 }
-                virtualFunctionBus.toPowerTrainPacket.setGasPedalValue(gasPedalValue);
+                virtualFunctionBus.inputPacket.setGasPedalValue(gasPedalValue);
                 virtualFunctionBus.guiInputPacket.setGasPedalValue(gasPedalValue);
                 counter++;
                 sleep();
@@ -128,7 +128,7 @@ public class PedalPosition {
                 } else {
                     gasPedalValue = 0;
                 }
-                virtualFunctionBus.toPowerTrainPacket.setGasPedalValue(gasPedalValue);
+                virtualFunctionBus.inputPacket.setGasPedalValue(gasPedalValue);
                 virtualFunctionBus.guiInputPacket.setGasPedalValue(gasPedalValue);
                 counter++;
                 sleep();
@@ -154,7 +154,7 @@ public class PedalPosition {
                 } else {
                     breakPedalValue = 100;
                 }
-                virtualFunctionBus.toPowerTrainPacket.setBreakPedalValue(breakPedalValue);
+                virtualFunctionBus.inputPacket.setBreakPedalValue(breakPedalValue);
                 virtualFunctionBus.guiInputPacket.setBreakPedalValue(breakPedalValue);
                 counter++;
                 sleep();
@@ -178,7 +178,7 @@ public class PedalPosition {
                 } else {
                     breakPedalValue = 0;
                 }
-                virtualFunctionBus.toPowerTrainPacket.setBreakPedalValue(breakPedalValue);
+                virtualFunctionBus.inputPacket.setBreakPedalValue(breakPedalValue);
                 virtualFunctionBus.guiInputPacket.setBreakPedalValue(breakPedalValue);
                 counter++;
                 sleep();

@@ -1,16 +1,16 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlyInputPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.SteeringPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ReadOnlyToPowerTrainPacket;
 //import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
 /**
- * @author  Robespierre19
- * @author  robert-megyesi-woz
- * @author  Kadi96
- * @author  attilanemeth
- *
+ * @author Robespierre19
+ * @author robert-megyesi-woz
+ * @author Kadi96
+ * @author attilanemeth
+ * <p>
  * Date: 2019-04-10
  */
 
@@ -36,9 +36,10 @@ public class Steering extends SystemComponent {
     }
 
     private void getValuesFromInputPacket() {
-        ReadOnlyInputPacket packet = virtualFunctionBus.inputPacket;
+//        ReadOnlyInputPacket packet = virtualFunctionBus.inputPacket;
+        ReadOnlyToPowerTrainPacket packet = virtualFunctionBus.inputPacket;
 
-        steeringWheel = packet.getSteeringWheel();
+        steeringWheel = (int) Math.round(packet.getSteeringWheelValue());
     }
 
     private void calculateSteeringAngleFromWheelPosition() {

@@ -7,7 +7,7 @@ public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
     private double gasPedalValue;
     private double breakPedalValue;
     private double steeringWheelValue;
-    private Shitfer.ShiftPos shiftChangeRequest;
+    private Shitfer.ShiftPos shiftChangeRequest = Shitfer.ShiftPos.D;
     private int tempomatValue;
     private boolean tempomatSwitch;
     private double trackingDistanceValue;
