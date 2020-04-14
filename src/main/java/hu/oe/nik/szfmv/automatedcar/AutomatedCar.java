@@ -3,6 +3,7 @@ package hu.oe.nik.szfmv.automatedcar;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.PowertrainSystem;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,10 +15,12 @@ public class AutomatedCar extends WorldObject {
     private final VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
     private final PowerTrain powerTrain = new PowerTrain(virtualFunctionBus);
+    private PowertrainSystem powertrainSystem;
 
     public AutomatedCar(int x, int y, String imageFileName) {
         super(x, y, imageFileName);
 
+        powertrainSystem = new PowertrainSystem(virtualFunctionBus);
         new Driver(virtualFunctionBus);
 
 
@@ -58,9 +61,9 @@ public class AutomatedCar extends WorldObject {
 //            default:
 //        }
 
-        y -= virtualFunctionBus.toPowerTrainPacket.getGasPedalValue()/10;
-        y +=virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue()/10;
-        x +=virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue()/10;
+        y -= virtualFunctionBus.toPowerTrainPacket.getGasPedalValue() / 10;
+        y += virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue() / 10;
+        x += virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue() / 10;
     }
 
 }
