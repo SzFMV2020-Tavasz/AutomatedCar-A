@@ -58,8 +58,8 @@ public class AutomatedCar extends WorldObject {
 //            default:
 //        }
 
-        x = (int)virtualFunctionBus.carPositionPacket.getX();
-        y = (int)virtualFunctionBus.carPositionPacket.getY();
+        x += (int)virtualFunctionBus.carPositionPacket.getMoveVector().getXDiff();
+        y += (int)virtualFunctionBus.carPositionPacket.getMoveVector().getLength();
 
         /*y -= virtualFunctionBus.toPowerTrainPacket.getGasPedalValue()/10;
         y +=virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue()/10;
