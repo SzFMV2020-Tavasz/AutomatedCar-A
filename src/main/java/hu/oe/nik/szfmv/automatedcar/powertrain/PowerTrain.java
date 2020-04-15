@@ -7,6 +7,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
+import static java.lang.Math.toRadians;
 
 /**<p>The powertrain encompasses every component that converts the engine’s power into movement.</p>
 <p>This includes the engine, transmission, the driveshaft, differentials, axles; basically anything from the engine through to the rotating wheels.</p>*/
@@ -17,7 +18,6 @@ public class PowerTrain extends SystemComponent {
     static final int MAX_WHEEL_ROTATION = 60;
 
     private ToPowerTrainPacket input;
-    private CarPositionPacketData lastOutput;
     //private EngineStatusPacketData status;
 
     private IVector currentCarRotation = Axis.Y.positiveDirection();
@@ -29,23 +29,17 @@ public class PowerTrain extends SystemComponent {
     }
 
     private void provideInitialOutput() {
-        this.provideOutput(new CarPositionPacketData(540, 1450, vectorFromXY(0, 0)));
+        CarMovePacketData initialOutput = new CarMovePacketData(vectorFromXY(0, 0));
+        this.provideOutput(initialOutput);
     }
 
-    private void provideOutput(CarPositionPacketData data) {
+    private void provideOutput(CarMovePacketData data) {
         this.virtualFunctionBus.carPositionPacket = data;
-        lastOutput = data;
     }
 
-    private CarPositionPacketData produceOutput() {
-        int previousCarPositionX = (int)lastOutput.getX();
-        int previousCarPositionY = (int)lastOutput.getY();
-
+    private CarMovePacketData produceOutput() {
         IVector move = calculateMove();
-        return new CarPositionPacketData(
-                previousCarPositionX + move.getXDiff(),
-                previousCarPositionY + move.getYDiff(),
-                move);
+        return new CarMovePacketData(move);
     }
 
     @Override
@@ -59,8 +53,8 @@ public class PowerTrain extends SystemComponent {
 
     private IVector calculateWheelRotation() {
         double steeringWheelDegree = input.getSteeringWheelValue();
-        double carWheelDegree = steeringWheelDegree * (MAX_WHEEL_ROTATION/MAX_STEERING_ROTATION);
-        double carWheelRadians = Math.toRadians(carWheelDegree);
+        double carWheelDegree = steeringWheelDegree * (MAX_WHEEL_ROTATION / MAX_STEERING_ROTATION);
+        double carWheelRadians = toRadians(carWheelDegree);
 
         return currentCarRotation.rotateByRadians(carWheelRadians);
     }

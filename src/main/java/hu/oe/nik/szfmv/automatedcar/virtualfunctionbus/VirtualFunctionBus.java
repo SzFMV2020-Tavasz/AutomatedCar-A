@@ -4,7 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarPositionPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraDisplayStatePacket;
@@ -33,7 +33,7 @@ public class VirtualFunctionBus {
     public GuiInputPacket guiInputPacket = new GuiInputPacket();
 
     public ReadOnlySamplePacket samplePacket;
-    public ICarPositionPacket carPositionPacket;
+    public ICarMovePacket carPositionPacket;
     public IEngineStatusPacket engineStatusPacket;
     public IRadarVisualizationPacket radarVisualizationPacket;
     public ICameraVisualizationPacket cameraVisualizationPacket;

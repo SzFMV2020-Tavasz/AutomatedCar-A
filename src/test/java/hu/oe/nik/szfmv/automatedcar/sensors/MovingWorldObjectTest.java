@@ -3,7 +3,7 @@ import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarPositionPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,19 +17,9 @@ public class MovingWorldObjectTest {
     /**
      * implementing interfaces for testing
      */
-    class MockCarPostionPacketData implements ICarPositionPacket{
+    class MockCarMovePacketData implements ICarMovePacket {
         int calledNumber = 0;
-        MockCarPostionPacketData( ){ }
-
-        @Override
-        public double getX() {
-            return 0;
-        }
-
-        @Override
-        public double getY() {
-            return 0;
-        }
+        MockCarMovePacketData( ){ }
 
         @Override
         public IVector getMoveVector() {
@@ -75,7 +65,7 @@ public class MovingWorldObjectTest {
     public void init() {
         WorldObject worldObject = new WorldObject(10, 20, "tree.png");
         virtualFunctionBus = new VirtualFunctionBus();
-        ICarPositionPacket carPositionPacket = new MockCarPostionPacketData();
+        ICarMovePacket carPositionPacket = new MockCarMovePacketData();
         virtualFunctionBus.carPositionPacket = carPositionPacket;
 
         movingWorldObject = new MovingWorldObject(worldObject, virtualFunctionBus);
