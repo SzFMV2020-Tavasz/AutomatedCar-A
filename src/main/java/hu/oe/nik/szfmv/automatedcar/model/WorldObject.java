@@ -113,6 +113,10 @@ public class WorldObject {
         return rotation;
     }
 
+    public final void setRotation(double rotation) {
+        this.rotation = (float) rotation;
+    }
+
     public void setRotation(float rotation) {
         this.rotation = rotation;
     }

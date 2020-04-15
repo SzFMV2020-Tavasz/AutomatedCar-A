@@ -6,7 +6,6 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,16 +52,28 @@ public class AutomatedCar extends WorldObject {
     }
 
     private void updatePositionAndOrientation() {
-        ICarMovePacket positionInfo = virtualFunctionBus.carPositionPacket;
-        IVector moveAmplitude = positionInfo.getMoveVector();
-        IVector moveForward = moveAmplitude.rotateByRadians(facingDirection.getRadians());
+        IVector forwardMove = virtualFunctionBus.carPositionPacket.getMoveVector();
+        this.moveForward(forwardMove);
+    }
 
-        if (moveAmplitude.getLength() > 0.01) {
-            //LOGGER.debug(move.getXDiff() + " : " + move.getYDiff() + "  l:" + move.getLength());
-            System.out.println(moveForward.getXDiff() + " : " + moveForward.getYDiff() + "  l:" + moveForward.getLength());
+    private void moveForward(IVector forwardMove) {
+        IVector moveInDirection = forwardMove.rotateByRadians(this.facingDirection.getRadians()); //+Y upwards
+        //IVector moveInDirectionOnMap = moveInDirection.withY(-moveInDirection.getYDiff());        //-Y upwards
+
+        this.setPosition(getPosition().add(moveInDirection));
+
+        double rotationAngle;
+        double speed = forwardMove.getLength();
+        System.out.println(speed);
+
+        if (speed < 50) {
+            rotationAngle = forwardMove.getRadians() / 10 * (speed / 50);
+        } else {
+            rotationAngle = forwardMove.getRadians() / 7;
         }
 
-        this.setPosition(getPosition().add(moveForward));
+        this.facingDirection = this.facingDirection.rotateByRadians(rotationAngle);
+        this.setRotation(this.facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
     }
 
 }
