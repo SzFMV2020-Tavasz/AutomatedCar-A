@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -87,6 +88,114 @@ public class Radar extends SystemComponent {
 
         // turn on debug mode - left here for debugging purposes
         virtualFunctionBus.debugModePacket.setDebuggingState(false);
+
+    }
+
+    /**
+     * Returns the list of objects that are moving towards the egocar and will collide if nothing changes
+     *
+     * @return the list of relevant objects for Automatic Emergency Break system
+     */
+    public List<WorldObject> getRelevantObjectsForAEB() {
+        List<WorldObject> returnList = new ArrayList<>();
+        for (MovingWorldObject mo : elementsSeenByRadar) {
+            // object if relevant if a) the relative movement vector is pointing towards the car
+            // b) if the relative movement vector line intersects the car
+            if (doesObjectMovementVectorPointTowardsTheEgocar(mo)) {
+                Line2D movementVectorLine = new Line2D.Double(mo.getX(), mo.getY(),
+                    mo.getX() + mo.getRelativeMovementVectorX(), mo.getY() + mo.getRelativeMovementVectorY());
+                Line2D extendedLine = extendLineToReachBeyondPolygon(mo.getPolygon(), movementVectorLine);
+                if (doesLineIntersectPolygon(extendedLine, ObjectTransform.transformPolygon(automatedCar))) {
+                    returnList.add(mo.getWorldObject());
+                }
+            }
+        }
+        return returnList;
+    }
+
+    /**
+     * Checks whether the given line intersects the polygon at all
+     *
+     * @param line    the line to check
+     * @param polygon the polygon to check against
+     * @return true if the line intersects the rectangle; false otherwise
+     */
+    private boolean doesLineIntersectPolygon(Line2D line, Polygon polygon) {
+        if (polygon != null && !line.getP1().equals(line.getP2())) {
+            // loop though the polygon
+            for (int i = 0; i < polygon.npoints; i++) {
+                if (i < polygon.npoints - 1) {
+                    Line2D polygonSegment = new Line2D.Double(polygon.xpoints[i], polygon.ypoints[i],
+                        polygon.xpoints[i + 1], polygon.ypoints[i + 1]);
+                    if (polygonSegment.intersectsLine(line)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether the object's movement vector is pointing towards the egocar
+     *
+     * @return true if it is pointing towards the car; false otherwise
+     */
+    private boolean doesObjectMovementVectorPointTowardsTheEgocar(MovingWorldObject mo) {
+        // If the movement vector's end is closer to the egocar than it's source point
+        // then it is pointing towards the egocar
+        Point2D vectorStart = new Point2D.Double(mo.getX(), mo.getY());
+        Point2D vectorEnd = new Point2D.Double(mo.getX() + mo.getRelativeMovementVectorX(),
+            mo.getY() + mo.getRelativeMovementVectorY());
+
+        Point2D egocarPos = new Point2D.Double(automatedCar.getX(), automatedCar.getY());
+        if (egocarPos.distance(vectorStart) > egocarPos.distance(vectorEnd)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Extends a segment line to behave like a line from the polygon's point of view
+     * ( to intersect it if the line would intersect it)
+     *
+     * @param polygon the polygon that may be intersected
+     * @param line    the line to extend
+     * @return an extended line
+     */
+    private Line2D extendLineToReachBeyondPolygon(Polygon polygon, Line2D line) {
+        if (polygon != null) {
+            // loop through the polygon's points and get the farthest one from the line's first point
+            Point furthestPoint = new Point(polygon.xpoints[0], polygon.ypoints[0]);
+            for (int i = 0; i < polygon.npoints; i++) {
+                Point currentPoint = new Point(polygon.xpoints[i], polygon.ypoints[i]);
+                if (currentPoint.distance(line.getP1()) > furthestPoint.distance(line.getP1())) {
+                    furthestPoint = currentPoint;
+                }
+            }
+            return extendLineBeyondPoint(furthestPoint, line);
+        } else {
+            return line;
+        }
+    }
+
+    private Line2D extendLineBeyondPoint(Point furthestPoint, Line2D line) {
+        // extend the line - first end
+        double lineDeltaX = line.getX2() - line.getX1();
+        double lineDeltaY = line.getY2() - line.getY1();
+        double newP2X = line.getX1() + (line.getX1() - furthestPoint.getX()) * 2;
+        double newP2Y = line.getY2();
+        if (lineDeltaX != 0) {
+            newP2Y = line.getY1() + (line.getX1() - furthestPoint.getX()) * 2  * lineDeltaY / lineDeltaX;
+        }
+        // extend the line - first end
+        double newP1X = line.getX1() - (line.getX1() - furthestPoint.getX()) * 2;
+        double newP1Y = line.getY1();
+        if (lineDeltaX != 0) {
+            newP1Y = line.getY1() - (line.getX1() - furthestPoint.getX()) * 2  * lineDeltaY / lineDeltaX;
+        }
+        return new Line2D.Double(newP1X, newP1Y, newP2X, newP2Y);
     }
 
     private void setRadarHighglightOffOnElements() {
@@ -138,7 +247,7 @@ public class Radar extends SystemComponent {
      */
     private MovingWorldObject elementsSeenByRadarlistContainsObject(WorldObject object) {
         for (MovingWorldObject mo : elementsSeenByRadar) {
-            if (object.getId() == mo.getId()) {
+            if (object.getId().equals(mo.getId())) {
                 return mo;
             }
         }
@@ -148,6 +257,7 @@ public class Radar extends SystemComponent {
     /**
      * Returns the list of {@link MovingWorldObject} that is collideable and seen by the radar.
      * Collideable means that the object's Z value is bigger than 0.
+     *
      * @return The list of objects.
      */
     public List<MovingWorldObject> getObjectsSeenByRadar() {
@@ -340,4 +450,5 @@ public class Radar extends SystemComponent {
     private boolean isCollideable(WorldObject object) {
         return object.getZ() >= 1;
     }
+
 }
