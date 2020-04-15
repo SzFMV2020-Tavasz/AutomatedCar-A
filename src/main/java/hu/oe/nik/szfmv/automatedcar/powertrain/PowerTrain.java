@@ -1,26 +1,24 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
-import hu.oe.nik.szfmv.automatedcar.math.Axis;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorWithAngle;
 import static java.lang.Math.toRadians;
 
 /**<p>The powertrain encompasses every component that converts the engine’s power into movement.</p>
 <p>This includes the engine, transmission, the driveshaft, differentials, axles; basically anything from the engine through to the rotating wheels.</p>*/
 public class PowerTrain extends SystemComponent {
 
-    static final int RPM_MULTIPLIER = 6000;
-    static final int MAX_STEERING_ROTATION = 180;
-    static final int MAX_WHEEL_ROTATION = 60;
+    static final double RPM_MULTIPLIER = 6000.0;
+    static final double MAX_STEERING_ROTATION = 180.0;
+    static final double MAX_WHEEL_ROTATION = 60.0;
 
     private ToPowerTrainPacket input;
     //private EngineStatusPacketData status;
-
-    private IVector currentCarRotation = Axis.Y.positiveDirection();
 
     public PowerTrain(VirtualFunctionBus virtualFunctionBus) {
         super(virtualFunctionBus);
@@ -56,7 +54,7 @@ public class PowerTrain extends SystemComponent {
         double carWheelDegree = steeringWheelDegree * (MAX_WHEEL_ROTATION / MAX_STEERING_ROTATION);
         double carWheelRadians = toRadians(carWheelDegree);
 
-        return currentCarRotation.rotateByRadians(carWheelRadians);
+        return vectorWithAngle(carWheelRadians);
     }
 
 }

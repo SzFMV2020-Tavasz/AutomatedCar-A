@@ -65,8 +65,7 @@ public class MovingWorldObjectTest {
     public void init() {
         WorldObject worldObject = new WorldObject(10, 20, "tree.png");
         virtualFunctionBus = new VirtualFunctionBus();
-        ICarMovePacket carPositionPacket = new MockCarMovePacketData();
-        virtualFunctionBus.carPositionPacket = carPositionPacket;
+        virtualFunctionBus.carPositionPacket = new MockCarMovePacketData();
 
         movingWorldObject = new MovingWorldObject(worldObject, virtualFunctionBus);
     }

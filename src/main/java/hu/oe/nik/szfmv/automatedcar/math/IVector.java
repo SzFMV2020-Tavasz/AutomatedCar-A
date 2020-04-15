@@ -33,6 +33,14 @@ public interface IVector {
         return Axis.Y.positiveDirection().rotateByRadians(_yRad + rad).multiplyBy(getLength());
     }
 
+    default double getRadians() {
+        return getRadiansRelativeTo(Axis.DEFAULT);
+    }
+
+    default double getDegrees() {
+        return toDegrees(getRadians());
+    }
+
     /**Gets the angle of the vector in radians relative to given axis.
      * Rotation is mathematical, positive is towards the left.*/
     default double getRadiansRelativeTo(Axis axis) {
@@ -187,6 +195,18 @@ public interface IVector {
 
     default IVector subtract(IVector another) {
         return vectorFromXY(getXDiff() - another.getXDiff(), getYDiff() - another.getYDiff());
+    }
+
+    default IVector withX(double dx) {
+        return vectorFromXY(dx, this.getYDiff());
+    }
+
+    default IVector withY(double dy) {
+        return vectorFromXY(this.getXDiff(), dy);
+    }
+
+    static IVector vectorWithAngle(double radians) {
+        return Axis.DEFAULT.positiveDirection().rotateByRadians(radians);
     }
 
 }

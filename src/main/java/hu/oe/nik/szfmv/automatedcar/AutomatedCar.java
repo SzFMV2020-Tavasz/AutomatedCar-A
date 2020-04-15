@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar;
 
+import hu.oe.nik.szfmv.automatedcar.math.Axis;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
@@ -18,6 +19,8 @@ public class AutomatedCar extends WorldObject {
     private final VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
     private final PowerTrain powerTrain = new PowerTrain(virtualFunctionBus);
+
+    private IVector facingDirection = Axis.Y.negativeDirection();
 
     public AutomatedCar(int x, int y, String imageFileName) {
         super(x, y, imageFileName);
@@ -40,18 +43,6 @@ public class AutomatedCar extends WorldObject {
 
     //public Radar getRadar() {return radar}
 
-    private void updatePositionAndOrientation() {
-        ICarMovePacket positionInfo = virtualFunctionBus.carPositionPacket;
-        IVector move = positionInfo.getMoveVector();
-
-        if (move.getLength() > 0.01) {
-            //LOGGER.debug(move.getXDiff() + " : " + move.getYDiff() + "  l:" + move.getLength());
-            System.out.println(move.getXDiff() + " : " + move.getYDiff() + "  l:" + move.getLength());
-        }
-
-        this.setPosition(getPosition().add(move));
-    }
-
     public IVector getPosition() {
         return vectorFromXY(this.x, this.y);
     }
@@ -59,6 +50,19 @@ public class AutomatedCar extends WorldObject {
     public void setPosition(IVector position) {
         this.setX((int)position.getXDiff());
         this.setY((int)position.getYDiff());
+    }
+
+    private void updatePositionAndOrientation() {
+        ICarMovePacket positionInfo = virtualFunctionBus.carPositionPacket;
+        IVector moveAmplitude = positionInfo.getMoveVector();
+        IVector moveForward = moveAmplitude.rotateByRadians(facingDirection.getRadians());
+
+        if (moveAmplitude.getLength() > 0.01) {
+            //LOGGER.debug(move.getXDiff() + " : " + move.getYDiff() + "  l:" + move.getLength());
+            System.out.println(moveForward.getXDiff() + " : " + moveForward.getYDiff() + "  l:" + moveForward.getLength());
+        }
+
+        this.setPosition(getPosition().add(moveForward));
     }
 
 }
