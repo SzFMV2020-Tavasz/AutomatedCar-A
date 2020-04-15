@@ -22,14 +22,11 @@ public class AutomatedCar extends WorldObject {
         super(x, y, imageFileName);
 
         new Driver(virtualFunctionBus);
-
-
     }
 
     public void drive() {
         virtualFunctionBus.loop();
-        calculatePositionAndOrientation();
-
+        updatePositionAndOrientation();
     }
 
     public VirtualFunctionBus getVirtualFunctionBus() {
@@ -42,7 +39,7 @@ public class AutomatedCar extends WorldObject {
 
     //public Radar getRadar() {return radar}
 
-    private void calculatePositionAndOrientation() {
+    private void updatePositionAndOrientation() {
         //TODO it is just a fake implementation
 
 //        switch (virtualFunctionBus.samplePacket.getKey()) {
@@ -66,10 +63,11 @@ public class AutomatedCar extends WorldObject {
         IVector newPosition = currentPosition.add(move);
 
         if (move.getLength() > 0.01) {
-            //debug
+            //LOGGER.debug(move.getXDiff() + " : " + move.getYDiff() + "  l:" + move.getLength());
             System.out.println(move.getXDiff() + " : " + move.getYDiff() + "  l:" + move.getLength());
-            this.setPosition(newPosition);
         }
+
+        this.setPosition(newPosition);
     }
 
     public IVector getPosition() {
