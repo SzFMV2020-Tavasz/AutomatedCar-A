@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
@@ -17,6 +18,8 @@ public class PowerTrain extends SystemComponent {
     static final double MAX_STEERING_ROTATION = 180.0;
     static final double MAX_WHEEL_ROTATION = 60.0;
 
+    public Transmission transmission;
+
     private ToPowerTrainPacket input;
     //private EngineStatusPacketData status;
 
@@ -24,6 +27,7 @@ public class PowerTrain extends SystemComponent {
         super(virtualFunctionBus);
         this.input = virtualFunctionBus.toPowerTrainPacket;
         this.provideInitialOutput();
+        this.transmission = new Transmission();
     }
 
     private void provideInitialOutput() {
@@ -42,6 +46,7 @@ public class PowerTrain extends SystemComponent {
 
     @Override
     public void loop() {
+        transmission.shift(TranslateShiftPos(input.getShiftChangeRequest()));
         provideOutput(produceOutput());
     }
 
@@ -55,6 +60,26 @@ public class PowerTrain extends SystemComponent {
         double carWheelRadians = toRadians(carWheelDegree);
 
         return vectorWithAngle(carWheelRadians);
+    }
+
+    private CarTransmissionMode TranslateShiftPos(Shitfer.ShiftPos pos){
+        CarTransmissionMode result = CarTransmissionMode.P_PARKING;
+        if(pos!=null){
+            switch (pos){
+                case D:
+                    result = CarTransmissionMode.D_DRIVE;
+                    break;
+                case N:
+                    result = CarTransmissionMode.N_NEUTRAL;
+                    break;
+                case R:
+                    result = CarTransmissionMode.R_REVERSE;
+                    break;
+                default:
+                    result = CarTransmissionMode.P_PARKING;
+            }
+        }
+        return result;
     }
 
 }

@@ -56,8 +56,24 @@ public class AutomatedCar extends WorldObject {
     }
 
     private void updatePositionAndOrientation() {
-        IVector forwardMove = virtualFunctionBus.carPositionPacket.getMoveVector();
-        this.moveForward(forwardMove);
+        IVector carMove = virtualFunctionBus.carPositionPacket.getMoveVector();
+        this.moveCar(carMove);
+    }
+
+    private void moveCar(IVector move){
+        switch (powerTrain.transmission.getGearMode()){
+            case D_DRIVE:
+                this.moveForward(move);
+                break;
+            case R_REVERSE:
+                this.moveBackward(move);
+                break;
+            case N_NEUTRAL:
+                this.neturalGear();
+                break;
+            default:
+                this.parkingGear();
+        }
     }
 
     private void moveForward(IVector forwardMove) {
@@ -76,5 +92,26 @@ public class AutomatedCar extends WorldObject {
         this.facingDirection = newCarFrontPosition.subtract(newCarBackPosition);
         this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
     }
+    private void moveBackward(IVector backwardMove) {
+        IVector currentPosition = this.getPosition();
+        IVector toCarFrontVector = this.facingDirection.withLength(HALF_CAR_LENGTH);
+        IVector carFrontPosition = currentPosition.add(toCarFrontVector);
+        IVector carBackPosition = currentPosition.subtract(toCarFrontVector);
 
+        IVector moveInDirection = backwardMove.rotateByRadians(this.facingDirection.getRadians()).multiplyBy(-1);
+
+        IVector newCarFrontPosition = carFrontPosition.add(moveInDirection);
+        IVector newCarBackPosition = carBackPosition.add(backwardMove.withDirection(toCarFrontVector));
+
+        this.setPosition(average(newCarFrontPosition, newCarBackPosition));
+
+        this.facingDirection = newCarFrontPosition.subtract(newCarBackPosition);
+        this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
+    }
+    private void neturalGear() {
+        //FAAAAAAAKE!!!
+    }
+    private void parkingGear(){
+        //FAAAAAKE as FAF, but it will be probably enough for parking mode.
+    }
 }
