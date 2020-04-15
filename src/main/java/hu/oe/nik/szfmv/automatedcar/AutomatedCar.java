@@ -12,18 +12,19 @@ import org.apache.logging.log4j.Logger;
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.average;
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
 
+/**Represents a car object with all its inner components contained.*/
 public class AutomatedCar extends WorldObject {
 
     private static final Logger LOGGER = LogManager.getLogger(AutomatedCar.class);
 
+    /**Host for information interchange between components of the car via packets.*/
     private final VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
 
+    /**@see PowerTrain*/
     private final PowerTrain powerTrain = new PowerTrain(virtualFunctionBus);
 
     /**Not necessarily a unit vector, can have any length.*/
     private IVector facingDirection = Axis.Y.negativeDirection();
-
-    private final double HALF_CAR_LENGTH = 100;
 
     public AutomatedCar(int x, int y, String imageFileName) {
         super(x, y, imageFileName);
@@ -44,12 +45,12 @@ public class AutomatedCar extends WorldObject {
         return powerTrain;
     }
 
-    //public Radar getRadar() {return radar}
-
+    /**Gets the current center position of the car.*/
     public IVector getPosition() {
         return vectorFromXY(this.x, this.y);
     }
 
+    /**Sets the center position of the car.*/
     public void setPosition(IVector position) {
         this.setX((int)position.getXDiff());
         this.setY((int)position.getYDiff());
@@ -60,6 +61,10 @@ public class AutomatedCar extends WorldObject {
         this.moveCar(carMove);
     }
 
+    /**Applies movement to the car.
+     * @param move The movement to apply.
+     * <p>- its direction is interpreted as facing direction of the front wheels.</p>
+     * <p>- its length is interpreted as the speed of movement.</p>*/
     private void moveCar(IVector move){
         switch (powerTrain.transmission.getGearMode()){
             case D_DRIVE:
@@ -79,7 +84,7 @@ public class AutomatedCar extends WorldObject {
 
     private void moveForward(IVector forwardMove) {
         IVector currentPosition = this.getPosition();
-        IVector toCarFrontVector = this.facingDirection.withLength(HALF_CAR_LENGTH);
+        IVector toCarFrontVector = this.facingDirection.withLength(getHeight() / 2.0);
         IVector carFrontPosition = currentPosition.add(toCarFrontVector);
         IVector carBackPosition = currentPosition.subtract(toCarFrontVector);
 
@@ -93,26 +98,29 @@ public class AutomatedCar extends WorldObject {
         this.facingDirection = newCarFrontPosition.subtract(newCarBackPosition);
         this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
     }
+
     private void moveBackward(IVector backwardMove) {
         IVector currentPosition = this.getPosition();
-        IVector toCarFrontVector = this.facingDirection.withLength(HALF_CAR_LENGTH);
-        IVector carFrontPosition = currentPosition.add(toCarFrontVector);
-        IVector carBackPosition = currentPosition.subtract(toCarFrontVector);
+        IVector toCarBackVector = this.facingDirection.withLength(getHeight() / -2.0);
+        IVector carFrontPosition = currentPosition.subtract(toCarBackVector);
+        IVector carBackPosition = currentPosition.add(toCarBackVector);
 
         IVector moveInDirection = backwardMove.rotateByRadians(this.facingDirection.getRadians()).multiplyBy(-1);
 
         IVector newCarFrontPosition = carFrontPosition.add(moveInDirection);
-        IVector newCarBackPosition = carBackPosition.add(backwardMove.withDirection(toCarFrontVector));
+        IVector newCarBackPosition = carBackPosition.add(backwardMove.withDirection(toCarBackVector));
 
         this.setPosition(average(newCarFrontPosition, newCarBackPosition));
 
         this.facingDirection = newCarFrontPosition.subtract(newCarBackPosition);
         this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
     }
+
     private void neturalGear() {
         //FAAAAAAAKE!!!
     }
-    private void parkingGear(){
+
+    private void parkingGear() {
         //FAAAAAKE as FAF, but it will be probably enough for parking mode.
     }
 }

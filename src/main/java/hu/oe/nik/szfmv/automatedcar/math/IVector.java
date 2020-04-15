@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.math;
 
+import static hu.oe.nik.szfmv.automatedcar.math.Axis.baseDirection;
 import static java.lang.Math.*;
 
 /**Represents a mathematical 2-dimensional vector with X and Y difference, which also define its length and angle.
@@ -33,13 +34,13 @@ public interface IVector {
         return Axis.Y.positiveDirection().rotateByRadians(_yRad + rad).multiplyBy(getLength());
     }
 
-    /**Gets the angle of the vector in radians relative to the {@link Axis#DEFAULT default axis}.
+    /**Gets the angle of the vector in radians relative to the {@link Axis#BASE default axis}.
      * <p>Rotation is mathematical, positive is towards the left.</p>*/
     default double getRadians() {
-        return getRadiansRelativeTo(Axis.DEFAULT);
+        return getRadiansRelativeTo(Axis.BASE);
     }
 
-    /**Gets the angle of the vector in degrees relative to the {@link Axis#DEFAULT default axis}.
+    /**Gets the angle of the vector in degrees relative to the {@link Axis#BASE default axis}.
      * <p>Rotation is mathematical, positive is towards the left.</p>*/
     default double getDegrees() {
         return toDegrees(getRadians());
@@ -98,48 +99,6 @@ public interface IVector {
         return getAbsRadiansRelativeTo(direction) / PI * 180;
     }
 
-    /**Creates a new vector with the given X and Y differences, which also define the length and angle of the vector.
-     * @see Axis#positiveDirection()
-     * @see Axis#negativeDirection() */
-    static IVector vectorFromXY(double x, double y) {
-        return new IVector() {
-
-            @Override
-            public double getXDiff() {
-                return x;
-            }
-
-            @Override
-            public double getYDiff() {
-                return y;
-            }
-
-            @Override public double getLength() {
-                return sqrt(x*x + y*y);
-            }
-
-            @Override public double getRadiansRelativeTo(IVector direction) {
-                double xRads = direction.getRadiansRelativeTo(Axis.X);
-                double relativeRads  = (getRadiansRelativeToAxisX() - xRads) % (2 * PI);
-                while (relativeRads < -PI) relativeRads += 2*PI;
-                while (relativeRads > PI) relativeRads -= 2*PI;
-                return relativeRads;
-            }
-
-            @Override public double getRadiansRelativeTo(Axis axis) {
-                return axis == Axis.X
-                        ? getRadiansRelativeToAxisX()
-                        : IVector.super.getRadiansRelativeTo(axis);
-            }
-
-            private double getRadiansRelativeToAxisX() {
-                double x = getXDiff();
-                double y = getYDiff();
-                return atan2(y, x);
-            }
-        };
-    }
-
     /**Flips the vector around, keeping its length, but changing its direction to its opposite.
      * @return A new vector with the same length but opposite direction.*/
     default IVector reverse() {
@@ -162,7 +121,7 @@ public interface IVector {
     /**Divides the length of the vector with the given scalar number.
      * @return A new vector with the same direction, but length divided by the given scalar.*/
     default IVector divideBy(double scalar) {
-        return this.multiplyBy(1 / scalar);
+        return this.multiplyBy(1.0 / scalar);
     }
 
     /**Moves the destination of the vector, possibly changing its length and angle in the process
@@ -230,9 +189,60 @@ public interface IVector {
     }
 
     /**Returns a clone of the vector, but with the given length.
-     * <p>Direction/angle of the vector remains unchanged (with epsilon error of floating point numbers).</p>*/
+     * <p>Direction/angle of the vector remains unchanged (with epsilon error of floating point numbers)
+     * unless passing negative value -- which reverts the direction of the newly created vector.</p>*/
     default IVector withLength(double scalarLength) {
         return this.multiplyBy(scalarLength / getLength());
+    }
+
+    /**Creates a new vector with the given X and Y differences, which also define the length and angle of the vector.
+     * @see Axis#positiveDirection()
+     * @see Axis#negativeDirection() */
+    static IVector vectorFromXY(final double x, final double y) {
+        return new IVector() {
+
+            @Override
+            public double getXDiff() {
+                return x;
+            }
+
+            @Override
+            public double getYDiff() {
+                return y;
+            }
+
+            @Override
+            public double getLength() {
+                return sqrt(x*x + y*y);
+            }
+
+            @Override
+            public double getRadiansRelativeTo(IVector direction) {
+                double xRads = direction.getRadiansRelativeTo(Axis.X);
+                double relativeRads  = (getRadiansRelativeToAxisX() - xRads) % (2 * PI);
+                while (relativeRads < -PI) relativeRads += 2*PI;
+                while (relativeRads > PI) relativeRads -= 2*PI;
+                return relativeRads;
+            }
+
+            @Override
+            public double getRadiansRelativeTo(Axis axis) {
+                return axis == Axis.X
+                        ? getRadiansRelativeToAxisX()
+                        : IVector.super.getRadiansRelativeTo(axis);
+            }
+
+            private double getRadiansRelativeToAxisX() {
+                double x = getXDiff();
+                double y = getYDiff();
+                return atan2(y, x);
+            }
+
+            @Override
+            public String toString() {
+                return "XYVector{ x:" + x + ", y:" + y + " }";
+            }
+        };
     }
 
     /**Returns the average vector of the given two, having the average {@code x} and {@code y} coordinates of them.
@@ -243,10 +253,10 @@ public interface IVector {
         return vectorFromXY(xMean, yMean);
     }
 
-    /**Returns a new vector with the given angle relative the {@link Axis#DEFAULT default positive direction}.
+    /**Returns a new vector with the given angle relative the {@link Axis#BASE base direction}.
      * <p>Length of the vector is one unit (with epsilon error of floating point numbers).</p>*/
     static IVector vectorWithAngle(double radians) {
-        return Axis.DEFAULT.positiveDirection().rotateByRadians(radians);
+        return baseDirection().rotateByRadians(radians);
     }
 
 }

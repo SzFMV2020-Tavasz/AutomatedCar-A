@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.math;
 
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
 import static java.lang.Math.*;
 import static java.lang.Math.PI;
 
@@ -44,19 +45,23 @@ public enum Axis {
             this.positive = positive;
         }
 
-        @Override public double getXDiff() {
+        @Override
+        public double getXDiff() {
             return axis == Axis.X ? (positive ? +1 : -1) : 0;
         }
 
-        @Override public double getYDiff() {
+        @Override
+        public double getYDiff() {
             return axis == Axis.Y ? (positive ? +1 : -1) : 0;
         }
 
-        @Override public double getLength() {
+        @Override
+        public double getLength() {
             return 1.0;
         }
 
-        @Override public double getRadiansRelativeTo(Axis axis) {
+        @Override
+        public double getRadiansRelativeTo(Axis axis) {
             if (axis == this.axis) {
                 return positive ? 0 : PI;
             } else {
@@ -64,7 +69,8 @@ public enum Axis {
             }
         }
 
-        @Override public double getRadiansRelativeTo(IVector direction) {
+        @Override
+        public double getRadiansRelativeTo(IVector direction) {
             double toPositive; switch (this.axis) {
                 case X:
                     toPositive = getRadiansRelativeToAxisX(direction);
@@ -123,24 +129,33 @@ public enum Axis {
             return positive;
         }
 
-        @Override public IVector rotateByRadians(double rad) {
+        @Override
+        public IVector rotateByRadians(double rad) {
             double alpha2 = (PI / 2) - rad;
             switch (this.axis) {
                 case X:
-                    return IVector.vectorFromXY(sin(alpha2), cos(alpha2));
+                    return vectorFromXY(sin(alpha2), cos(alpha2));
                 case Y:
-                    return IVector.vectorFromXY(-cos(alpha2), sin(alpha2));
+                    return vectorFromXY(-cos(alpha2), sin(alpha2));
                 default:
                     throw new IllegalStateException();
             }
         }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return "AxisVector{ " + axis + (positive ? "+": "-") + " }";
         }
 
     }
 
-    public static Axis DEFAULT = X;
+    /**The axis of default forward and backward direction.*/
+    public static Axis BASE = X;
+
+    /**The standard positive/neutral direction.
+     * <p>Should be used for vectors only representing angle, length or both, but relative to no specific axis.</p>*/
+    public static IVector baseDirection() {
+        return Axis.BASE.positiveDirection();
+    }
 
 }
