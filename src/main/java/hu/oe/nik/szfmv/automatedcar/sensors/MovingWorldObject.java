@@ -13,17 +13,40 @@ public class MovingWorldObject extends WorldObject {
     private Integer lastPosY;
     private int movementVectorX;
     private int movementVectorY;
+    private WorldObject worldObject; // storing the reference
 
     // calculate new  position and old position?
     //oldpos
     //newpos
     public MovingWorldObject(WorldObject worldObject, VirtualFunctionBus virtualFunctionBus) {
+        // copy the whole WorldObject int the class so it could be passed as one if needed
+        // with WorldObject information intact
         this.x = worldObject.getX();
         this.y = worldObject.getY();
+        this.rotation = worldObject.getRotation();
+        this.height = worldObject.getHeight();
+        this.width = worldObject.getWidth();
+        this.type = worldObject.getType();
+        this.image = worldObject.getImage();
+        this.rotationMatrix = worldObject.getRotationMatrix();
+        this.imageFileName = worldObject.getImageFileName();
         this.id = worldObject.getId();
+        this.polygon = worldObject.getPolygon();
         this.virtualFunctionBus = virtualFunctionBus;
         this.movementVectorX = 0;
         this.movementVectorY = 0;
+        this.worldObject = worldObject;
+        // set the radar highlight false
+        this.worldObject.setHighlightedWhenRadarIsOn(false);
+
+    }
+
+    /**
+     * Gets the original worldObject stored
+     * @return the referenc to the original worldObject
+     */
+    public WorldObject getWorldObject() {
+        return worldObject;
     }
 
     /**
@@ -54,7 +77,9 @@ public class MovingWorldObject extends WorldObject {
      * @return the x component of the relative movement vector.
      */
     public int getRelativeMovementVectorX() {
-        return (int)virtualFunctionBus.carPositionPacket.getMoveVector().getXDiff() + movementVectorX;
+        // car movement vector needs to be negative
+        // as we need the elements' relative movement because of the automated car's movement
+        return (int)-virtualFunctionBus.carPositionPacket.getMoveVector().getXDiff() + movementVectorX;
     }
 
     /**
@@ -63,7 +88,9 @@ public class MovingWorldObject extends WorldObject {
      * @return the y component of the relative movement vector.
      */
     public int getRelativeMovementVectorY() {
-        return (int)virtualFunctionBus.carPositionPacket.getMoveVector().getYDiff() + movementVectorY;
+        // car movement vector needs to be negative
+        // as we need the elements' relative movement because of the automated car's movement
+        return (int)-virtualFunctionBus.carPositionPacket.getMoveVector().getYDiff() + movementVectorY;
     }
 
     public int getMovementVectorX() {
