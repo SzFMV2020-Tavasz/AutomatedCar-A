@@ -205,7 +205,7 @@ public interface IVector {
 
     /**Returns a clone of the vector decremented its {@code x} and {@code y} coordinates with the given values.*/
     default IVector subtract(double x, double y) {
-        return vectorFromXY(getXDiff() + x, getYDiff() + y);
+        return vectorFromXY(getXDiff() - x, getYDiff() - y);
     }
 
     /**Returns a clone of the vector decremented its {@code x} and {@code y} coordinates with those of the given vector.*/

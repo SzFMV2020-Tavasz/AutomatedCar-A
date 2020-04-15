@@ -63,10 +63,10 @@ public class AutomatedCar extends WorldObject {
     private void moveForward(IVector forwardMove) {
         IVector currentPosition = this.getPosition();
         IVector toCarFrontVector = this.facingDirection.withLength(HALF_CAR_LENGTH);
-        IVector moveInDirection = forwardMove.rotateByRadians(this.facingDirection.getRadians());
-
         IVector carFrontPosition = currentPosition.add(toCarFrontVector);
         IVector carBackPosition = currentPosition.subtract(toCarFrontVector);
+
+        IVector moveInDirection = forwardMove.rotateByRadians(this.facingDirection.getRadians());
 
         IVector newCarFrontPosition = carFrontPosition.add(moveInDirection);
         IVector newCarBackPosition = carBackPosition.add(forwardMove.withDirection(toCarFrontVector));
