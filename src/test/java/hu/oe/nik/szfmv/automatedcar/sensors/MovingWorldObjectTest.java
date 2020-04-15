@@ -17,7 +17,7 @@ public class MovingWorldObjectTest {
     /**
      * implementing interfaces for testing
      */
-    class MockCarPostionPacketData implements CarPositionPacket{
+    private class MockCarPostionPacketData implements CarPositionPacket{
         int calledNumber = 0;
         MockCarPostionPacketData( ){ };
 
@@ -41,7 +41,7 @@ public class MovingWorldObjectTest {
             }
         }
     }
-    class MockVector implements IVector{
+    private class MockVector implements IVector{
         int xDiff;
         int yDiff;
         MockVector(int xDiff, int yDiff){
@@ -104,11 +104,12 @@ public class MovingWorldObjectTest {
 
     @Test
     public void relativeMovementVector(){
-        assertEquals(25, movingWorldObject.getRelativeMovementVectorX());
-        assertEquals(35, movingWorldObject.getRelativeMovementVectorY());
+        assertEquals(-25, movingWorldObject.getRelativeMovementVectorX());
+        assertEquals(-35, movingWorldObject.getRelativeMovementVectorY());
         movingWorldObject.setX(20);
-        movingWorldObject.setY(40);
-        assertEquals(45, movingWorldObject.getRelativeMovementVectorX());
-        assertEquals(65, movingWorldObject.getRelativeMovementVectorY());
+        movingWorldObject.setY(30);
+        assertEquals(-25, movingWorldObject.getRelativeMovementVectorX());
+        assertEquals(-35, movingWorldObject.getRelativeMovementVectorY());
     }
+
 }

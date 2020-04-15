@@ -1,9 +1,11 @@
 package hu.oe.nik.szfmv.automatedcar.sensors;
 
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
+import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.CarPositionPacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,10 +31,21 @@ public class RadarTest {
     class MockWorld extends World {
         int calledNumber = 0;
         List<WorldObject> passlist;
+        MockWorldObject object1;
+        MockWorldObject object3;
+        Polygon testPoly = new Polygon(new int[]{0, 1, 0}, new int[]{0, 0, 1}, 3);
 
         MockWorld(int width, int height) {
             super(width, height, new ArrayList<WorldObject>());
             passlist = new ArrayList<>();
+            object1 = new MockWorldObject(-100, -100, "roadsign_speed_40.png");
+            object1.setId("roadsign_speed_40_1");
+            object1.setZ(1);
+            object1.setPolygon(testPoly);
+            object3 = new MockWorldObject(600, 600, "tree.png");
+            object3.setId("tree_3");
+            object3.setZ(1);
+            object3.setPolygon(testPoly);
         }
 
         public List<WorldObject> getPasslist() {
@@ -44,13 +57,9 @@ public class RadarTest {
             calledNumber++;
             passlist = new ArrayList<>();
             if (calledNumber < 5) {
-                Polygon testPoly = new Polygon(new int[]{0, 1, 0}, new int[]{0, 0, 1}, 3);
 
                 // the collideable object
-                MockWorldObject object1 = new MockWorldObject(-100, -100, "roadsign_speed_40.png");
-                object1.setId("roadsign_speed_40_1");
-                object1.setZ(1);
-                object1.setPolygon(testPoly);
+                // Made as class global so it could change values
                 passlist.add((WorldObject) object1);
 
                 // the not collideable object
@@ -60,32 +69,128 @@ public class RadarTest {
                 object2.setPolygon(testPoly);
                 passlist.add((WorldObject) object2);
 
-                addRemoved(testPoly);
+                if (calledNumber == 1 || calledNumber == 3) {
+                    // a collideable object
+                    passlist.add((WorldObject) object3);
+                }
             }
             return passlist;
         }
 
-        private void addRemoved(Polygon testPoly) {
-            if (calledNumber == 1 || calledNumber == 3) {
-                // a collideable object
-                MockWorldObject object1 = new MockWorldObject(600, 200, "tree.png");
-                object1.setId("tree_3");
-                object1.setZ(1);
-                object1.setPolygon(testPoly);
-                passlist.add((WorldObject) object1);
-            }
-        }
     }
 
     private class MockWorldObject extends WorldObject {
+        int calledNumberX;
+        int calledNumberY;
+
         MockWorldObject(int x, int y, String filename) {
             super(x, y, filename);
+            calledNumberX = 0;
+            calledNumberY = 0;
         }
 
         // add method for setting polygon for testing
         void setPolygon(Polygon poly) {
             this.polygon = poly;
         }
+
+        /**
+         * override for creating different movement vectors
+         */
+        @Override
+        public int getX() {
+            calledNumberX++;
+            int tempX;
+            switch (calledNumberX) {
+                case 2:
+                    tempX = super.getX() + 40;
+                    break;
+                case 3:
+                    tempX = super.getX() + 40;
+                    break;
+                default:
+                    tempX = super.getX();
+                    break;
+            }
+            return tempX;
+        }
+
+        /**
+         * override for creating different movement vectors
+         */
+        @Override
+        public int getY() {
+            calledNumberY++;
+            int tempY;
+            switch (calledNumberY) {
+                case 2:
+                    tempY = super.getY() + 25;
+                    break;
+                case 3:
+                    tempY = super.getY() - 35;
+                    break;
+                default:
+                    tempY = super.getY();
+                    break;
+            }
+            return tempY;
+        }
+    }
+
+    /**
+     * implementing interfaces for testing
+     */
+    private class MockCarPostionPacketData implements CarPositionPacket {
+        int calledNumber = 0;
+
+        MockCarPostionPacketData() {
+        }
+
+        @Override
+        public double getX() {
+            return 10;
+        }
+
+        @Override
+        public double getY() {
+            return 10;
+        }
+
+        @Override
+        public IVector getMoveVector() {
+            return new MockVector(10, -5);
+        }
+    }
+
+    private class MockVector implements IVector {
+        int xDiff;
+        int yDiff;
+
+        MockVector(int xDiff, int yDiff) {
+            this.xDiff = xDiff;
+            this.yDiff = yDiff;
+        }
+
+        @Override
+        public double getXDiff() {
+            return xDiff;
+        }
+
+        @Override
+        public double getYDiff() {
+            return yDiff;
+        }
+
+        @Override
+        public double getLength() {
+            return 0;
+        }
+
+        @Override
+        public double getRadiansRelativeTo(IVector direction) {
+            return 0;
+        }
+
     }
 
     @BeforeEach
@@ -95,6 +200,8 @@ public class RadarTest {
         automatedCar.setRotation((float) Math.toRadians(-30));
         world = new MockWorld(1000, 1000);
         radar = new Radar(virtualFunctionBus, automatedCar, world);
+        MockCarPostionPacketData carPostionPacketData = new MockCarPostionPacketData();
+        virtualFunctionBus.carPositionPacket = carPostionPacketData;
     }
 
     /**
@@ -190,5 +297,20 @@ public class RadarTest {
             .filter(t -> t.isHighlightedWhenRadarIsOn() == true).findAny().isPresent());
         assertFalse(world.getDynamics().stream()
             .filter(t -> t.isHighlightedWhenRadarIsOn() == true).findAny().isPresent());
+    }
+
+    /**
+     * Checks whether relative movement vector intersection is calulated right
+     */
+    @Test
+    public void intersectsWithAutoCarPolygon() {
+        // creating the needed movement vector
+        radar.loop();
+        radar.loop();
+        List<WorldObject> list = radar.getRelevantObjectsForAEB();
+        assertTrue(list.stream().filter(t -> t.getId().equals("roadsign_speed_40_1")).findAny().isPresent());
+        radar.loop();
+        list = radar.getRelevantObjectsForAEB();
+        assertEquals(0, list.size());
     }
 }

@@ -77,7 +77,9 @@ public class MovingWorldObject extends WorldObject {
      * @return the x component of the relative movement vector.
      */
     public int getRelativeMovementVectorX() {
-        return (int)virtualFunctionBus.carPositionPacket.getMoveVector().getXDiff() + movementVectorX;
+        // car movement vector needs to be negative
+        // as we need the elements' relative movement because of the automated car's movement
+        return (int)-virtualFunctionBus.carPositionPacket.getMoveVector().getXDiff() + movementVectorX;
     }
 
     /**
@@ -86,7 +88,9 @@ public class MovingWorldObject extends WorldObject {
      * @return the y component of the relative movement vector.
      */
     public int getRelativeMovementVectorY() {
-        return (int)virtualFunctionBus.carPositionPacket.getMoveVector().getYDiff() + movementVectorY;
+        // car movement vector needs to be negative
+        // as we need the elements' relative movement because of the automated car's movement
+        return (int)-virtualFunctionBus.carPositionPacket.getMoveVector().getYDiff() + movementVectorY;
     }
 
     public int getMovementVectorX() {
