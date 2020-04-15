@@ -181,4 +181,12 @@ public interface IVector {
         return rotateByRadians(grads / 200 * PI);
     }
 
+    default IVector add(IVector another) {
+        return vectorFromXY(getXDiff() + another.getXDiff(), getYDiff() + another.getYDiff());
+    }
+
+    default IVector subtract(IVector another) {
+        return vectorFromXY(getXDiff() - another.getXDiff(), getYDiff() - another.getYDiff());
+    }
+
 }

@@ -1,11 +1,14 @@
 package hu.oe.nik.szfmv.automatedcar;
 
+import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
 
 public class AutomatedCar extends WorldObject {
 
@@ -58,12 +61,24 @@ public class AutomatedCar extends WorldObject {
 //            default:
 //        }
 
-        x += (int)virtualFunctionBus.carPositionPacket.getMoveVector().getXDiff();
-        y += (int)virtualFunctionBus.carPositionPacket.getMoveVector().getLength();
+        IVector move = virtualFunctionBus.carPositionPacket.getMoveVector();
+        IVector currentPosition = this.getPosition();
+        IVector newPosition = currentPosition.add(move);
 
-        /*y -= virtualFunctionBus.toPowerTrainPacket.getGasPedalValue()/10;
-        y +=virtualFunctionBus.toPowerTrainPacket.getBreakPedalValue()/10;
-        x +=virtualFunctionBus.toPowerTrainPacket.getSteeringWheelValue()/10;*/
+        if (move.getLength() > 0.01) {
+            //debug
+            System.out.println(move.getXDiff() + " : " + move.getYDiff() + "  l:" + move.getLength());
+            this.setPosition(newPosition);
+        }
+    }
+
+    public IVector getPosition() {
+        return vectorFromXY(this.x, this.y);
+    }
+
+    public void setPosition(IVector position) {
+        this.setX((int)position.getXDiff());
+        this.setY((int)position.getYDiff());
     }
 
 }

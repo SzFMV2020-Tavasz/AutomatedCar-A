@@ -140,4 +140,7 @@ public enum Axis {
         }
 
     }
+
+    public static Axis DEFAULT = X;
+
 }
