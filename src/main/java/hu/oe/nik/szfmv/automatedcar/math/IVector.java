@@ -155,6 +155,10 @@ public interface IVector {
         return vectorFromXY(getXDiff() * scalar, getYDiff() * scalar);
     }
 
+    default IVector withLength(double scalarLength) {
+        return this.multiplyBy(scalarLength / getLength());
+    }
+
     /**Divides the length of the vector with the given scalar number.
      * @return A new vector with the same direction, but length divided by the given scalar.*/
     default IVector divideBy(double scalar) {
@@ -189,8 +193,12 @@ public interface IVector {
         return rotateByRadians(grads / 200 * PI);
     }
 
+    default IVector add(double x, double y) {
+        return vectorFromXY(getXDiff() + x, getYDiff() + y);
+    }
+
     default IVector add(IVector another) {
-        return vectorFromXY(getXDiff() + another.getXDiff(), getYDiff() + another.getYDiff());
+        return this.add(another.getXDiff(), another.getYDiff());
     }
 
     default IVector subtract(IVector another) {
@@ -209,4 +217,13 @@ public interface IVector {
         return Axis.DEFAULT.positiveDirection().rotateByRadians(radians);
     }
 
+    default IVector withDirection(IVector newDirection) {
+        return this.rotateByRadians(newDirection.getRadians() - this.getRadians());
+    }
+
+    static IVector average(IVector a, IVector b) {
+        double xMean = (a.getXDiff() + b.getXDiff()) / 2;
+        double yMean = (a.getYDiff() + b.getYDiff()) / 2;
+        return vectorFromXY(xMean, yMean);
+    }
 }

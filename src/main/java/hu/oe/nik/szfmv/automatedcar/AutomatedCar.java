@@ -9,6 +9,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.average;
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
 
 public class AutomatedCar extends WorldObject {
@@ -19,7 +20,10 @@ public class AutomatedCar extends WorldObject {
 
     private final PowerTrain powerTrain = new PowerTrain(virtualFunctionBus);
 
+    /**Not necessarily a unit vector, can have any length.*/
     private IVector facingDirection = Axis.Y.negativeDirection();
+
+    private final double HALF_CAR_LENGTH = 100;
 
     public AutomatedCar(int x, int y, String imageFileName) {
         super(x, y, imageFileName);
@@ -57,23 +61,20 @@ public class AutomatedCar extends WorldObject {
     }
 
     private void moveForward(IVector forwardMove) {
-        IVector moveInDirection = forwardMove.rotateByRadians(this.facingDirection.getRadians()); //+Y upwards
-        //IVector moveInDirectionOnMap = moveInDirection.withY(-moveInDirection.getYDiff());        //-Y upwards
+        IVector currentPosition = this.getPosition();
+        IVector toCarFrontVector = this.facingDirection.withLength(HALF_CAR_LENGTH);
+        IVector moveInDirection = forwardMove.rotateByRadians(this.facingDirection.getRadians());
 
-        this.setPosition(getPosition().add(moveInDirection));
+        IVector carFrontPosition = currentPosition.add(toCarFrontVector);
+        IVector carBackPosition = currentPosition.subtract(toCarFrontVector);
 
-        double rotationAngle;
-        double speed = forwardMove.getLength();
-        System.out.println(speed);
+        IVector newCarFrontPosition = carFrontPosition.add(moveInDirection);
+        IVector newCarBackPosition = carBackPosition.add(forwardMove.withDirection(toCarFrontVector));
 
-        if (speed < 50) {
-            rotationAngle = forwardMove.getRadians() / 10 * (speed / 50);
-        } else {
-            rotationAngle = forwardMove.getRadians() / 7;
-        }
+        this.setPosition(average(newCarFrontPosition, newCarBackPosition));
 
-        this.facingDirection = this.facingDirection.rotateByRadians(rotationAngle);
-        this.setRotation(this.facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
+        this.facingDirection = newCarFrontPosition.subtract(newCarBackPosition);
+        this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
     }
 
 }
