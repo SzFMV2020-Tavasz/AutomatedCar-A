@@ -33,35 +33,39 @@ public interface IVector {
         return Axis.Y.positiveDirection().rotateByRadians(_yRad + rad).multiplyBy(getLength());
     }
 
+    /**Gets the angle of the vector in radians relative to the {@link Axis#DEFAULT default axis}.
+     * <p>Rotation is mathematical, positive is towards the left.</p>*/
     default double getRadians() {
         return getRadiansRelativeTo(Axis.DEFAULT);
     }
 
+    /**Gets the angle of the vector in degrees relative to the {@link Axis#DEFAULT default axis}.
+     * <p>Rotation is mathematical, positive is towards the left.</p>*/
     default double getDegrees() {
         return toDegrees(getRadians());
     }
 
     /**Gets the angle of the vector in radians relative to given axis.
-     * Rotation is mathematical, positive is towards the left.*/
+     * <p>Rotation is mathematical, positive is towards the left.</p>*/
     default double getRadiansRelativeTo(Axis axis) {
         return getRadiansRelativeTo(axis.positiveDirection());
     }
 
     /**Gets the angle of the vector in degrees relative to given axis.
-     * Rotation is mathematical, positive is towards the left.*/
+     * <p>Rotation is mathematical, positive is towards the left.</p>*/
     default double getDegreesRelativeTo(Axis axis) {
         return getRadiansRelativeTo(axis.positiveDirection()) / PI * 180;
     }
 
     /**Gets the angle of the vector in degrees relative to the given direction.
-     * Rotation is mathematical, positive is towards the left.
+     * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value from -180° to +180°.*/
     default double getDegreesRelativeTo(IVector direction) {
         return getRadiansRelativeTo(direction) / PI * 180;
     }
 
     /**Gets angle of vector in absolute radians relative to the given axis.
-     * Rotation is mathematical, positive is towards the left.
+     * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value between 0 rad and 2*PI rad.*/
     default double getAbsRadiansRelativeTo(Axis axis) {
         double signedRads = getRadiansRelativeTo(axis);
@@ -71,7 +75,7 @@ public interface IVector {
     }
 
     /**Gets angle of vector in absolute radians relative to the given direction.
-     * Rotation is mathematical, positive is towards the left.
+     * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value between 0 rad and 2*PI rad.*/
     default double getAbsRadiansRelativeTo(IVector direction) {
         double signedRads = getRadiansRelativeTo(direction);
@@ -81,14 +85,14 @@ public interface IVector {
     }
 
     /**Gets angle of vector in absolute degrees relative to the given axis.
-     * Rotation is mathematical, positive is towards the left.
+     * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value between 0° and 360°.*/
     default double getAbsDegreesRelativeTo(Axis axis) {
         return getAbsRadiansRelativeTo(axis.positiveDirection()) / PI * 180;
     }
 
     /**Gets angle of vector in absolute degrees relative to the given direction.
-     * Rotation is mathematical, positive is towards the left.
+     * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value between 0° and 360°.*/
     default double getAbsDegreesRelativeTo(IVector direction) {
         return getAbsRadiansRelativeTo(direction) / PI * 180;
@@ -155,10 +159,6 @@ public interface IVector {
         return vectorFromXY(getXDiff() * scalar, getYDiff() * scalar);
     }
 
-    default IVector withLength(double scalarLength) {
-        return this.multiplyBy(scalarLength / getLength());
-    }
-
     /**Divides the length of the vector with the given scalar number.
      * @return A new vector with the same direction, but length divided by the given scalar.*/
     default IVector divideBy(double scalar) {
@@ -174,7 +174,7 @@ public interface IVector {
     }
 
     /**Clones this vector, rotates it by the given degrees and returns it.
-     * Rotation is mathematical, positive is towards the left.
+     * <p>Rotation is mathematical, positive is towards the left.</p>
      * @param degrees Degrees to rotate the vector with. A whole circle is 360 degrees.
      * @see #rotateByRadians(double)
      * @see #rotateByGradians(double)
@@ -184,7 +184,7 @@ public interface IVector {
     }
 
     /**Clones this vector, rotates it by the given gradians and returns it.
-     * Rotation is mathematical, positive is towards the left.
+     * <p>Rotation is mathematical, positive is towards the left.</p>
      * @param grads Gradians to rotate the vector with. A whole circle is 400 gradians.
      * @see #rotateByRadians(double)
      * @see #rotateByDegrees(double)
@@ -193,37 +193,60 @@ public interface IVector {
         return rotateByRadians(grads / 200 * PI);
     }
 
+    /**Returns a clone of the vector incremented its {@code x} and {@code y} coordinates with the given values.*/
     default IVector add(double x, double y) {
         return vectorFromXY(getXDiff() + x, getYDiff() + y);
     }
 
+    /**Returns a clone of the vector incremented its {@code x} and {@code y} coordinates with those of the given vector.*/
     default IVector add(IVector another) {
         return this.add(another.getXDiff(), another.getYDiff());
     }
 
-    default IVector subtract(IVector another) {
-        return vectorFromXY(getXDiff() - another.getXDiff(), getYDiff() - another.getYDiff());
+    /**Returns a clone of the vector decremented its {@code x} and {@code y} coordinates with the given values.*/
+    default IVector subtract(double x, double y) {
+        return vectorFromXY(getXDiff() + x, getYDiff() + y);
     }
 
+    /**Returns a clone of the vector decremented its {@code x} and {@code y} coordinates with those of the given vector.*/
+    default IVector subtract(IVector another) {
+        return this.subtract(another.getXDiff(), another.getYDiff());
+    }
+
+    /**Returns a clone of the vector but with the given {@code x} value.*/
     default IVector withX(double dx) {
         return vectorFromXY(dx, this.getYDiff());
     }
 
+    /**Returns a clone of the vector but with the given {@code y} value.*/
     default IVector withY(double dy) {
         return vectorFromXY(this.getXDiff(), dy);
     }
 
-    static IVector vectorWithAngle(double radians) {
-        return Axis.DEFAULT.positiveDirection().rotateByRadians(radians);
-    }
-
+    /**Returns a clone of the vector but with the given direction.
+     * <p>Length of the vector remains unchanged (with epsilon error of floating point numbers).</p>*/
     default IVector withDirection(IVector newDirection) {
         return this.rotateByRadians(newDirection.getRadians() - this.getRadians());
     }
 
+    /**Returns a clone of the vector, but with the given length.
+     * <p>Direction/angle of the vector remains unchanged (with epsilon error of floating point numbers).</p>*/
+    default IVector withLength(double scalarLength) {
+        return this.multiplyBy(scalarLength / getLength());
+    }
+
+    /**Returns the average vector of the given two, having the average {@code x} and {@code y} coordinates of them.
+     * <p>Length is the average of the two lengths,</p>*/
     static IVector average(IVector a, IVector b) {
         double xMean = (a.getXDiff() + b.getXDiff()) / 2;
         double yMean = (a.getYDiff() + b.getYDiff()) / 2;
         return vectorFromXY(xMean, yMean);
     }
+
+    /**Returns a new vector with the given angle relative the {@link Axis#DEFAULT default positive direction}.
+     * <p>Length of the vector is one unit (with epsilon error of floating point numbers).</p>*/
+    static IVector vectorWithAngle(double radians) {
+        return Axis.DEFAULT.positiveDirection().rotateByRadians(radians);
+    }
+
 }
