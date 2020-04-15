@@ -73,6 +73,7 @@ public class AutomatedCar extends WorldObject {
                 break;
             default:
                 this.parkingGear();
+                break;
         }
     }
 

@@ -77,6 +77,7 @@ public class PowerTrain extends SystemComponent {
                     break;
                 default:
                     result = CarTransmissionMode.P_PARKING;
+                    break;
             }
         }
         return result;
