@@ -149,11 +149,7 @@ public class Radar extends SystemComponent {
             mo.getY() + mo.getRelativeMovementVectorY());
 
         Point2D egocarPos = new Point2D.Double(automatedCar.getX(), automatedCar.getY());
-        if (egocarPos.distance(vectorStart) > egocarPos.distance(vectorEnd)) {
-            return true;
-        } else {
-            return false;
-        }
+        return egocarPos.distance(vectorStart) > egocarPos.distance(vectorEnd);
     }
 
     /**
