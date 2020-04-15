@@ -100,16 +100,9 @@
 
         <module name="TypeName"/>
 
-        <module name="LineLength">
-            <property name="max" value="120"/>
-        </module>
-
         <module name="ParenPad">
             <property name="option" value="nospace"/>
         </module>
-
-
-
 
 
 
@@ -198,5 +191,9 @@
 
     <module name="NewlineAtEndOfFile">
         <property name="severity" value="warning"/>
+    </module>
+
+    <module name="LineLength">
+        <property name="max" value="120"/>
     </module>
 </module>
