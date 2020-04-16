@@ -479,7 +479,7 @@ public class WorldObject {
         return person;
     }
 
-    private void addPolygons() {
+    public void addPolygons() {
         switch (this.type) {
             case "2_crossroad_1":
             case "2_crossroad_2":
