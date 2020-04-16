@@ -4,9 +4,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorldObject {
 
@@ -476,92 +481,44 @@ public class WorldObject {
     }
 
     private void addPolygons() {
-        switch (this.type) {
-            case "2_crossroad_1":
-            case "2_crossroad_2":
-                this.polygon = CreateCrossRoadPolygon();
-                break;
-            case "bicycle":
-                this.polygon = CreateBicyclePolygon();
-                break;
-            case "bollard":
-                this.polygon = CreateBollardPolygon();
-                break;
-            case "boundary":
-                this.polygon = CreateBoundaryPolygon();
-                break;
-            case "car_1_blue":
-            case "car_1_red":
-            case "car_1_white":
-            case "car_2_blue":
-            case "car_2_red":
-            case "car_2_white":
-                this.polygon = CreateCarPolygon(false);
-                break;
-            case "car_3_black":
-                this.polygon = CreateCarPolygon(true);
-                break;
-            case "crosswalk":
-                this.polygon = CreateCrossWalkPolygon();
-                break;
-            case "garage":
-                this.polygon = CreateGaragePolygon();
-                break;
-            case "man":
-            case "woman":
-                this.polygon = CreatePersonPolygon();
-                break;
-            case "parking_90":
-                this.polygon = CreateParkingPolygon(false);
-                break;
-            case "parking_space_parallel":
-                this.polygon = CreateParkingPolygon(true);
-                break;
-            case "road_2lane_6left":
-                this.polygon = Create2Lane6Polygon(true);
-                break;
-            case "road_2lane_6right":
-                this.polygon = Create2Lane6Polygon(false);
-                break;
-            case "road_2lane_45left":
-                this.polygon = Create2Lane45Polygon(true);
-                break;
-            case "road_2lane_45right":
-                this.polygon = Create2Lane45Polygon(true);
-                break;
-            case "road_2lane_90left":
-                this.polygon = Create2Lane90Polygon(true);
-                break;
-            case "road_2lane_90right":
-                this.polygon = Create2Lane90Polygon(true);
-                break;
-            case "road_2lane_rotary":
-                this.polygon = Create2LaneRotaryPolygon();
-                break;
-            case "road_2lane_straight":
-                this.polygon = Create2LaneStraightPolygon();
-                break;
-            case "road_2lane_tjunctionleft":
-                this.polygon = Create2LaneTJunctionPolygon(true);
-                break;
-            case "road_2lane_tjunctionright":
-                this.polygon = Create2LaneTJunctionPolygon(false);
-                break;
-            case "roadsign_parking_right":
-                this.polygon = CreateParkingSignPolygon();
-                break;
-            case "roadesign_priority_stop":
-                this.polygon = CreateStopSignPolygon();
-                break;
-            case "roadsign_speed_40":
-            case "roadsign_speed_50":
-            case "roadsign_speed_60":
-                this.polygon = CreateSpeedSignPolygon();
-                break;
-            case "tree":
-            default:
-                this.polygon = CreateTreePolygon();
-                break;
-        }
+        Map<String, Polygon> addActions = new HashMap<String, Polygon>();
+        addActions.put("2_crossroad_1", CreateCrossRoadPolygon());
+        addActions.put("2_crossroad_2", CreateCrossRoadPolygon());
+        addActions.put("bollard", CreateBollardPolygon());
+        addActions.put("bicycle", CreateBicyclePolygon());
+        addActions.put("boundary", CreateBoundaryPolygon());
+        addActions.put("car_1_blue", CreateCarPolygon(false));
+        addActions.put("car_1_red", CreateCarPolygon(false));
+        addActions.put("car_1_white", CreateCarPolygon(false));
+        addActions.put("car_2_blue", CreateCarPolygon(false));
+        addActions.put("car_2_red", CreateCarPolygon(false));
+        addActions.put("car_2_white", CreateCarPolygon(false));
+        addActions.put("car_3_black", CreateCarPolygon(true));
+        addActions.put("crosswalk", CreateCrossWalkPolygon());
+        addActions.put("garage", CreateGaragePolygon());
+        addActions.put("man", CreatePersonPolygon());
+        addActions.put("woman", CreatePersonPolygon());
+        addActions.put("parking_90", CreateParkingPolygon(false));
+        addActions.put("parking_space_parallel", CreateParkingPolygon(true));
+        addActions.put("road_2lane_6left", Create2Lane6Polygon(true));
+        addActions.put("road_2lane_6right", Create2Lane6Polygon(false));
+        addActions.put("road_2lane_45left", Create2Lane45Polygon(true));
+        addActions.put("road_2lane_45right", Create2Lane45Polygon(false));
+        addActions.put("road_2lane_90left", Create2Lane90Polygon(true));
+        addActions.put("road_2lane_90right", Create2Lane90Polygon(false));
+        addActions.put("road_2lane_rotary", Create2LaneRotaryPolygon());
+        addActions.put("road_2lane_straight", Create2LaneStraightPolygon());
+        addActions.put("road_2lane_tjunctionleft", Create2LaneTJunctionPolygon(true));
+        addActions.put("road_2lane_tjunctionright", Create2LaneTJunctionPolygon(false));
+        addActions.put("roadsign_parking_right", CreateParkingSignPolygon());
+        addActions.put("roadsign_priority_stop", CreateStopSignPolygon());
+        addActions.put("roadsign_speed_40", CreateSpeedSignPolygon());
+        addActions.put("roadsign_speed_50", CreateSpeedSignPolygon());
+        addActions.put("roadsign_speed_60", CreateSpeedSignPolygon());
+        addActions.put("tree", CreateTreePolygon());
+
+        this.polygon = addActions.get(this.type);
+
+
     }
 }
