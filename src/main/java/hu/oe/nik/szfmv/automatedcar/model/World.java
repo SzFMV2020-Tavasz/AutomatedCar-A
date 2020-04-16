@@ -63,13 +63,13 @@ public class World {
     }
 
     private boolean isInside(Point a, Point b, Point c, WorldObject item) {
-        Point itemsPosition = new Point(item.getX(), item.getY());
+        var triangle = new Polygon();
+        triangle.addPoint(a.x,a.y);
+        triangle.addPoint(b.x,b.y);
+        triangle.addPoint(c.x,c.y);
 
-        double A = area(a, b, c);
-        double A1 = area(itemsPosition, b, c);
-        double A2 = area(a, itemsPosition, c);
-        double A3 = area(a, b, itemsPosition);
-        return (A == A1 + A2 + A3);
+        // return triangle.getBounds().contains(item.getX(), item.getY());
+        return triangle.getBounds2D().intersects(item.getPolygon().getBounds2D());
     }
 
     private double area(Point a, Point b, Point c) {
