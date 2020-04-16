@@ -159,7 +159,7 @@ public class WorldObject {
         addPolygons();
     }
 
-    private Polygon CreateCrossRoadPolygon() {
+    private Polygon createCrossRoadPolygon() {
         var crossroad = new Polygon();
         crossroad.addPoint(0, 520);
         crossroad.addPoint(345, 525);
@@ -181,7 +181,7 @@ public class WorldObject {
         return crossroad;
     }
 
-    private Polygon Create2LaneTJunctionPolygon(boolean isLeft) {
+    private Polygon create2LaneTJunctionPolygon(boolean isLeft) {
         var road2LaneTJunction = new Polygon();
 
         if (isLeft) {
@@ -211,7 +211,7 @@ public class WorldObject {
         return road2LaneTJunction;
     }
 
-    private Polygon CreateBicyclePolygon() {
+    private Polygon createBicyclePolygon() {
         var bicycle = new Polygon();
         bicycle.addPoint(9, 9);
         bicycle.addPoint(71, 9);
@@ -221,7 +221,7 @@ public class WorldObject {
         return bicycle;
     }
 
-    private Polygon CreateBollardPolygon() {
+    private Polygon createBollardPolygon() {
         var bollard = new Polygon();
         bollard.addPoint(0, 0);
         bollard.addPoint(20, 0);
@@ -231,7 +231,7 @@ public class WorldObject {
         return bollard;
     }
 
-    private Polygon CreateBoundaryPolygon() {
+    private Polygon createBoundaryPolygon() {
         var boundary = new Polygon();
         boundary.addPoint(0, 0);
         boundary.addPoint(50, 0);
@@ -241,7 +241,7 @@ public class WorldObject {
         return boundary;
     }
 
-    private Polygon CreateCarPolygon(boolean isLongCar) {
+    private Polygon createCarPolygon(boolean isLongCar) {
         var car = new Polygon();
 
         if (isLongCar) {
@@ -259,7 +259,7 @@ public class WorldObject {
         return car;
     }
 
-    private Polygon CreateCrossWalkPolygon() {
+    private Polygon createCrossWalkPolygon() {
         var crossWalk = new Polygon();
         crossWalk.addPoint(0, 0);
         crossWalk.addPoint(335, 0);
@@ -269,7 +269,7 @@ public class WorldObject {
         return crossWalk;
     }
 
-    private Polygon CreateGaragePolygon() {
+    private Polygon createGaragePolygon() {
         var garage = new Polygon();
         garage.addPoint(0, 0);
         garage.addPoint(336, 0);
@@ -279,7 +279,7 @@ public class WorldObject {
         return garage;
     }
 
-    private Polygon CreateParkingPolygon(boolean isParallel) {
+    private Polygon createParkingPolygon(boolean isParallel) {
         var parking = new Polygon();
 
         if (isParallel) {
@@ -297,7 +297,7 @@ public class WorldObject {
         return parking;
     }
 
-    private Polygon Create2Lane6Polygon(boolean isLeft) {
+    private Polygon create2Lane6Polygon(boolean isLeft) {
         var roa2lane6 = new Polygon();
 
         if (isLeft) {
@@ -315,7 +315,7 @@ public class WorldObject {
         return roa2lane6;
     }
 
-    private Polygon Create2Lane45Polygon(boolean isLeft) {
+    private Polygon create2Lane45Polygon(boolean isLeft) {
         var roa2lane45 = new Polygon();
 
         if (isLeft) {
@@ -344,7 +344,7 @@ public class WorldObject {
         return roa2lane45;
     }
 
-    private Polygon Create2Lane90Polygon(boolean isLeft) {
+    private Polygon create2Lane90Polygon(boolean isLeft) {
         var road2lane90 = new Polygon();
 
         if (isLeft) {
@@ -382,7 +382,7 @@ public class WorldObject {
         return road2lane90;
     }
 
-    private Polygon Create2LaneRotaryPolygon() {
+    private Polygon create2LaneRotaryPolygon() {
         var road2lanerotary = new Polygon();
         road2lanerotary.addPoint(0, 533);
         road2lanerotary.addPoint(341, 517);
@@ -404,7 +404,7 @@ public class WorldObject {
         return road2lanerotary;
     }
 
-    private Polygon Create2LaneStraightPolygon() {
+    private Polygon create2LaneStraightPolygon() {
         var roadStraight = new Polygon();
         roadStraight.addPoint(0, 0);
         roadStraight.addPoint(350, 0);
@@ -414,7 +414,7 @@ public class WorldObject {
         return roadStraight;
     }
 
-    private Polygon CreateParkingSignPolygon() {
+    private Polygon createParkingSignPolygon() {
         var parkingSign = new Polygon();
         parkingSign.addPoint(41, 30);
         parkingSign.addPoint(50, 33);
@@ -427,7 +427,7 @@ public class WorldObject {
         return parkingSign;
     }
 
-    private Polygon CreateStopSignPolygon() {
+    private Polygon createStopSignPolygon() {
         var stopSign = new Polygon();
         stopSign.addPoint(41, 30);
         stopSign.addPoint(50, 33);
@@ -441,7 +441,7 @@ public class WorldObject {
         return stopSign;
     }
 
-    private Polygon CreateSpeedSignPolygon() {
+    private Polygon createSpeedSignPolygon() {
         var speedSign = new Polygon();
         speedSign.addPoint(41, 30);
         speedSign.addPoint(50, 33);
@@ -455,7 +455,7 @@ public class WorldObject {
         return speedSign;
     }
 
-    private Polygon CreateTreePolygon() {
+    private Polygon createTreePolygon() {
         var tree = new Polygon();
         tree.addPoint(73, 55);
         tree.addPoint(88, 63);
@@ -469,7 +469,7 @@ public class WorldObject {
         return tree;
     }
 
-    private Polygon CreatePersonPolygon() {
+    private Polygon createPersonPolygon() {
         var person = new Polygon();
         person.addPoint(0, 0);
         person.addPoint(47, 0);
@@ -483,16 +483,16 @@ public class WorldObject {
         switch (this.type) {
             case "2_crossroad_1":
             case "2_crossroad_2":
-                this.polygon = CreateCrossRoadPolygon();
+                this.polygon = createCrossRoadPolygon();
                 break;
             case "bicycle":
-                this.polygon = CreateBicyclePolygon();
+                this.polygon = createBicyclePolygon();
                 break;
             case "bollard":
-                this.polygon = CreateBollardPolygon();
+                this.polygon = createBollardPolygon();
                 break;
             case "boundary":
-                this.polygon = CreateBoundaryPolygon();
+                this.polygon = createBoundaryPolygon();
                 break;
             case "car_1_blue":
             case "car_1_red":
@@ -500,70 +500,70 @@ public class WorldObject {
             case "car_2_blue":
             case "car_2_red":
             case "car_2_white":
-                this.polygon = CreateCarPolygon(false);
+                this.polygon = createCarPolygon(false);
                 break;
             case "car_3_black":
-                this.polygon = CreateCarPolygon(true);
+                this.polygon = createCarPolygon(true);
                 break;
             case "crosswalk":
-                this.polygon = CreateCrossWalkPolygon();
+                this.polygon = createCrossWalkPolygon();
                 break;
             case "garage":
-                this.polygon = CreateGaragePolygon();
+                this.polygon = createGaragePolygon();
                 break;
             case "man":
             case "woman":
-                this.polygon = CreatePersonPolygon();
+                this.polygon = createPersonPolygon();
                 break;
             case "parking_90":
-                this.polygon = CreateParkingPolygon(false);
+                this.polygon = createParkingPolygon(false);
                 break;
             case "parking_space_parallel":
-                this.polygon = CreateParkingPolygon(true);
+                this.polygon = createParkingPolygon(true);
                 break;
             case "road_2lane_6left":
-                this.polygon = Create2Lane6Polygon(true);
+                this.polygon = create2Lane6Polygon(true);
                 break;
             case "road_2lane_6right":
-                this.polygon = Create2Lane6Polygon(false);
+                this.polygon = create2Lane6Polygon(false);
                 break;
             case "road_2lane_45left":
-                this.polygon = Create2Lane45Polygon(true);
+                this.polygon = create2Lane45Polygon(true);
                 break;
             case "road_2lane_45right":
-                this.polygon = Create2Lane45Polygon(false);
+                this.polygon = create2Lane45Polygon(false);
                 break;
             case "road_2lane_90left":
-                this.polygon = Create2Lane90Polygon(true);
+                this.polygon = create2Lane90Polygon(true);
                 break;
             case "road_2lane_90right":
-                this.polygon = Create2Lane90Polygon(false);
+                this.polygon = create2Lane90Polygon(false);
                 break;
             case "road_2lane_rotary":
-                this.polygon = Create2LaneRotaryPolygon();
+                this.polygon = create2LaneRotaryPolygon();
                 break;
             case "road_2lane_straight":
-                this.polygon = Create2LaneStraightPolygon();
+                this.polygon = create2LaneStraightPolygon();
                 break;
             case "road_2lane_tjunctionleft":
-                this.polygon = Create2LaneTJunctionPolygon(true);
+                this.polygon = create2LaneTJunctionPolygon(true);
                 break;
             case "road_2lane_tjunctionright":
-                this.polygon = Create2LaneTJunctionPolygon(false);
+                this.polygon = create2LaneTJunctionPolygon(false);
                 break;
             case "roadsign_parking_right":
-                this.polygon = CreateParkingSignPolygon();
+                this.polygon = createParkingSignPolygon();
                 break;
             case "roadsign_priority_stop":
-                this.polygon = CreateStopSignPolygon();
+                this.polygon = createStopSignPolygon();
                 break;
             case "roadsign_speed_40":
             case "roadsign_speed_50":
             case "roadsign_speed_60":
-                this.polygon = CreateSpeedSignPolygon();
+                this.polygon = createSpeedSignPolygon();
                 break;
             case "tree":
-                this.polygon = CreateTreePolygon();
+                this.polygon = createTreePolygon();
             default:
                 break;
         }
