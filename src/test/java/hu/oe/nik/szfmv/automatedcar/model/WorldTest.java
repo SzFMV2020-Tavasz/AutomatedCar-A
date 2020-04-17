@@ -15,22 +15,41 @@ public class WorldTest {
 
     @BeforeEach
     void init() {
+        Polygon polygon = new Polygon();
+        polygon.addPoint(0, 50);
+        polygon.addPoint(10, 50);
+        polygon.addPoint(0, 40);
+
         WorldObject instance = new WorldObject("4");
         instance.setIsStatic(true);
         instance.setType("car_1_blue");
         instance.setX(5);
         instance.setY(4);
+        instance.polygon = polygon;
+        instance.setImageFileName(instance.getType()+ ".png");
         instance.setRotationMatrix(new float[][]{{1, 2}, {1, 2}});
 
         WorldObject instance1 = new WorldObject("3");
         instance1.setIsStatic(true);
+        instance1.setX(100);
+        instance1.setY(100);
+        instance1.polygon = polygon;
+        instance1.setImageFileName(instance.getType()+ ".png");
         instance1.setType("road_2lane_straight");
 
         WorldObject instance2 = new WorldObject("2");
         instance2.setIsStatic(true);
+        instance2.setX(500);
+        instance2.setY(100);
+        instance2.polygon = polygon;
+        instance2.setImageFileName(instance2.getType()+ ".png");
         instance2.setType("tree");
 
         WorldObject instance3 = new WorldObject("1");
+        instance3.setX(0);
+        instance3.setY(400);
+        instance3.polygon = polygon;
+        instance3.setImageFileName(instance3.getType()+ ".png");
         instance3.setIsStatic(false);
         instance3.setType("man");
 
@@ -79,10 +98,10 @@ public class WorldTest {
 
     @Test
     void testObjectInsideTriangle(){
-        String expectedId = "4";
-        Point a = new Point(5,8);
-        Point b = new Point(0,2);
-        Point c = new Point(10,2);
+        String expectedId = "3";
+        Point a = new Point(40,40);
+        Point b = new Point(40,150);
+        Point c = new Point(150,40);
         List<WorldObject> objectInsideTriangle = worldInstance.getObjectsInsideTriangle(a,b,c);
         int size = objectInsideTriangle.size();
         assertEquals(1, size);
