@@ -26,7 +26,6 @@ public class DeserializerTest {
         assertEquals(1700, entry.getX());
         assertEquals(144, entry.getY());
         assertEquals(0, entry.getZ());
-        assertEquals("road_2lane_straight_1", entry.getId());
         assertEquals(0.0f, entry.getRotationMatrix()[0][0]);
         assertEquals(true, entry.getIsStatic());
 
