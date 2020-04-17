@@ -30,7 +30,7 @@ public class DeserializerTest {
         assertEquals(true, entry.getIsStatic());
 
         var entry2 = world.getWorldObjects().get(6);
-        assertEquals("road_2lane_45right_7", entry2.getId());
+
         assertEquals(0.7071068286895752f, entry2.getRotationMatrix()[0][0]);
     }
 
