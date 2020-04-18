@@ -161,7 +161,7 @@ public class WorldObject {
 
         setImageFileName(this.type + ".png");
         initImage();
-        addPolygons();
+        addPolygons1();
     }
 
     private Polygon createCrossRoadPolygon1() {
@@ -230,12 +230,10 @@ public class WorldObject {
         final Point road2LaneTJunctionP10 = new Point(0, 875);
 
 
-
-
-            road2LaneTJunction.addPoint(road2LaneTJunctionP1.x, road2LaneTJunctionP1.y);
-            road2LaneTJunction.addPoint(road2LaneTJunctionP2.x, road2LaneTJunctionP2.y);
-            road2LaneTJunction.addPoint(road2LaneTJunctionP3.x, road2LaneTJunctionP3.y);
-            road2LaneTJunction.addPoint(road2LaneTJunctionP4.x, road2LaneTJunctionP4.y);
+        road2LaneTJunction.addPoint(road2LaneTJunctionP1.x, road2LaneTJunctionP1.y);
+        road2LaneTJunction.addPoint(road2LaneTJunctionP2.x, road2LaneTJunctionP2.y);
+        road2LaneTJunction.addPoint(road2LaneTJunctionP3.x, road2LaneTJunctionP3.y);
+        road2LaneTJunction.addPoint(road2LaneTJunctionP4.x, road2LaneTJunctionP4.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP5.x, road2LaneTJunctionP5.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP6.x, road2LaneTJunctionP6.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP7.x, road2LaneTJunctionP7.y);
@@ -469,9 +467,9 @@ public class WorldObject {
 
         var road2lane45 = new Polygon();
 
-            road2lane45.addPoint(road2lane45P1.x, road2lane45P1.y);
-            road2lane45.addPoint(road2lane45P2.x, road2lane45P2.y);
-            road2lane45.addPoint(road2lane45P3.x, road2lane45P3.y);
+        road2lane45.addPoint(road2lane45P1.x, road2lane45P1.y);
+        road2lane45.addPoint(road2lane45P2.x, road2lane45P2.y);
+        road2lane45.addPoint(road2lane45P3.x, road2lane45P3.y);
         road2lane45.addPoint(road2lane45P4.x, road2lane45P4.y);
         road2lane45.addPoint(road2lane45P5.x, road2lane45P5.y);
         road2lane45.addPoint(road2lane45P6.x, road2lane45P6.y);
@@ -530,16 +528,16 @@ public class WorldObject {
 
         var road2lane90 = new Polygon();
 
-            road2lane90.addPoint(road2lane90P1.x, road2lane90P1.y);
-            road2lane90.addPoint(road2lane90P2.x, road2lane90P2.y);
-            road2lane90.addPoint(road2lane90P3.x, road2lane90P3.y);
-            road2lane90.addPoint(road2lane90P4.x, road2lane90P4.y);
-            road2lane90.addPoint(road2lane90P5.x, road2lane90P5.y);
-            road2lane90.addPoint(road2lane90P6.x, road2lane90P6.y);
-            road2lane90.addPoint(road2lane90P7.x, road2lane90P7.y);
-            road2lane90.addPoint(road2lane90P8.x, road2lane90P8.y);
-            road2lane90.addPoint(road2lane90P9.x, road2lane90P9.y);
-            road2lane90.addPoint(road2lane90P10.x, road2lane90P10.y);
+        road2lane90.addPoint(road2lane90P1.x, road2lane90P1.y);
+        road2lane90.addPoint(road2lane90P2.x, road2lane90P2.y);
+        road2lane90.addPoint(road2lane90P3.x, road2lane90P3.y);
+        road2lane90.addPoint(road2lane90P4.x, road2lane90P4.y);
+        road2lane90.addPoint(road2lane90P5.x, road2lane90P5.y);
+        road2lane90.addPoint(road2lane90P6.x, road2lane90P6.y);
+        road2lane90.addPoint(road2lane90P7.x, road2lane90P7.y);
+        road2lane90.addPoint(road2lane90P8.x, road2lane90P8.y);
+        road2lane90.addPoint(road2lane90P9.x, road2lane90P9.y);
+        road2lane90.addPoint(road2lane90P10.x, road2lane90P10.y);
         road2lane90.addPoint(road2lane90P11.x, road2lane90P11.y);
         road2lane90.addPoint(road2lane90P12.x, road2lane90P12.y);
         road2lane90.addPoint(road2lane90P13.x, road2lane90P13.y);
@@ -743,7 +741,7 @@ public class WorldObject {
         return person;
     }
 
-    private void addPolygons() {
+    private void addPolygons1() {
         Map<String, Polygon> addActions = new HashMap<String, Polygon>();
         addActions.put("2_crossroad_1", createCrossRoadPolygon1());
         addActions.put("2_crossroad_2", createCrossRoadPolygon1());
@@ -761,6 +759,16 @@ public class WorldObject {
         addActions.put("garage", createGaragePolygon());
         addActions.put("man", createPersonPolygon());
         addActions.put("woman", createPersonPolygon());
+
+        addActions = addPolygons2(addActions);
+
+
+        this.polygon = addActions.get(this.type);
+
+
+    }
+
+    private Map<String, Polygon> addPolygons2(Map<String, Polygon> addActions) {
         addActions.put("parking_90", createParkingPolygonParalellNot());
         addActions.put("parking_space_parallel", createParkingPolygonParalell());
         addActions.put("road_2lane_6left", create2Lane6PolygonLeft());
@@ -779,9 +787,8 @@ public class WorldObject {
         addActions.put("roadsign_speed_50", createSpeedSignPolygon());
         addActions.put("roadsign_speed_60", createSpeedSignPolygon());
         addActions.put("tree", createTreePolygon());
-
-        this.polygon = addActions.get(this.type);
-
-
+        return addActions;
     }
+
+
 }
