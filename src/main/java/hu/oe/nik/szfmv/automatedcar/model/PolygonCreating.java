@@ -124,17 +124,25 @@ public class PolygonCreating {
         final Point road2LaneTJunctionP9 = new Point(350, 875);
         final Point road2LaneTJunctionP10 = new Point(0, 875);
         final Point road2LaneTJunctionP11 = new Point(525, 0);
-        final Point road2LaneTJunctionP12 = new Point(525, 1380);
-        final Point road2LaneTJunctionP13 = new Point(690, 0);
-        final Point road2LaneTJunctionP14 = new Point(690, 1395);
-        final Point road2LaneTJunctionP15 = new Point(850, 0);
-        final Point road2LaneTJunctionP16 = new Point(860, 1385);
+
         road2LaneTJunction.addPoint(road2LaneTJunctionP6.x, road2LaneTJunctionP6.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP7.x, road2LaneTJunctionP7.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP8.x, road2LaneTJunctionP8.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP9.x, road2LaneTJunctionP9.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP10.x, road2LaneTJunctionP10.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP11.x, road2LaneTJunctionP11.y);
+        road2LaneTJunction = create2LaneTJunctionPolygonLeft3(road2LaneTJunction);
+
+        return road2LaneTJunction;
+
+    }
+
+    private Polygon create2LaneTJunctionPolygonLeft3(Polygon road2LaneTJunction) {
+        final Point road2LaneTJunctionP12 = new Point(525, 1380);
+        final Point road2LaneTJunctionP13 = new Point(690, 0);
+        final Point road2LaneTJunctionP14 = new Point(690, 1395);
+        final Point road2LaneTJunctionP15 = new Point(850, 0);
+        final Point road2LaneTJunctionP16 = new Point(860, 1385);
         road2LaneTJunction.addPoint(road2LaneTJunctionP12.x, road2LaneTJunctionP12.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP13.x, road2LaneTJunctionP13.y);
         road2LaneTJunction.addPoint(road2LaneTJunctionP14.x, road2LaneTJunctionP14.y);
@@ -494,11 +502,7 @@ public class PolygonCreating {
         final Point road2lane90P13 = new Point(121, 401);
         final Point road2lane90P14 = new Point(75, 369);
         final Point road2lane90P15 = new Point(0, 350);
-        final Point road2lane90P16 = new Point(6, 174);
-        final Point road2lane90P17 = new Point(139, 205);
-        final Point road2lane90P18 = new Point(253, 286);
-        final Point road2lane90P19 = new Point(322, 388);
-        final Point road2lane90P20 = new Point(351, 523);
+
 
 
         road2lane90.addPoint(road2lane90P8.x, road2lane90P8.y);
@@ -509,12 +513,23 @@ public class PolygonCreating {
         road2lane90.addPoint(road2lane90P13.x, road2lane90P13.y);
         road2lane90.addPoint(road2lane90P14.x, road2lane90P14.y);
         road2lane90.addPoint(road2lane90P15.x, road2lane90P15.y);
+
+        road2lane90 = create2Lane90PolygonLeft3(road2lane90);
+        return road2lane90;
+    }
+
+    private Polygon create2Lane90PolygonLeft3(Polygon road2lane90) {
+        final Point road2lane90P16 = new Point(6, 174);
+        final Point road2lane90P17 = new Point(139, 205);
+        final Point road2lane90P18 = new Point(253, 286);
+        final Point road2lane90P19 = new Point(322, 388);
+        final Point road2lane90P20 = new Point(351, 523);
+        
         road2lane90.addPoint(road2lane90P16.x, road2lane90P16.y);
         road2lane90.addPoint(road2lane90P17.x, road2lane90P17.y);
         road2lane90.addPoint(road2lane90P18.x, road2lane90P18.y);
         road2lane90.addPoint(road2lane90P19.x, road2lane90P19.y);
         road2lane90.addPoint(road2lane90P20.x, road2lane90P20.y);
-
         return road2lane90;
     }
 
@@ -544,18 +559,26 @@ public class PolygonCreating {
         final Point road2lane90P24 = new Point(468, 360);
         final Point road2lane90P25 = new Point(427, 388);
         final Point road2lane90P26 = new Point(386, 419);
-        final Point road2lane90P27 = new Point(363, 456);
-        final Point road2lane90P28 = new Point(523, 174);
-        final Point road2lane90P29 = new Point(381, 207);
-        final Point road2lane90P30 = new Point(270, 285);
-        final Point road2lane90P31 = new Point(200, 395);
-        final Point road2lane90P32 = new Point(175, 522);
+
 
         road2lane90.addPoint(road2lane90P22.x, road2lane90P22.y);
         road2lane90.addPoint(road2lane90P23.x, road2lane90P23.y);
         road2lane90.addPoint(road2lane90P24.x, road2lane90P24.y);
         road2lane90.addPoint(road2lane90P25.x, road2lane90P25.y);
         road2lane90.addPoint(road2lane90P26.x, road2lane90P26.y);
+        road2lane90 = create2Lane90PolygonRight3(road2lane90);
+
+        return road2lane90;
+
+    }
+
+    private Polygon create2Lane90PolygonRight3(Polygon road2lane90) {
+        final Point road2lane90P27 = new Point(363, 456);
+        final Point road2lane90P28 = new Point(523, 174);
+        final Point road2lane90P29 = new Point(381, 207);
+        final Point road2lane90P30 = new Point(270, 285);
+        final Point road2lane90P31 = new Point(200, 395);
+        final Point road2lane90P32 = new Point(175, 522);
         road2lane90.addPoint(road2lane90P27.x, road2lane90P27.y);
         road2lane90.addPoint(road2lane90P28.x, road2lane90P28.y);
         road2lane90.addPoint(road2lane90P29.x, road2lane90P29.y);
