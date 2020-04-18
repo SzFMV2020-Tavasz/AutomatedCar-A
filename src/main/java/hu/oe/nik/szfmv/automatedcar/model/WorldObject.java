@@ -631,14 +631,14 @@ public class WorldObject {
     }
 
     private Polygon createTreePolygon() {
-        Point treeP1 = new Point(73, 55);
-        Point treeP2 = new Point(88, 63);
-        Point treeP3 = new Point(94, 74);
-        Point treeP4 = new Point(87, 94);
-        Point treeP5 = new Point(71, 100);
-        Point treeP6 = new Point(54, 93);
-        Point treeP7 = new Point(45, 78);
-        Point treeP8 = new Point(53, 63);
+        final Point treeP1 = new Point(73, 55);
+        final Point treeP2 = new Point(88, 63);
+        final Point treeP3 = new Point(94, 74);
+        final Point treeP4 = new Point(87, 94);
+        final Point treeP5 = new Point(71, 100);
+        final Point treeP6 = new Point(54, 93);
+        final Point treeP7 = new Point(45, 78);
+        final Point treeP8 = new Point(53, 63);
 
         var tree = new Polygon();
         tree.addPoint(treeP1.x, treeP1.y);
