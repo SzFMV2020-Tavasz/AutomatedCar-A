@@ -7,8 +7,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class WorldObject {
 
@@ -35,11 +34,15 @@ public class WorldObject {
         this.y = y;
         this.imageFileName = imageFileName;
         initImage();
+        PolygonCreating polygonCreating = new PolygonCreating(this.type);
+        this.polygon = polygonCreating.getPolygon();
     }
 
     public WorldObject(String id) {
         setId(id);
         this.rotationMatrix = new float[2][2];
+        PolygonCreating polygonCreating = new PolygonCreating(this.type);
+        this.polygon = polygonCreating.getPolygon();
     }
 
     public WorldObject() {
