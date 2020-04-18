@@ -172,7 +172,7 @@ public class WorldObject {
         final Point crossRoadP5 = new Point(870, 0);
         final Point crossRoadP6 = new Point(865, 360);
         final Point crossRoadP7 = new Point(1050, 535);
-        final Point crossRoadP8 = new Point(1400, 535);
+
 
 
         var crossroad = new Polygon();
@@ -184,7 +184,7 @@ public class WorldObject {
         crossroad.addPoint(crossRoadP5.x, crossRoadP5.y);
         crossroad.addPoint(crossRoadP6.x, crossRoadP6.y);
         crossroad.addPoint(crossRoadP7.x, crossRoadP7.y);
-        crossroad.addPoint(crossRoadP8.x, crossRoadP8.y);
+
 
 
         crossroad = createCrossRoadPolygon2(crossroad);
@@ -194,24 +194,23 @@ public class WorldObject {
     }
 
     private Polygon createCrossRoadPolygon2(Polygon crossroad) {
-
+        final Point crossRoadP8 = new Point(1400, 535);
         final Point crossRoadP9 = new Point(1400, 870);
         final Point crossRoadP10 = new Point(1055, 860);
         final Point crossRoadP11 = new Point(870, 1055);
         final Point crossRoadP12 = new Point(870, 1390);
         final Point crossRoadP13 = new Point(525, 1390);
         final Point crossRoadP14 = new Point(525, 1035);
-        final Point crossRoadP15 = new Point(350, 870);
-        final Point crossRoadP16 = new Point(0, 875);
 
+
+        crossroad.addPoint(crossRoadP8.x, crossRoadP8.y);
         crossroad.addPoint(crossRoadP9.x, crossRoadP9.y);
         crossroad.addPoint(crossRoadP10.x, crossRoadP10.y);
         crossroad.addPoint(crossRoadP11.x, crossRoadP11.y);
         crossroad.addPoint(crossRoadP12.x, crossRoadP12.y);
         crossroad.addPoint(crossRoadP13.x, crossRoadP13.y);
         crossroad.addPoint(crossRoadP14.x, crossRoadP14.y);
-        crossroad.addPoint(crossRoadP15.x, crossRoadP15.y);
-        crossroad.addPoint(crossRoadP16.x, crossRoadP16.y);
+
         crossroad = createCrossRoadPolygon3(crossroad);
 
         return crossroad;
@@ -220,6 +219,10 @@ public class WorldObject {
     }
 
     private Polygon createCrossRoadPolygon3(Polygon crossroad) {
+        final Point crossRoadP15 = new Point(350, 870);
+        final Point crossRoadP16 = new Point(0, 875);
+        crossroad.addPoint(crossRoadP15.x, crossRoadP15.y);
+        crossroad.addPoint(crossRoadP16.x, crossRoadP16.y);
 
         return crossroad;
     }
@@ -644,7 +647,6 @@ public class WorldObject {
         final Point road2laneRotaryP5 = new Point(870, 0);
         final Point road2laneRotaryP6 = new Point(860, 349);
         final Point road2laneRotaryP7 = new Point(1050, 530);
-        final Point road2laneRotaryP8 = new Point(1397, 537);
 
         var road2laneRotary = new Polygon();
         road2laneRotary.addPoint(road2laneRotaryP1.x, road2laneRotaryP1.y);
@@ -654,7 +656,7 @@ public class WorldObject {
         road2laneRotary.addPoint(road2laneRotaryP5.x, road2laneRotaryP5.y);
         road2laneRotary.addPoint(road2laneRotaryP6.x, road2laneRotaryP6.y);
         road2laneRotary.addPoint(road2laneRotaryP7.x, road2laneRotaryP7.y);
-        road2laneRotary.addPoint(road2laneRotaryP8.x, road2laneRotaryP8.y);
+
 
         road2laneRotary = create2LaneRotaryPolygon2(road2laneRotary);
 
@@ -663,23 +665,31 @@ public class WorldObject {
 
     Polygon create2LaneRotaryPolygon2(Polygon road2laneRotary) {
 
-
+        final Point road2laneRotaryP8 = new Point(1397, 537);
         final Point road2laneRotaryP9 = new Point(1397, 862);
         final Point road2laneRotaryP10 = new Point(1040, 869);
         final Point road2laneRotaryP11 = new Point(860, 1045);
         final Point road2laneRotaryP12 = new Point(865, 1389);
         final Point road2laneRotaryP13 = new Point(530, 1389);
         final Point road2laneRotaryP14 = new Point(525, 1037);
-        final Point road2laneRotaryP15 = new Point(345, 865);
-        final Point road2laneRotaryP16 = new Point(0, 865);
 
 
+        road2laneRotary.addPoint(road2laneRotaryP8.x, road2laneRotaryP8.y);
         road2laneRotary.addPoint(road2laneRotaryP9.x, road2laneRotaryP9.y);
         road2laneRotary.addPoint(road2laneRotaryP10.x, road2laneRotaryP10.y);
         road2laneRotary.addPoint(road2laneRotaryP11.x, road2laneRotaryP11.y);
         road2laneRotary.addPoint(road2laneRotaryP12.x, road2laneRotaryP12.y);
         road2laneRotary.addPoint(road2laneRotaryP13.x, road2laneRotaryP13.y);
         road2laneRotary.addPoint(road2laneRotaryP14.x, road2laneRotaryP14.y);
+        road2laneRotary = create2LaneRotaryPolygon3(road2laneRotary);
+
+        return road2laneRotary;
+
+    }
+
+    Polygon create2LaneRotaryPolygon3(Polygon road2laneRotary) {
+        final Point road2laneRotaryP15 = new Point(345, 865);
+        final Point road2laneRotaryP16 = new Point(0, 865);
         road2laneRotary.addPoint(road2laneRotaryP15.x, road2laneRotaryP15.y);
         road2laneRotary.addPoint(road2laneRotaryP16.x, road2laneRotaryP16.y);
         return road2laneRotary;
