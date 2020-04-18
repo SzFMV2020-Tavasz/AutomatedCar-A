@@ -172,6 +172,7 @@ public class WorldObject {
         final Point crossRoadP5 = new Point(870, 0);
         final Point crossRoadP6 = new Point(865, 360);
         final Point crossRoadP7 = new Point(1050, 535);
+        final Point crossRoadP8 = new Point(1400, 535);
 
 
         var crossroad = new Polygon();
@@ -183,6 +184,7 @@ public class WorldObject {
         crossroad.addPoint(crossRoadP5.x, crossRoadP5.y);
         crossroad.addPoint(crossRoadP6.x, crossRoadP6.y);
         crossroad.addPoint(crossRoadP7.x, crossRoadP7.y);
+        crossroad.addPoint(crossRoadP8.x, crossRoadP8.y);
 
 
         crossroad = createCrossRoadPolygon2(crossroad);
@@ -192,7 +194,7 @@ public class WorldObject {
     }
 
     private Polygon createCrossRoadPolygon2(Polygon crossroad) {
-        final Point crossRoadP8 = new Point(1400, 535);
+
         final Point crossRoadP9 = new Point(1400, 870);
         final Point crossRoadP10 = new Point(1055, 860);
         final Point crossRoadP11 = new Point(870, 1055);
@@ -201,7 +203,7 @@ public class WorldObject {
         final Point crossRoadP14 = new Point(525, 1035);
         final Point crossRoadP15 = new Point(350, 870);
         final Point crossRoadP16 = new Point(0, 875);
-        crossroad.addPoint(crossRoadP8.x, crossRoadP8.y);
+
         crossroad.addPoint(crossRoadP9.x, crossRoadP9.y);
         crossroad.addPoint(crossRoadP10.x, crossRoadP10.y);
         crossroad.addPoint(crossRoadP11.x, crossRoadP11.y);
@@ -555,10 +557,11 @@ public class WorldObject {
         final Point road2lane90P4 = new Point(276, 79);
         final Point road2lane90P5 = new Point(343, 127);
         final Point road2lane90P6 = new Point(428, 221);
+        final Point road2lane90P7 = new Point(456, 265);
 
 
         var road2lane90 = new Polygon();
-
+        road2lane90.addPoint(road2lane90P7.x, road2lane90P7.y);
         road2lane90.addPoint(road2lane90P1.x, road2lane90P1.y);
         road2lane90.addPoint(road2lane90P2.x, road2lane90P2.y);
         road2lane90.addPoint(road2lane90P3.x, road2lane90P3.y);
@@ -572,7 +575,7 @@ public class WorldObject {
     }
 
     private Polygon create2Lane90PolygonLeft2(Polygon road2lane90) {
-        final Point road2lane90P7 = new Point(456, 265);
+
         final Point road2lane90P8 = new Point(470, 293);
         final Point road2lane90P9 = new Point(506, 394);
         final Point road2lane90P10 = new Point(523, 521);
@@ -581,7 +584,7 @@ public class WorldObject {
         final Point road2lane90P13 = new Point(121, 401);
         final Point road2lane90P14 = new Point(75, 369);
         final Point road2lane90P15 = new Point(0, 350);
-        road2lane90.addPoint(road2lane90P7.x, road2lane90P7.y);
+
         road2lane90.addPoint(road2lane90P8.x, road2lane90P8.y);
         road2lane90.addPoint(road2lane90P9.x, road2lane90P9.y);
         road2lane90.addPoint(road2lane90P10.x, road2lane90P10.y);
@@ -641,6 +644,7 @@ public class WorldObject {
         final Point road2laneRotaryP5 = new Point(870, 0);
         final Point road2laneRotaryP6 = new Point(860, 349);
         final Point road2laneRotaryP7 = new Point(1050, 530);
+        final Point road2laneRotaryP8 = new Point(1397, 537);
 
         var road2laneRotary = new Polygon();
         road2laneRotary.addPoint(road2laneRotaryP1.x, road2laneRotaryP1.y);
@@ -650,6 +654,7 @@ public class WorldObject {
         road2laneRotary.addPoint(road2laneRotaryP5.x, road2laneRotaryP5.y);
         road2laneRotary.addPoint(road2laneRotaryP6.x, road2laneRotaryP6.y);
         road2laneRotary.addPoint(road2laneRotaryP7.x, road2laneRotaryP7.y);
+        road2laneRotary.addPoint(road2laneRotaryP8.x, road2laneRotaryP8.y);
 
         road2laneRotary = create2LaneRotaryPolygon2(road2laneRotary);
 
@@ -658,7 +663,7 @@ public class WorldObject {
 
     Polygon create2LaneRotaryPolygon2(Polygon road2laneRotary) {
 
-        final Point road2laneRotaryP8 = new Point(1397, 537);
+
         final Point road2laneRotaryP9 = new Point(1397, 862);
         final Point road2laneRotaryP10 = new Point(1040, 869);
         final Point road2laneRotaryP11 = new Point(860, 1045);
@@ -668,7 +673,7 @@ public class WorldObject {
         final Point road2laneRotaryP15 = new Point(345, 865);
         final Point road2laneRotaryP16 = new Point(0, 865);
 
-        road2laneRotary.addPoint(road2laneRotaryP8.x, road2laneRotaryP8.y);
+
         road2laneRotary.addPoint(road2laneRotaryP9.x, road2laneRotaryP9.y);
         road2laneRotary.addPoint(road2laneRotaryP10.x, road2laneRotaryP10.y);
         road2laneRotary.addPoint(road2laneRotaryP11.x, road2laneRotaryP11.y);
