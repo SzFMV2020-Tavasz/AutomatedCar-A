@@ -162,22 +162,22 @@ public class WorldObject {
     }
 
     private Polygon createCrossRoadPolygon() {
-        Point crossRoadP1 = new Point(0, 520);
-        Point crossRoadP2 = new Point(345, 525);
-        Point crossRoadP3 = new Point(530, 345);
-        Point crossRoadP4 = new Point(525, 0);
-        Point crossRoadP5 = new Point(870, 0);
-        Point crossRoadP6 = new Point(865, 360);
-        Point crossRoadP7 = new Point(1050, 535);
-        Point crossRoadP8 = new Point(1400, 535);
-        Point crossRoadP9 = new Point(1400, 870);
-        Point crossRoadP10 = new Point(1055, 860);
-        Point crossRoadP11 = new Point(870, 1055);
-        Point crossRoadP12 = new Point(870, 1390);
-        Point crossRoadP13 = new Point(525, 1390);
-        Point crossRoadP14 = new Point(525, 1035);
-        Point crossRoadP15 = new Point(350, 870);
-        Point crossRoadP16 = new Point(0, 875);
+        final Point crossRoadP1 = new Point(0, 520);
+        final Point crossRoadP2 = new Point(345, 525);
+        final Point crossRoadP3 = new Point(530, 345);
+        final Point crossRoadP4 = new Point(525, 0);
+        final Point crossRoadP5 = new Point(870, 0);
+        final Point crossRoadP6 = new Point(865, 360);
+        final Point crossRoadP7 = new Point(1050, 535);
+        final Point crossRoadP8 = new Point(1400, 535);
+        final Point crossRoadP9 = new Point(1400, 870);
+        final Point crossRoadP10 = new Point(1055, 860);
+        final Point crossRoadP11 = new Point(870, 1055);
+        final Point crossRoadP12 = new Point(870, 1390);
+        final Point crossRoadP13 = new Point(525, 1390);
+        final Point crossRoadP14 = new Point(525, 1035);
+        final Point crossRoadP15 = new Point(350, 870);
+        final Point crossRoadP16 = new Point(0, 875);
 
 
         var crossroad = new Polygon();
@@ -204,27 +204,27 @@ public class WorldObject {
 
     private Polygon create2LaneTJunctionPolygon(boolean isLeft) {
         var road2LaneTJunction = new Polygon();
-        Point road2LaneTJunctionP1 = new Point(0, 530);
-        Point road2LaneTJunctionP2 = new Point(350, 530);
-        Point road2LaneTJunctionP3 = new Point(530, 350);
-        Point road2LaneTJunctionP4 = new Point(530, 0);
-        Point road2LaneTJunctionP5 = new Point(865, 0);
-        Point road2LaneTJunctionP6 = new Point(875, 1400);
-        Point road2LaneTJunctionP7 = new Point(525, 1400);
-        Point road2LaneTJunctionP8 = new Point(520, 1050);
-        Point road2LaneTJunctionP9 = new Point(350, 875);
-        Point road2LaneTJunctionP10 = new Point(0, 875);
+        final Point road2LaneTJunctionP1 = new Point(0, 530);
+        final Point road2LaneTJunctionP2 = new Point(350, 530);
+        final Point road2LaneTJunctionP3 = new Point(530, 350);
+        final Point road2LaneTJunctionP4 = new Point(530, 0);
+        final Point road2LaneTJunctionP5 = new Point(865, 0);
+        final Point road2LaneTJunctionP6 = new Point(875, 1400);
+        final Point road2LaneTJunctionP7 = new Point(525, 1400);
+        final Point road2LaneTJunctionP8 = new Point(520, 1050);
+        final Point road2LaneTJunctionP9 = new Point(350, 875);
+        final Point road2LaneTJunctionP10 = new Point(0, 875);
 
-        Point road2LaneTJunctionP11 = new Point(0, 0);
-        Point road2LaneTJunctionP12 = new Point(350, 0);
-        Point road2LaneTJunctionP13 = new Point(350, 355);
-        Point road2LaneTJunctionP14 = new Point(525, 525);
-        Point road2LaneTJunctionP15 = new Point(875, 530);
-        Point road2LaneTJunctionP16 = new Point(870, 870);
-        Point road2LaneTJunctionP17 = new Point(520, 875);
-        Point road2LaneTJunctionP18 = new Point(345, 1055);
-        Point road2LaneTJunctionP19 = new Point(350, 1095);
-        Point road2LaneTJunctionP20 = new Point(0, 1095);
+        final Point road2LaneTJunctionP11 = new Point(0, 0);
+        final Point road2LaneTJunctionP12 = new Point(350, 0);
+        final Point road2LaneTJunctionP13 = new Point(350, 355);
+        final Point road2LaneTJunctionP14 = new Point(525, 525);
+        final Point road2LaneTJunctionP15 = new Point(875, 530);
+        final Point road2LaneTJunctionP16 = new Point(870, 870);
+        final Point road2LaneTJunctionP17 = new Point(520, 875);
+        final Point road2LaneTJunctionP18 = new Point(345, 1055);
+        final Point road2LaneTJunctionP19 = new Point(350, 1095);
+        final Point road2LaneTJunctionP20 = new Point(0, 1095);
 
         if (isLeft) {
             road2LaneTJunction.addPoint(road2LaneTJunctionP1.x, road2LaneTJunctionP1.y);
@@ -254,10 +254,10 @@ public class WorldObject {
     }
 
     private Polygon createBicyclePolygon() {
-        Point bicycleP1 = new Point(9, 9);
-        Point bicycleP2 = new Point(71, 9);
-        Point bicycleP3 = new Point(71, 137);
-        Point bicycleP4 = new Point(9, 137);
+        final Point bicycleP1 = new Point(9, 9);
+        final Point bicycleP2 = new Point(71, 9);
+        final Point bicycleP3 = new Point(71, 137);
+        final Point bicycleP4 = new Point(9, 137);
         var bicycle = new Polygon();
         bicycle.addPoint(bicycleP1.x, bicycleP1.y);
         bicycle.addPoint(bicycleP2.x, bicycleP2.y);
@@ -268,10 +268,10 @@ public class WorldObject {
     }
 
     private Polygon createBollardPolygon() {
-        Point bollardP1 = new Point(0, 0);
-        Point bollardP2 = new Point(20, 0);
-        Point bollardP3 = new Point(20, 60);
-        Point bollardP4 = new Point(0, 60);
+        final Point bollardP1 = new Point(0, 0);
+        final Point bollardP2 = new Point(20, 0);
+        final Point bollardP3 = new Point(20, 60);
+        final Point bollardP4 = new Point(0, 60);
         var bollard = new Polygon();
 
         bollard.addPoint(bollardP1.x, bollardP1.y);
@@ -283,10 +283,10 @@ public class WorldObject {
     }
 
     private Polygon createBoundaryPolygon() {
-        Point boundaryP1 = new Point(0, 0);
-        Point boundaryP2 = new Point(50, 0);
-        Point boundaryP3 = new Point(50, 85);
-        Point boundaryP4 = new Point(0, 85);
+        final Point boundaryP1 = new Point(0, 0);
+        final Point boundaryP2 = new Point(50, 0);
+        final Point boundaryP3 = new Point(50, 85);
+        final Point boundaryP4 = new Point(0, 85);
         var boundary = new Polygon();
         boundary.addPoint(boundaryP1.x, boundaryP1.y);
         boundary.addPoint(boundaryP2.x, boundaryP2.y);
@@ -297,15 +297,15 @@ public class WorldObject {
     }
 
     private Polygon createCarPolygon(boolean isLongCar) {
-        Point carP1 = new Point(0, 0);
-        Point carP2 = new Point(119, 0);
-        Point carP3 = new Point(119, 286);
-        Point carP4 = new Point(0, 286);
+        final Point carP1 = new Point(0, 0);
+        final Point carP2 = new Point(119, 0);
+        final Point carP3 = new Point(119, 286);
+        final Point carP4 = new Point(0, 286);
 
-        Point carP5 = new Point(0, 0);
-        Point carP6 = new Point(105, 0);
-        Point carP7 = new Point(105, 238);
-        Point carP8 = new Point(0, 238);
+        final Point carP5 = new Point(0, 0);
+        final Point carP6 = new Point(105, 0);
+        final Point carP7 = new Point(105, 238);
+        final Point carP8 = new Point(0, 238);
         var car = new Polygon();
 
         if (isLongCar) {
@@ -324,10 +324,10 @@ public class WorldObject {
     }
 
     private Polygon createCrossWalkPolygon() {
-        Point crossWalkP1 = new Point(0, 0);
-        Point crossWalkP2 = new Point(335, 0);
-        Point crossWalkP3 = new Point(335, 195);
-        Point crossWalkP4 = new Point(0, 195);
+        final Point crossWalkP1 = new Point(0, 0);
+        final Point crossWalkP2 = new Point(335, 0);
+        final Point crossWalkP3 = new Point(335, 195);
+        final Point crossWalkP4 = new Point(0, 195);
         var crossWalk = new Polygon();
         crossWalk.addPoint(crossWalkP1.x, crossWalkP1.y);
         crossWalk.addPoint(crossWalkP2.x, crossWalkP2.y);
@@ -338,10 +338,10 @@ public class WorldObject {
     }
 
     private Polygon createGaragePolygon() {
-        Point GarageP1 = new Point(0, 0);
-        Point GarageP2 = new Point(336, 0);
-        Point GarageP3 = new Point(336, 294);
-        Point GarageP4 = new Point(0, 294);
+        final Point GarageP1 = new Point(0, 0);
+        final Point GarageP2 = new Point(336, 0);
+        final Point GarageP3 = new Point(336, 294);
+        final Point GarageP4 = new Point(0, 294);
         var garage = new Polygon();
         garage.addPoint(GarageP1.x, GarageP1.y);
         garage.addPoint(GarageP2.x, GarageP2.y);
@@ -352,15 +352,15 @@ public class WorldObject {
     }
 
     private Polygon createParkingPolygon(boolean isParallel) {
-        Point parkingP1 = new Point(0, 0);
-        Point parkingP2 = new Point(141, 0);
-        Point parkingP3 = new Point(141, 624);
-        Point parkingP4 = new Point(0, 624);
+        final Point parkingP1 = new Point(0, 0);
+        final Point parkingP2 = new Point(141, 0);
+        final Point parkingP3 = new Point(141, 624);
+        final Point parkingP4 = new Point(0, 624);
 
-        Point parkingP5 = new Point(0, 0);
-        Point parkingP6 = new Point(295, 0);
-        Point parkingP7 = new Point(295, 465);
-        Point parkingP8 = new Point(0, 465);
+        final Point parkingP5 = new Point(0, 0);
+        final Point parkingP6 = new Point(295, 0);
+        final Point parkingP7 = new Point(295, 465);
+        final Point parkingP8 = new Point(0, 465);
         var parking = new Polygon();
 
         if (isParallel) {
@@ -379,15 +379,15 @@ public class WorldObject {
     }
 
     private Polygon create2Lane6Polygon(boolean isLeft) {
-        Point road2lane6P1 = new Point(0, 35);
-        Point road2lane6P2 = new Point(345, 0);
-        Point road2lane6P3 = new Point(363, 363);
-        Point road2lane6P4 = new Point(19, 363);
+        final Point road2lane6P1 = new Point(0, 35);
+        final Point road2lane6P2 = new Point(345, 0);
+        final Point road2lane6P3 = new Point(363, 363);
+        final Point road2lane6P4 = new Point(19, 363);
 
-        Point road2lane6P5 = new Point(19, 0);
-        Point road2lane6P6 = new Point(365, 39);
-        Point road2lane6P7 = new Point(347, 364);
-        Point road2lane6P8 = new Point(0, 360);
+        final Point road2lane6P5 = new Point(19, 0);
+        final Point road2lane6P6 = new Point(365, 39);
+        final Point road2lane6P7 = new Point(347, 364);
+        final Point road2lane6P8 = new Point(0, 360);
         var road2lane6 = new Polygon();
 
         if (isLeft) {
@@ -406,26 +406,26 @@ public class WorldObject {
     }
 
     private Polygon create2Lane45Polygon(boolean isLeft) {
-        Point road2lane45P1 = new Point(0, 247);
-        Point road2lane45P2 = new Point(247, 0);
-        Point road2lane45P3 = new Point(302, 60);
-        Point road2lane45P4 = new Point(348, 141);
-        Point road2lane45P5 = new Point(380, 226);
-        Point road2lane45P6 = new Point(401, 371);
-        Point road2lane45P7 = new Point(51, 371);
-        Point road2lane45P8 = new Point(43, 321);
-        Point road2lane45P9 = new Point(31, 291);
-        Point road2lane45P10 = new Point(23, 272);
+        final Point road2lane45P1 = new Point(0, 247);
+        final Point road2lane45P2 = new Point(247, 0);
+        final Point road2lane45P3 = new Point(302, 60);
+        final Point road2lane45P4 = new Point(348, 141);
+        final Point road2lane45P5 = new Point(380, 226);
+        final Point road2lane45P6 = new Point(401, 371);
+        final Point road2lane45P7 = new Point(51, 371);
+        final Point road2lane45P8 = new Point(43, 321);
+        final Point road2lane45P9 = new Point(31, 291);
+        final Point road2lane45P10 = new Point(23, 272);
 
-        Point road2lane45P11 = new Point(0, 368);
-        Point road2lane45P12 = new Point(9, 264);
-        Point road2lane45P13 = new Point(52, 141);
-        Point road2lane45P14 = new Point(91, 74);
-        Point road2lane45P15 = new Point(154, 0);
-        Point road2lane45P16 = new Point(399, 244);
-        Point road2lane45P17 = new Point(372, 284);
-        Point road2lane45P18 = new Point(359, 316);
-        Point road2lane45P19 = new Point(349, 369);
+        final Point road2lane45P11 = new Point(0, 368);
+        final Point road2lane45P12 = new Point(9, 264);
+        final Point road2lane45P13 = new Point(52, 141);
+        final Point road2lane45P14 = new Point(91, 74);
+        final Point road2lane45P15 = new Point(154, 0);
+        final Point road2lane45P16 = new Point(399, 244);
+        final Point road2lane45P17 = new Point(372, 284);
+        final Point road2lane45P18 = new Point(359, 316);
+        final Point road2lane45P19 = new Point(349, 369);
         var road2lane45 = new Polygon();
 
         if (isLeft) {
@@ -455,35 +455,35 @@ public class WorldObject {
     }
 
     private Polygon create2Lane90Polygon(boolean isLeft) {
-        Point road2lane90P1 = new Point(0, 0);
-        Point road2lane90P2 = new Point(127, 17);
-        Point road2lane90P3 = new Point(206, 43);
-        Point road2lane90P4 = new Point(276, 79);
-        Point road2lane90P5 = new Point(343, 127);
-        Point road2lane90P6 = new Point(428, 221);
-        Point road2lane90P7 = new Point(456, 265);
-        Point road2lane90P8 = new Point(470, 293);
-        Point road2lane90P9 = new Point(506, 394);
-        Point road2lane90P10 = new Point(523, 521);
-        Point road2lane90P11 = new Point(175, 521);
-        Point road2lane90P12 = new Point(164, 462);
-        Point road2lane90P13 = new Point(121, 401);
-        Point road2lane90P14 = new Point(75, 369);
-        Point road2lane90P15 = new Point(0, 350);
+        final Point road2lane90P1 = new Point(0, 0);
+        final Point road2lane90P2 = new Point(127, 17);
+        final Point road2lane90P3 = new Point(206, 43);
+        final Point road2lane90P4 = new Point(276, 79);
+        final Point road2lane90P5 = new Point(343, 127);
+        final Point road2lane90P6 = new Point(428, 221);
+        final Point road2lane90P7 = new Point(456, 265);
+        final Point road2lane90P8 = new Point(470, 293);
+        final Point road2lane90P9 = new Point(506, 394);
+        final Point road2lane90P10 = new Point(523, 521);
+        final Point road2lane90P11 = new Point(175, 521);
+        final Point road2lane90P12 = new Point(164, 462);
+        final Point road2lane90P13 = new Point(121, 401);
+        final Point road2lane90P14 = new Point(75, 369);
+        final Point road2lane90P15 = new Point(0, 350);
 
-        Point road2lane90P16 = new Point(0, 520);
-        Point road2lane90P17 = new Point(20, 375);
-        Point road2lane90P18 = new Point(62, 278);
-        Point road2lane90P19 = new Point(133, 175);
-        Point road2lane90P20 = new Point(244, 82);
-        Point road2lane90P21 = new Point(345, 28);
-        Point road2lane90P22 = new Point(522, 0);
-        Point road2lane90P23 = new Point(522, 350);
-        Point road2lane90P24 = new Point(468, 360);
-        Point road2lane90P25 = new Point(427, 388);
-        Point road2lane90P26 = new Point(386, 419);
-        Point road2lane90P27 = new Point(363, 456);
-        Point road2lane90P28 = new Point(348, 524);
+        final Point road2lane90P16 = new Point(0, 520);
+        final Point road2lane90P17 = new Point(20, 375);
+        final Point road2lane90P18 = new Point(62, 278);
+        final Point road2lane90P19 = new Point(133, 175);
+        final Point road2lane90P20 = new Point(244, 82);
+        final Point road2lane90P21 = new Point(345, 28);
+        final Point road2lane90P22 = new Point(522, 0);
+        final Point road2lane90P23 = new Point(522, 350);
+        final Point road2lane90P24 = new Point(468, 360);
+        final Point road2lane90P25 = new Point(427, 388);
+        final Point road2lane90P26 = new Point(386, 419);
+        final Point road2lane90P27 = new Point(363, 456);
+        final Point road2lane90P28 = new Point(348, 524);
         var road2lane90 = new Polygon();
 
         if (isLeft) {
@@ -522,22 +522,22 @@ public class WorldObject {
     }
 
     private Polygon create2LaneRotaryPolygon() {
-        Point road2laneRotaryP1 = new Point(0, 533);
-        Point road2laneRotaryP2 = new Point(341, 517);
-        Point road2laneRotaryP3 = new Point(525, 341);
-        Point road2laneRotaryP4 = new Point(525, 0);
-        Point road2laneRotaryP5 = new Point(870, 0);
-        Point road2laneRotaryP6 = new Point(860, 349);
-        Point road2laneRotaryP7 = new Point(1050, 530);
-        Point road2laneRotaryP8 = new Point(1397, 537);
-        Point road2laneRotaryP9 = new Point(1397, 862);
-        Point road2laneRotaryP10 = new Point(1040, 869);
-        Point road2laneRotaryP11 = new Point(860, 1045);
-        Point road2laneRotaryP12 = new Point(865, 1389);
-        Point road2laneRotaryP13 = new Point(530, 1389);
-        Point road2laneRotaryP14 = new Point(525, 1037);
-        Point road2laneRotaryP15 = new Point(345, 865);
-        Point road2laneRotaryP16 = new Point(0, 865);
+        final Point road2laneRotaryP1 = new Point(0, 533);
+        final Point road2laneRotaryP2 = new Point(341, 517);
+        final Point road2laneRotaryP3 = new Point(525, 341);
+        final Point road2laneRotaryP4 = new Point(525, 0);
+        final Point road2laneRotaryP5 = new Point(870, 0);
+        final Point road2laneRotaryP6 = new Point(860, 349);
+        final Point road2laneRotaryP7 = new Point(1050, 530);
+        final Point road2laneRotaryP8 = new Point(1397, 537);
+        final Point road2laneRotaryP9 = new Point(1397, 862);
+        final Point road2laneRotaryP10 = new Point(1040, 869);
+        final Point road2laneRotaryP11 = new Point(860, 1045);
+        final Point road2laneRotaryP12 = new Point(865, 1389);
+        final Point road2laneRotaryP13 = new Point(530, 1389);
+        final Point road2laneRotaryP14 = new Point(525, 1037);
+        final Point road2laneRotaryP15 = new Point(345, 865);
+        final Point road2laneRotaryP16 = new Point(0, 865);
 
         var road2laneRotary = new Polygon();
         road2laneRotary.addPoint(road2laneRotaryP1.x, road2laneRotaryP1.y);
@@ -561,10 +561,10 @@ public class WorldObject {
     }
 
     private Polygon create2LaneStraightPolygon() {
-        Point roadStraightP1 = new Point(0, 0);
-        Point roadStraightP2 = new Point(350, 0);
-        Point roadStraightP3 = new Point(350, 350);
-        Point roadStraightP4 = new Point(0, 350);
+        final Point roadStraightP1 = new Point(0, 0);
+        final Point roadStraightP2 = new Point(350, 0);
+        final Point roadStraightP3 = new Point(350, 350);
+        final Point roadStraightP4 = new Point(0, 350);
         var roadStraight = new Polygon();
         roadStraight.addPoint(roadStraightP1.x, roadStraightP1.y);
         roadStraight.addPoint(roadStraightP2.x, roadStraightP2.y);
@@ -575,10 +575,10 @@ public class WorldObject {
     }
 
     private Polygon createParkingSignPolygon() {
-        Point parkingSignP1 = new Point(0, 0);
-        Point parkingSignP2 = new Point(80, 0);
-        Point parkingSignP3 = new Point(80, 80);
-        Point parkingSignP4 = new Point(0, 80);
+        final Point parkingSignP1 = new Point(0, 0);
+        final Point parkingSignP2 = new Point(80, 0);
+        final Point parkingSignP3 = new Point(80, 80);
+        final Point parkingSignP4 = new Point(0, 80);
         var parkingSign = new Polygon();
         parkingSign.addPoint(parkingSignP1.x, parkingSignP1.y);
         parkingSign.addPoint(parkingSignP2.x, parkingSignP2.y);
@@ -589,13 +589,13 @@ public class WorldObject {
     }
 
     private Polygon createStopSignPolygon() {
-        Point stopSignP1 = new Point(0, 23);
-        Point stopSignP2 = new Point(23, 0);
-        Point stopSignP3 = new Point(56, 0);
-        Point stopSignP4 = new Point(80, 23);
-        Point stopSignP5 = new Point(80, 55);
-        Point stopSignP6 = new Point(55, 80);
-        Point stopSignP7 = new Point(23, 80);
+        final Point stopSignP1 = new Point(0, 23);
+        final Point stopSignP2 = new Point(23, 0);
+        final Point stopSignP3 = new Point(56, 0);
+        final Point stopSignP4 = new Point(80, 23);
+        final Point stopSignP5 = new Point(80, 55);
+        final Point stopSignP6 = new Point(55, 80);
+        final Point stopSignP7 = new Point(23, 80);
         var stopSign = new Polygon();
         stopSign.addPoint(stopSignP1.x, stopSignP1.y);
         stopSign.addPoint(stopSignP2.x, stopSignP2.y);
@@ -609,14 +609,14 @@ public class WorldObject {
     }
 
     private Polygon createSpeedSignPolygon() {
-        Point speedSignP1 = new Point(0, 38);
-        Point speedSignP2 = new Point(10, 12);
-        Point speedSignP3 = new Point(40, 0);
-        Point speedSignP4 = new Point(66, 10);
-        Point speedSignP5 = new Point(79, 40);
-        Point speedSignP6 = new Point(70, 65);
-        Point speedSignP7 = new Point(40, 80);
-        Point speedSignP8 = new Point(10, 67);
+        final Point speedSignP1 = new Point(0, 38);
+        final Point speedSignP2 = new Point(10, 12);
+        final Point speedSignP3 = new Point(40, 0);
+        final Point speedSignP4 = new Point(66, 10);
+        final Point speedSignP5 = new Point(79, 40);
+        final Point speedSignP6 = new Point(70, 65);
+        final Point speedSignP7 = new Point(40, 80);
+        final Point speedSignP8 = new Point(10, 67);
         var speedSign = new Polygon();
         speedSign.addPoint(speedSignP1.x, speedSignP1.y);
         speedSign.addPoint(speedSignP2.x, speedSignP2.y);
@@ -654,10 +654,10 @@ public class WorldObject {
     }
 
     private Polygon createPersonPolygon() {
-        Point personP1 = new Point(0, 0);
-        Point personP2 = new Point(47, 0);
-        Point personP3 = new Point(47, 74);
-        Point personP4 = new Point(0, 74);
+        final Point personP1 = new Point(0, 0);
+        final Point personP2 = new Point(47, 0);
+        final Point personP3 = new Point(47, 74);
+        final Point personP4 = new Point(0, 74);
 
 
         var person = new Polygon();
