@@ -9,6 +9,7 @@ public class PolygonCreating {
     String type;
 
     PolygonCreating(String type) {
+        this.type = type;
         polygonInstance = new Polygon();
         addPolygons1();
 

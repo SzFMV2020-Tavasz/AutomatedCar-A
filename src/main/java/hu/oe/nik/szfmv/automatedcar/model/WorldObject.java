@@ -34,7 +34,7 @@ public class WorldObject {
         this.y = y;
         this.imageFileName = imageFileName;
         initImage();
-        PolygonCreating polygonCreating = new PolygonCreating(this.type);
+        PolygonCreating polygonCreating = new PolygonCreating(imageFileName.replace(".png", ""));
         this.polygon = polygonCreating.getPolygon();
     }
 
