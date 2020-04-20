@@ -40,7 +40,7 @@ public class WorldTest {
         testList.add(instance3);
         for (var element:
              testList) {
-            element.addPolygons();
+            element.initObject();
         }
 
         worldInstance = new World(10, 10, testList);
