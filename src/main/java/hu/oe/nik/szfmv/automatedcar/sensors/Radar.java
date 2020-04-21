@@ -35,7 +35,7 @@ public class Radar extends SystemComponent {
     // when the egocar is looking north
     private static final int RADAR_SENSOR_DX = 0;
     private static final int RADAR_SENSOR_DY = -104;
-    private static final int RADAR_TRIANGLE_HALF_X = (int)(Math.tan(RADAR_SENSOR_ANGLE) * RADAR_SENSOR_RANGE);
+    private static final int RADAR_TRIANGLE_HALF_X = (int) (Math.tan(RADAR_SENSOR_ANGLE) * RADAR_SENSOR_RANGE);
 
     // packets for sending data
     private final RadarVisualizationPacket radarVisualizationPacket;
@@ -71,9 +71,9 @@ public class Radar extends SystemComponent {
     public void loop() {
         // calculate radar polygon's current position
         calculateDefaultPolygon();
-        Point source = new Point((int)radarPolygon.xpoints[0], (int)radarPolygon.ypoints[0]);
-        Point corner1 = new Point((int)radarPolygon.xpoints[1], (int)radarPolygon.ypoints[1]);
-        Point corner2 = new Point((int)radarPolygon.xpoints[2], (int)radarPolygon.ypoints[2]);
+        Point source = new Point((int) radarPolygon.xpoints[0], (int) radarPolygon.ypoints[0]);
+        Point corner1 = new Point((int) radarPolygon.xpoints[1], (int) radarPolygon.ypoints[1]);
+        Point corner2 = new Point((int) radarPolygon.xpoints[2], (int) radarPolygon.ypoints[2]);
 
         // get elements in triangle
         List<WorldObject> selectedInTriangle = getCollideableElementsInRadarTriangle(source, corner1, corner2);
@@ -89,6 +89,7 @@ public class Radar extends SystemComponent {
     /**
      * Keepst the list of elements seen by radar up to date
      * by comparing it to the freshly requested elements
+     *
      * @param elementsInRadarTriangle the fresh list of the elements seen by radar
      */
     private void updateElementsSeenByRadar(List<WorldObject> elementsInRadarTriangle) {
@@ -118,6 +119,7 @@ public class Radar extends SystemComponent {
 
     /**
      * Checks if an object is already in the elements seeen by radar list
+     *
      * @param object the object to check
      * @return the object reference in the list if found; null otherwise
      */
@@ -132,8 +134,9 @@ public class Radar extends SystemComponent {
 
     /**
      * Checks if a {@link MovingWorldObject} is in the list of {@link WorldObject}
+     *
      * @param selectedInTriangle The list of object to check against
-     * @param movingWorldObject The object to search for in the list
+     * @param movingWorldObject  The object to search for in the list
      * @return true if the objects id is found in the list; false otherwise
      */
     private boolean elementInNewRadarTriangleList(List<WorldObject> selectedInTriangle,
@@ -148,6 +151,7 @@ public class Radar extends SystemComponent {
 
     /**
      * Sets the list of elements that are shown with different color inside the radar triangle
+     *
      * @param selectedDebugListPacket the packet that will pass o the list
      */
     private void showElementsInTriangle(SelectedDebugListPacket selectedDebugListPacket) {
@@ -161,7 +165,8 @@ public class Radar extends SystemComponent {
 
     /**
      * Gets the collideable objects inside the triangle defined by the 3 points
-     * @param source source point of the triangle
+     *
+     * @param source  source point of the triangle
      * @param corner1 second point of the triangle
      * @param corner2 third point of the triangle
      * @return the list of objects that are collideable and inside the triangle.
@@ -185,30 +190,32 @@ public class Radar extends SystemComponent {
      */
     private void calculateDefaultPolygon() {
         // source point
-        Point2D source =  getSource();
+        Point2D source = getSource();
         Point2D corner1 = getCorner1();
         Point2D corner2 = getCorner2();
 
-        radarPolygon = new Polygon(new int[]{(int)source.getX(), (int)corner1.getX(), (int)corner2.getX()},
-            new int[]{(int)source.getY(), (int)corner1.getY(), (int)corner2.getY()}, TRIANGLE_POLYGON_POINTS);
+        radarPolygon = new Polygon(new int[]{(int) source.getX(), (int) corner1.getX(), (int) corner2.getX()},
+                new int[]{(int) source.getY(), (int) corner1.getY(), (int) corner2.getY()}, TRIANGLE_POLYGON_POINTS);
     }
 
     /**
      * Calculates the world position of the radar sensor polygon's source point
+     *
      * @return The calculated source point
      */
     private Point2D getSource() {
         // get the x and y components of the segment line between the egocar's rotation origo
         // and the source of the radar triangle
         AffineTransform sourceT = AffineTransform.getRotateInstance(automatedCar.getRotation(),
-            -RADAR_SENSOR_DX, -RADAR_SENSOR_DY);
+                -RADAR_SENSOR_DX, -RADAR_SENSOR_DY);
         Point2D source = new Point2D.Double(automatedCar.getX() + RADAR_SENSOR_DX + sourceT.getTranslateX(),
-            automatedCar.getY() + RADAR_SENSOR_DY + sourceT.getTranslateY());
+                automatedCar.getY() + RADAR_SENSOR_DY + sourceT.getTranslateY());
         return source;
     }
 
     /**
      * Calculates the world position of the radar sensor polygon's second point
+     *
      * @return The calculated second point
      */
     private Point2D getCorner1() {
@@ -217,14 +224,15 @@ public class Radar extends SystemComponent {
         int corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
         int corner1DiffY = -(RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
-            -corner1DiffX, -corner1DiffY);
+                -corner1DiffX, -corner1DiffY);
         Point2D corner1 = new Point2D.Double(automatedCar.getX() + corner1DiffX + corner1T.getTranslateX(),
-            automatedCar.getY() + corner1DiffY + corner1T.getTranslateY());
+                automatedCar.getY() + corner1DiffY + corner1T.getTranslateY());
         return corner1;
     }
 
     /**
      * Calculates the world position of the radar sensor polygon's third point
+     *
      * @return The calculated third point
      */
     private Point2D getCorner2() {
@@ -233,16 +241,17 @@ public class Radar extends SystemComponent {
         int corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
         int corner2DiffY = -(RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
-            -corner2DiffX, -corner2DiffY);
+                -corner2DiffX, -corner2DiffY);
         Point2D corner2 = new Point2D.Double(automatedCar.getX() + corner2DiffX + corner1T.getTranslateX(),
-            automatedCar.getY() + corner2DiffY + corner1T.getTranslateY());
+                automatedCar.getY() + corner2DiffY + corner1T.getTranslateY());
         return corner2;
     }
 
     /**
      * Checks whether an element is collideable by checking its Z value.
-     *
+     * <p>
      * Everything with a Z value higher than 0 is collidable
+     *
      * @param object The {@link WorldObject} to check
      * @return True if the object is not on the not collideable element's list.
      */
