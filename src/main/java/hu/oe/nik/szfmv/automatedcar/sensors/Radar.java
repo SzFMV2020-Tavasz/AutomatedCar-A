@@ -222,7 +222,7 @@ public class Radar extends SystemComponent {
         // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
         int corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
-        int corner1DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
+        int corner1DiffY = -(RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
                 -corner1DiffX, -corner1DiffY);
         Point2D corner1 = new Point2D.Double(automatedCar.getX() + corner1DiffX + corner1T.getTranslateX(),
@@ -241,7 +241,7 @@ public class Radar extends SystemComponent {
         // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
         int corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
-        int corner2DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
+        int corner2DiffY = -(RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
                 -corner2DiffX, -corner2DiffY);
         Point2D corner2 = new Point2D.Double(automatedCar.getX() + corner2DiffX + corner1T.getTranslateX(),
