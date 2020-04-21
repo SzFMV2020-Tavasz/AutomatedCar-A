@@ -100,10 +100,6 @@
 
         <module name="TypeName"/>
 
-        <module name="LineLength">
-            <property name="max" value="120"/>
-        </module>
-
         <module name="ParenPad">
             <property name="option" value="nospace"/>
         </module>
@@ -112,88 +108,91 @@
 
 
 
+        <!--The followings are only warnings-->
+        <module name="MethodLength">
+            <property name="tokens" value="METHOD_DEF"/>
+            <property name="max" value="20"/>
+            <property name="countEmpty" value="false"/>
+            <property name="severity" value="warning"/>
+        </module>
 
-    <!--The followings are only warnings-->
-    <module name="MethodLength">
-        <property name="tokens" value="METHOD_DEF"/>
-        <property name="max" value="20"/>
-        <property name="countEmpty" value="false"/>
-        <property name="severity" value="warning"/>
+
+        <module name="MagicNumber">
+            <property name="ignoreFieldDeclaration" value="true"/>
+            <property name="ignoreAnnotation" value="true"/>
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <module name="MultipleStringLiterals">
+            <property name="allowedDuplicates" value="2"/>
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <module name="NestedForDepth">
+            <property name="max" value="5"/>
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <!--doesn't allow any return statements in constructors, more than one return statement in all lambda expressions and more than two return statements in methods-->
+        <module name="ReturnCount">
+            <property name="max" value="0"/>
+            <property name="tokens" value="CTOR_DEF"/>
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ReturnCount">
+            <property name="max" value="1"/>
+            <property name="tokens" value="LAMBDA"/>
+            <property name="severity" value="warning"/>
+        </module>
+        <module name="ReturnCount">
+            <property name="max" value="2"/>
+            <property name="tokens" value="METHOD_DEF"/>
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <module name="CyclomaticComplexity">
+            <property name="max" value="15"/>
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <module name="NPathComplexity">
+            <property name="max" value="1000"/>
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <!--warn if there is TODO or FIXME in code-->
+        <module name="TodoComment">
+            <property name="format" value="(TODO)|(FIXME)"/>
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <module name="ModifierOrder">
+            <property name="severity" value="warning"/>
+        </module>
+
+
+        <module name="ParameterNumber">
+            <property name="max" value="5"/>
+            <property name="tokens" value="METHOD_DEF"/>
+            <property name="severity" value="warning"/>
+        </module>
     </module>
 
-
-    <module name="MagicNumber">
-        <property name="ignoreFieldDeclaration" value="true"/>
-        <property name="ignoreAnnotation" value="true"/>
-        <property name="severity" value="warning"/>
-    </module>
-
-
-    <module name="MultipleStringLiterals">
-        <property name="allowedDuplicates" value="2"/>
-        <property name="severity" value="warning"/>
-    </module>
-
-
-    <module name="NestedForDepth">
-        <property name="max" value="5"/>
-        <property name="severity" value="warning"/>
-    </module>
-
-
-    <module name="NestedIfDepth">
-        <property name="max" value="3"/>
-        <property name="severity" value="warning"/>
-    </module>
-
-
-    <!--doesn't allow any return statements in constructors, more than one return statement in all lambda expressions and more than two return statements in methods-->
-    <module name="ReturnCount">
-        <property name="max" value="0"/>
-        <property name="tokens" value="CTOR_DEF"/>
-        <property name="severity" value="warning"/>
-    </module>
-    <module name="ReturnCount">
-        <property name="max" value="1"/>
-        <property name="tokens" value="LAMBDA"/>
-        <property name="severity" value="warning"/>
-    </module>
-    <module name="ReturnCount">
-        <property name="max" value="2"/>
-        <property name="tokens" value="METHOD_DEF"/>
-        <property name="severity" value="warning"/>
-    </module>
-
-
-    <module name="CyclomaticComplexity">
-        <property name="max" value="15"/>
-        <property name="severity" value="warning"/>
-    </module>
-
-
-    <module name="NPathComplexity">
-        <property name="max" value="1000"/>
-        <property name="severity" value="warning"/>
-    </module>
-
-
-    <!--warn if there is TODO or FIXME in code-->
-    <module name="TodoComment">
-        <property name="format" value="(TODO)|(FIXME)"/>
-        <property name="severity" value="warning"/>
-    </module>
-
-
-    <module name="ModifierOrder">
-        <property name="severity" value="warning"/>
-    </module>
-
-
-    <module name="ParameterNumber">
-        <property name="max" value="5"/>
-        <property name="tokens" value="METHOD_DEF"/>
-        <property name="severity" value="warning"/>
-    </module>
+    <module name="LineLength">
+        <property name="max" value="120"/>
     </module>
 
     <module name="NewlineAtEndOfFile">
