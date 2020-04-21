@@ -6,9 +6,10 @@ import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.sensors.MovingWorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarDisplayStatePacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.SelectedDebugListPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundDisplayStatePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundsVisualizationPacket;
+import hu.oe.nik.szfmv.automatedcar.visualization.UltrasoundPositions;
 import hu.oe.nik.szfmv.automatedcar.visualization.VisualizationConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +26,7 @@ public class Sensor extends SystemComponent {
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
     private static final int RADAR_RANGE_IN_METER = 3;
     private static final double RADAR_SENSOR_ANGLE = Math.PI / 180 * 50;// 50°
-    private static final Color RADAR_SENSOR_BG_COLOUR = new Color(255, 0, 0, 125);
+    //  private static final Color RADAR_SENSOR_BG_COLOUR = new Color(255, 0, 0, 125);
     private static final int TRIANGLE_POLYGON_POINTS = 3;
     private static final int RADAR_SENSOR_RANGE = RADAR_RANGE_IN_METER * VisualizationConfig.METER_IN_PIXELS;
     // radar sensor triangle data
@@ -33,10 +34,9 @@ public class Sensor extends SystemComponent {
     // when the egocar is looking north
     private final int RADAR_SENSOR_DX;
     private final int RADAR_SENSOR_DY;
-    private final RadarVisualizationPacket radarVisualizationPacket;
-    private final RadarDisplayStatePacket radarDisplayStatePacket;
     private final SelectedDebugListPacket selectedDebugListPacket;
-
+    private UltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
+    private UltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
     // objects references for reference(eh...)
     private AutomatedCar automatedCar;
     private World world;
@@ -45,16 +45,21 @@ public class Sensor extends SystemComponent {
 
     private Polygon radarPolygon;
 
-    public Sensor(VirtualFunctionBus virtualFunctionBus, AutomatedCar automatedCar, World world, Point startPoint) {
+    private UltrasoundPositions sensorPosition;
+
+    public Sensor(VirtualFunctionBus virtualFunctionBus, AutomatedCar automatedCar, World world, Point startPoint,
+                  UltrasoundPositions sensorPosition, UltrasoundDisplayStatePacket ultrasoundDisplayStatePacket,
+                  UltrasoundsVisualizationPacket ultrasoundsVisualizationPacket) {
         super(virtualFunctionBus);
         RADAR_SENSOR_DX = (int) startPoint.getX();
         RADAR_SENSOR_DY = (int) startPoint.getY();
-        radarVisualizationPacket = new RadarVisualizationPacket();
-        virtualFunctionBus.radarVisualizationPacket = radarVisualizationPacket;
-        radarDisplayStatePacket = new RadarDisplayStatePacket();
-        virtualFunctionBus.radarDisplayStatePacket = radarDisplayStatePacket;
+        this.ultrasoundsVisualizationPacket = ultrasoundsVisualizationPacket;
+        virtualFunctionBus.ultrasoundsVisualizationPacket = ultrasoundsVisualizationPacket;
+        this.ultrasoundDisplayStatePacket = ultrasoundDisplayStatePacket;
+        virtualFunctionBus.ultrasoundDisplayStatePacket = ultrasoundDisplayStatePacket;
         selectedDebugListPacket = new SelectedDebugListPacket();
         virtualFunctionBus.selectedDebugListPacket = selectedDebugListPacket;
+        this.sensorPosition = sensorPosition;
 
         this.automatedCar = automatedCar;
         this.world = world;
@@ -78,8 +83,8 @@ public class Sensor extends SystemComponent {
         showElementsInTriangle(selectedDebugListPacket);
 
         // send radar display data
-        radarVisualizationPacket.setSensorTriangle(source, corner1, corner2, RADAR_SENSOR_BG_COLOUR);
-        radarDisplayStatePacket.setRadarDisplayState(this.virtualFunctionBus.guiInputPacket.getDebugSwitch());
+        ultrasoundsVisualizationPacket.setSensorTriangle(sensorPosition, source, corner1, corner2);
+        ultrasoundDisplayStatePacket.setUltrasoundDisplayState(this.virtualFunctionBus.guiInputPacket.getDebugSwitch());
 
     }
 
