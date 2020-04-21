@@ -27,7 +27,7 @@ public class Radar extends SystemComponent {
     private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     // radar sensor triangle data
-    private static final double RADAR_SENSOR_ANGLE = Math.PI / 180 * 30;  // 60 /2 - half angle
+    private static final double RADAR_SENSOR_ANGLE = Math.PI / 6;  // 60 /2 - half angle
     private static final int RADAR_SENSOR_RANGE = 200 * VisualizationConfig.METER_IN_PIXELS;
     private static final Color RADAR_SENSOR_BG_COLOUR = new Color(121, 0, 0, 125);
     private static final int TRIANGLE_POLYGON_POINTS = 3;
@@ -222,13 +222,11 @@ public class Radar extends SystemComponent {
         // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
         int corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
-        int corner1DiffY = -(RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
+        int corner1DiffY = -(RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
                 -corner1DiffX, -corner1DiffY);
         Point2D corner1 = new Point2D.Double(automatedCar.getX() + corner1DiffX + corner1T.getTranslateX(),
                 automatedCar.getY() + corner1DiffY + corner1T.getTranslateY());
-        int X = automatedCar.getX();
-        int Y = automatedCar.getY();
         return corner1;
     }
 
@@ -241,7 +239,7 @@ public class Radar extends SystemComponent {
         // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
         int corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
-        int corner2DiffY = -(RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
+        int corner2DiffY = -(RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
                 -corner2DiffX, -corner2DiffY);
         Point2D corner2 = new Point2D.Double(automatedCar.getX() + corner2DiffX + corner1T.getTranslateX(),
