@@ -73,18 +73,12 @@ public enum Axis {
         public double getRadiansRelativeTo(IVector direction) {
             double toPositive; switch (this.axis) {
                 case X:
-                    toPositive = getRadiansRelativeToAxisX(direction);
-                    break;
+                    return getRadiansRelativeToAxisX(direction);
                 case Y:
-                    toPositive = getRadiansRelativeToAxisY(direction);
-                    break;
+                    return getRadiansRelativeToAxisY(direction);
                 default:
                     throw new IllegalStateException();
             }
-
-            return positive ? toPositive : toPositive > 0
-                    ? -(PI - toPositive)
-                    : +(PI + toPositive);
         }
 
         /**Rotation is mathematical, positive is towards the left.*/

@@ -99,6 +99,45 @@ public interface IVector {
         return getAbsRadiansRelativeTo(direction) / PI * 180;
     }
 
+    /**Creates a new vector with the given X and Y differences, which also define the length and angle of the vector.
+     * @see Axis#positiveDirection()
+     * @see Axis#negativeDirection() */
+    static IVector vectorFromXY(double x, double y) {
+        return new IVector() {
+
+            @Override
+            public double getXDiff() {
+                return x;
+            }
+
+            @Override
+            public double getYDiff() {
+                return y;
+            }
+
+            @Override public double getLength() {
+                return sqrt(x*x + y*y);
+            }
+
+            @Override public double getRadiansRelativeTo(IVector direction) {
+                double xRads = direction.getRadiansRelativeTo(Axis.X);
+                return inPeriodOfPI(getRadiansRelativeToAxisX() - xRads);
+            }
+
+            @Override public double getRadiansRelativeTo(Axis axis) {
+                return axis == Axis.X
+                        ? getRadiansRelativeToAxisX()
+                        : IVector.super.getRadiansRelativeTo(axis);
+            }
+
+            private double getRadiansRelativeToAxisX() {
+                double x = getXDiff();
+                double y = getYDiff();
+                return atan2(y, x);
+            }
+        };
+    }
+
     /**Flips the vector around, keeping its length, but changing its direction to its opposite.
      * @return A new vector with the same length but opposite direction.*/
     default IVector reverse() {
@@ -151,7 +190,6 @@ public interface IVector {
     default IVector rotateByGradians(double grads) {
         return rotateByRadians(grads / 200 * PI);
     }
-
     /**Returns a clone of the vector incremented its {@code x} and {@code y} coordinates with the given values.*/
     default IVector add(double x, double y) {
         return vectorFromXY(getXDiff() + x, getYDiff() + y);
