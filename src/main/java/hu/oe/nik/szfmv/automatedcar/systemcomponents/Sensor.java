@@ -223,14 +223,35 @@ public class Sensor extends SystemComponent {
     private Point2D getCorner1() {
         // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
-        int corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
-        int corner1DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
+        
+        int corner1DiffX = 0;
+        int corner1DiffY = 0;
+        
+        // look forward
+        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT){
+            corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
+            corner1DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
+        }
+        // look left
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE){
+            corner1DiffX = (RADAR_SENSOR_DX - RADAR_SENSOR_RANGE);
+            corner1DiffY = (RADAR_SENSOR_DY - RADAR_TRIANGLE_HALF_X);
+        }
+        // look right
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE){
+            corner1DiffX = (RADAR_SENSOR_DX + RADAR_SENSOR_RANGE);
+            corner1DiffY = (RADAR_SENSOR_DY + RADAR_TRIANGLE_HALF_X);
+        }
+        // look backward
+        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT){
+            corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
+            corner1DiffY = (RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
+        }
+                
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
                 -corner1DiffX, -corner1DiffY);
         Point2D corner1 = new Point2D.Double(automatedCar.getX() + corner1DiffX + corner1T.getTranslateX(),
                 automatedCar.getY() + corner1DiffY + corner1T.getTranslateY());
-        int X = automatedCar.getX();
-        int Y = automatedCar.getY();
         return corner1;
     }
 
@@ -242,8 +263,29 @@ public class Sensor extends SystemComponent {
     private Point2D getCorner2() {
         // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
-        int corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
-        int corner2DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
+        int corner2DiffX = 0;
+        int corner2DiffY = 0;
+        // look forward
+        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT){
+            corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
+            corner2DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
+        }
+        // look left
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE){
+            corner2DiffX = (RADAR_SENSOR_DX - RADAR_SENSOR_RANGE);
+            corner2DiffY = (RADAR_SENSOR_DY + RADAR_TRIANGLE_HALF_X);
+        }
+        // look right
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE){
+            corner2DiffX = (RADAR_SENSOR_DX + RADAR_SENSOR_RANGE);
+            corner2DiffY = (RADAR_SENSOR_DY - RADAR_TRIANGLE_HALF_X);
+        }
+        // look backward
+        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT){
+            corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
+            corner2DiffY = (RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
+        }
+
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
                 -corner2DiffX, -corner2DiffY);
         Point2D corner2 = new Point2D.Double(automatedCar.getX() + corner2DiffX + corner1T.getTranslateX(),
