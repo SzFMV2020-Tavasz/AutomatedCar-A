@@ -35,6 +35,7 @@ public class Ultrasonic {
     private final static Point FRONT_LEFT_SENSOR = new Point(-40, -90);
     private final static Point REAR_RIGHT_SENSOR = new Point(40, 90);
     private final static Point REAR_LEFT_SENSOR = new Point(-40, 90);
+    
     private final static UltrasoundsVisualizationPacket ultrasoundsVisualizationPacket = new UltrasoundsVisualizationPacket();
     private final static UltrasoundDisplayStatePacket ultrasoundDisplayPacket = new UltrasoundDisplayStatePacket();
     private final VirtualFunctionBus virtualFunctionBus;
@@ -46,14 +47,24 @@ public class Ultrasonic {
         this.virtualFunctionBus = virtualFunctionBus;
         this.automatedCar = automatedCar;
         this.world = world;
-        sensors.add(new Sensor(this.virtualFunctionBus, this.automatedCar, this.world, FRONT_LEFT_SENSOR,
-                UltrasoundPositions.FRONT_LEFT, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket));
         sensors.add(new Sensor(this.virtualFunctionBus, this.automatedCar, this.world, FRONT_RIGHT_SENSOR,
                 UltrasoundPositions.FRONT_RIGHT, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket));
+        sensors.add(new Sensor(this.virtualFunctionBus, this.automatedCar, this.world, FRONT_LEFT_SENSOR,
+               UltrasoundPositions.FRONT_LEFT, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket));
         sensors.add(new Sensor(this.virtualFunctionBus, this.automatedCar, this.world, REAR_RIGHT_SENSOR,
                 UltrasoundPositions.REAR_RIGHT, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket));
         sensors.add(new Sensor(this.virtualFunctionBus, this.automatedCar, this.world, REAR_LEFT_SENSOR,
-                UltrasoundPositions.REAR_LEFT, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket));
+                UltrasoundPositions.REAR_LEFT, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket)); 
+        sensors.add(new Sensor(this.virtualFunctionBus, this.automatedCar, this.world, FRONT_RIGHT_SENSOR,
+                UltrasoundPositions.FRONT_RIGHT_SIDE, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket));
+        sensors.add(new Sensor(this.virtualFunctionBus, this.automatedCar, this.world, FRONT_LEFT_SENSOR,
+               UltrasoundPositions.FRONT_LEFT_SIDE, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket));
+        sensors.add(new Sensor(this.virtualFunctionBus, this.automatedCar, this.world, REAR_RIGHT_SENSOR,
+                UltrasoundPositions.REAR_RIGHT_SIDE, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket));
+        sensors.add(new Sensor(this.virtualFunctionBus, this.automatedCar, this.world, REAR_LEFT_SENSOR,
+                UltrasoundPositions.REAR_LEFT_SIDE, ultrasoundDisplayPacket, ultrasoundsVisualizationPacket));
+        
+              
     }
 
 }
