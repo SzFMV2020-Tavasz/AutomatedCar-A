@@ -45,6 +45,7 @@ public class Main {
         radar = new Radar(car.getVirtualFunctionBus(), car, world);
         ultrasonic = new Ultrasonic(car.getVirtualFunctionBus(), car, world);
 
+
         // create the displayworld
         displayWorld = new DisplayWorld(world, car);
 
@@ -59,6 +60,7 @@ public class Main {
                 window.getCourseDisplay().drawWorld(displayWorld);
                 window.getDashboard().refresh(car.getX(), car.getY());
 //                window.getCourseDisplay().refreshFrame();
+                ultrasonic.getCollidableObjects();
                 Thread.sleep(CYCLE_PERIOD);
             } catch (InterruptedException e) {
                 LOGGER.error(e.getMessage());

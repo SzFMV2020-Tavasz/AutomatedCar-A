@@ -223,31 +223,31 @@ public class Sensor extends SystemComponent {
     private Point2D getCorner1() {
         // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
-        
+
         int corner1DiffX = 0;
         int corner1DiffY = 0;
-        
+
         // look forward
-        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT){
+        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT) {
             corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
             corner1DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
         }
         // look left
-        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE){
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE) {
             corner1DiffX = (RADAR_SENSOR_DX - RADAR_SENSOR_RANGE);
             corner1DiffY = (RADAR_SENSOR_DY - RADAR_TRIANGLE_HALF_X);
         }
         // look right
-        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE){
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE) {
             corner1DiffX = (RADAR_SENSOR_DX + RADAR_SENSOR_RANGE);
             corner1DiffY = (RADAR_SENSOR_DY + RADAR_TRIANGLE_HALF_X);
         }
         // look backward
-        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT){
+        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT) {
             corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
             corner1DiffY = (RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         }
-                
+
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
                 -corner1DiffX, -corner1DiffY);
         Point2D corner1 = new Point2D.Double(automatedCar.getX() + corner1DiffX + corner1T.getTranslateX(),
@@ -266,22 +266,22 @@ public class Sensor extends SystemComponent {
         int corner2DiffX = 0;
         int corner2DiffY = 0;
         // look forward
-        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT){
+        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT) {
             corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
             corner2DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
         }
         // look left
-        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE){
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE) {
             corner2DiffX = (RADAR_SENSOR_DX - RADAR_SENSOR_RANGE);
             corner2DiffY = (RADAR_SENSOR_DY + RADAR_TRIANGLE_HALF_X);
         }
         // look right
-        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE){
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE) {
             corner2DiffX = (RADAR_SENSOR_DX + RADAR_SENSOR_RANGE);
             corner2DiffY = (RADAR_SENSOR_DY - RADAR_TRIANGLE_HALF_X);
         }
         // look backward
-        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT){
+        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT) {
             corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
             corner2DiffY = (RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         }
@@ -303,5 +303,20 @@ public class Sensor extends SystemComponent {
      */
     private boolean isCollideable(WorldObject object) {
         return object.getZ() >= 1;
+    }
+
+    public Point getTriangleSource() {
+        Point2D cache = getSource();
+        return new Point((int) cache.getX(), (int) cache.getY());
+    }
+
+    public Point getTriangleCorner1() {
+        Point2D cache = getCorner1();
+        return new Point((int) cache.getX(), (int) cache.getY());
+    }
+
+    public Point getTriangleCorner2() {
+        Point2D cache = getCorner2();
+        return new Point((int) cache.getX(), (int) cache.getY());
     }
 }
