@@ -4,6 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.SamplePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
@@ -39,7 +40,6 @@ public class VirtualFunctionBus {
     public ICameraVisualizationPacket cameraVisualizationPacket;
     public IUltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
     public DebugModePacket debugModePacket = new DebugModePacket();
-    public ISelectedDebugListPacket selectedDebugListPacket;
     public ICameraDisplayStatePacket cameraDisplayStatePacket;
     public IRadarDisplayStatePacket radarDisplayStatePacket;
     public IUltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;

@@ -10,7 +10,6 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.Cam
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.SelectedDebugListPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundsVisualizationPacket;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,11 +73,6 @@ public class DisplayWorldTest {
             DebugModePacket debugModePacket = new DebugModePacket();
             debugModePacket.setDebuggingState(true);
             virtualFunctionBus.debugModePacket = debugModePacket;
-
-            SelectedDebugListPacket selectedDebugListPacket = new SelectedDebugListPacket();
-            selectedDebugListPacket.addDebugListElement("id1");
-            selectedDebugListPacket.addDebugListElement("id2");
-            virtualFunctionBus.selectedDebugListPacket = selectedDebugListPacket;
         }
 
         private void sensorStateSets(VirtualFunctionBus virtualFunctionBus) {
@@ -90,7 +84,7 @@ public class DisplayWorldTest {
             radarDisplayStatePacket.setRadarDisplayState(true);
             virtualFunctionBus.radarDisplayStatePacket = radarDisplayStatePacket;
 
-            UltrasoundDisplayStatePacket ultrasoundDisplayStatePacket =  new UltrasoundDisplayStatePacket();
+            UltrasoundDisplayStatePacket ultrasoundDisplayStatePacket = new UltrasoundDisplayStatePacket();
             ultrasoundDisplayStatePacket.setUltrasoundDisplayState(true);
             virtualFunctionBus.ultrasoundDisplayStatePacket = ultrasoundDisplayStatePacket;
         }
@@ -122,6 +116,8 @@ public class DisplayWorldTest {
         public List<WorldObject> getWorldObjects() {
             WorldObject fixWorldObject1 = new WorldObject(10, 20, "boundary.png");
             fixWorldObject1.setZ(5);
+            fixWorldObject1.setId("boundary_1");
+            fixWorldObject1.setHighlightedWhenCameraIsOn(true);
             WorldObject fixWorldObject2 = new WorldObject(30, 40, "road_2lane_90right.png");
             fixWorldObject2.setZ(2);
             List<WorldObject> fixObjects = List.of(
@@ -136,6 +132,8 @@ public class DisplayWorldTest {
             dynamicWorldObject1.setZ(1);
             WorldObject dynamicWorldObject2 = new WorldObject(50, 60, "2_crossroad_1.png");
             dynamicWorldObject2.setZ(4);
+            dynamicWorldObject2.setId("2_crossroad_1_4");
+            dynamicWorldObject2.setHighlightedWhenRadarIsOn(true);
 
             List<WorldObject> dynamicObjects = List.of(
                 dynamicWorldObject1,
@@ -227,10 +225,13 @@ public class DisplayWorldTest {
             assertEquals(10, dso[3].source.getX());
         }
 
-        @Test void checkDebugListPacket() {
+        @Test
+        void checkDebugListPacket() {
+            // only to trigger refresh for worldobjects
+            List<DisplayObject> displayObjects = displayWorld.getDisplayObjects();
             List<String> list = displayWorld.getDebugObjects();
-            assertEquals("id1", list.get(0));
-            assertEquals("id2", list.get(1));
+            assertEquals("boundary_1", list.get(0));
+            assertEquals("2_crossroad_1_4", list.get(1));
         }
     }
 

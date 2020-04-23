@@ -198,7 +198,7 @@ public interface IVector {
     /**Creates a new vector with the given X and Y differences, which also define the length and angle of the vector.
      * @see Axis#positiveDirection()
      * @see Axis#negativeDirection() */
-    static IVector vectorFromXY(final double x, final double y) {
+    static IVector vectorFromXY(double x, double y) {
         return new IVector() {
 
             @Override
@@ -219,10 +219,7 @@ public interface IVector {
             @Override
             public double getRadiansRelativeTo(IVector direction) {
                 double xRads = direction.getRadiansRelativeTo(Axis.X);
-                double relativeRads  = (getRadiansRelativeToAxisX() - xRads) % (2 * PI);
-                while (relativeRads < -PI) relativeRads += 2*PI;
-                while (relativeRads > PI) relativeRads -= 2*PI;
-                return relativeRads;
+                return inPeriodOfPI(getRadiansRelativeToAxisX() - xRads);
             }
 
             @Override
@@ -257,6 +254,22 @@ public interface IVector {
      * <p>Length of the vector is one unit (with epsilon error of floating point numbers).</p>*/
     static IVector vectorWithAngle(double radians) {
         return baseDirection().rotateByRadians(radians);
+    }
+
+    /**Puts the given radian value within the bounds of {@code -}{@link Math#PI PI} to {@code +}{@link Math#PI PI}.
+     * @return Value between {@code -}{@link Math#PI PI} and {@code +}{@link Math#PI PI} (both inclusive).*/
+    private static double inPeriodOfPI(double radians) {
+        radians = radians % (2 * PI);
+
+        while (radians < -PI) {
+            radians += 2*PI;
+        }
+
+        while (radians > PI) {
+            radians -= 2*PI;
+        }
+
+        return radians;
     }
 
 }

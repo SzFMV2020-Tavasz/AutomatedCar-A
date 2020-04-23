@@ -47,21 +47,27 @@ public enum Axis {
 
         @Override
         public double getXDiff() {
-            return axis == Axis.X ? (positive ? +1 : -1) : 0;
+            if (this.axis == Axis.X) {
+                return (positive ? +1.0 : -1.0);
+            } else {
+                return 0;
+            }
         }
 
         @Override
         public double getYDiff() {
-            return axis == Axis.Y ? (positive ? +1 : -1) : 0;
+            if (this.axis == Axis.Y) {
+                return (positive ? +1.0 : -1.0);
+            } else {
+                return 0;
+            }
         }
 
-        @Override
-        public double getLength() {
+        @Override public double getLength() {
             return 1.0;
         }
 
-        @Override
-        public double getRadiansRelativeTo(Axis axis) {
+        @Override public double getRadiansRelativeTo(Axis axis) {
             if (axis == this.axis) {
                 return positive ? 0 : PI;
             } else {
@@ -71,20 +77,25 @@ public enum Axis {
 
         @Override
         public double getRadiansRelativeTo(IVector direction) {
-            double toPositive; switch (this.axis) {
+            double towardsPositive = getRadiansRelativeToOwnAxis(direction);
+            if (positive) {
+                return towardsPositive;
+            } else {
+                return towardsPositive > 0
+                        ? -(PI - towardsPositive)
+                        : +(PI + towardsPositive);
+            }
+        }
+
+        private double getRadiansRelativeToOwnAxis(IVector direction) {
+            switch (this.axis) {
                 case X:
-                    toPositive = getRadiansRelativeToAxisX(direction);
-                    break;
+                    return getRadiansRelativeToAxisX(direction);
                 case Y:
-                    toPositive = getRadiansRelativeToAxisY(direction);
-                    break;
+                    return getRadiansRelativeToAxisY(direction);
                 default:
                     throw new IllegalStateException();
             }
-
-            return positive ? toPositive : toPositive > 0
-                    ? -(PI - toPositive)
-                    : +(PI + toPositive);
         }
 
         /**Rotation is mathematical, positive is towards the left.*/

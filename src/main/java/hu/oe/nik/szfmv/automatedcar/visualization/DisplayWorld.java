@@ -94,8 +94,9 @@ public class DisplayWorld {
      */
     List<DisplayObject> getDisplayObjects() {
 
-        List<DisplayObject> returnList = new ArrayList<DisplayObject>();
+        List<DisplayObject> returnList = new ArrayList<>();
 
+        this.getFixWorldObjectsFromWorld();
         // loop through the fix objects and create their DisplayObjects
         for (WorldObject obj : fixWorldObjects) {
             DisplayObject dispObj = new DisplayObject(obj, automatedCar);
@@ -237,10 +238,20 @@ public class DisplayWorld {
      * @return
      */
     public List<String> getDebugObjects() {
-
-        if (virtualFunctionBus.selectedDebugListPacket != null) {
-            debugObjects = virtualFunctionBus.selectedDebugListPacket.getDebugList();
+        debugObjects = new ArrayList<>();
+        for (WorldObject object : fixWorldObjects) {
+            if (object.isHighlightedWhenRadarIsOn() || object.isHighlightedWhenCameraIsOn() ||
+                object.isHighlightedWhenUltrasoundIsOn()) {
+                debugObjects.add(object.getId());
+            }
         }
+        for (WorldObject object : dynamicWorldObjects) {
+            if (object.isHighlightedWhenRadarIsOn() || object.isHighlightedWhenCameraIsOn() ||
+                object.isHighlightedWhenUltrasoundIsOn()) {
+                debugObjects.add(object.getId());
+            }
+        }
+
         return debugObjects;
     }
 }
