@@ -5,7 +5,7 @@ import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.CarPositionPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +13,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +29,7 @@ public class RadarTest {
     /**
      * Mock class for controling the passed on data
      */
-    class MockWorld extends World {
+    static class MockWorld extends World {
         int calledNumber = 0;
         List<WorldObject> passlist;
         MockWorldObject object1;
@@ -36,7 +37,7 @@ public class RadarTest {
         Polygon testPoly = new Polygon(new int[]{0, 1, 0}, new int[]{0, 0, 1}, 3);
 
         MockWorld(int width, int height) {
-            super(width, height, new ArrayList<WorldObject>());
+            super(width, height, new ArrayList<>());
             passlist = new ArrayList<>();
             object1 = new MockWorldObject(-100, -100, "roadsign_speed_40.png");
             object1.setId("roadsign_speed_40_1");
@@ -60,18 +61,18 @@ public class RadarTest {
 
                 // the collideable object
                 // Made as class global so it could change values
-                passlist.add((WorldObject) object1);
+                passlist.add(object1);
 
                 // the not collideable object
                 MockWorldObject object2 = new MockWorldObject(200, 400, "parking_space_parallel.png");
                 object2.setId("parking_space_parallel_2");
                 object2.setZ(0);
                 object2.setPolygon(testPoly);
-                passlist.add((WorldObject) object2);
+                passlist.add(object2);
 
                 if (calledNumber == 1 || calledNumber == 3) {
                     // a collideable object
-                    passlist.add((WorldObject) object3);
+                    passlist.add(object3);
                 }
             }
             return passlist;
@@ -79,7 +80,7 @@ public class RadarTest {
 
     }
 
-    private class MockWorldObject extends WorldObject {
+    private static class MockWorldObject extends WorldObject {
         int calledNumberX;
         int calledNumberY;
 
@@ -140,57 +141,12 @@ public class RadarTest {
     /**
      * implementing interfaces for testing
      */
-    private class MockCarPostionPacketData implements CarPositionPacket {
-        int calledNumber = 0;
-
-        MockCarPostionPacketData() {
-        }
-
-        @Override
-        public double getX() {
-            return 10;
-        }
-
-        @Override
-        public double getY() {
-            return 10;
-        }
+    private static class DummyCarPositionPacketData implements ICarMovePacket {
 
         @Override
         public IVector getMoveVector() {
-            return new MockVector(10, -5);
+            return vectorFromXY(10, -5);
         }
-    }
-
-    private class MockVector implements IVector {
-        int xDiff;
-        int yDiff;
-
-        MockVector(int xDiff, int yDiff) {
-            this.xDiff = xDiff;
-            this.yDiff = yDiff;
-        }
-
-        @Override
-        public double getXDiff() {
-            return xDiff;
-        }
-
-        @Override
-        public double getYDiff() {
-            return yDiff;
-        }
-
-        @Override
-        public double getLength() {
-            return 0;
-        }
-
-        @Override
-        public double getRadiansRelativeTo(IVector direction) {
-            return 0;
-        }
-
     }
 
     @BeforeEach
@@ -200,12 +156,12 @@ public class RadarTest {
         automatedCar.setRotation((float) Math.toRadians(-30));
         world = new MockWorld(1000, 1000);
         radar = new Radar(virtualFunctionBus, automatedCar, world);
-        MockCarPostionPacketData carPostionPacketData = new MockCarPostionPacketData();
-        virtualFunctionBus.carPositionPacket = carPostionPacketData;
+        DummyCarPositionPacketData dummyData = new DummyCarPositionPacketData();
+        virtualFunctionBus.carPositionPacket = dummyData;
     }
 
     /**
-     * Check whether the class gets instantiatied when new Radar() called.
+     * Check whether the class gets instantiated when new Radar() called.
      */
     @Test
     public void classInstantiated() {
@@ -218,10 +174,8 @@ public class RadarTest {
     @Test
     public void collidableObjects() {
         radar.loop();
-        assertTrue(radar.getObjectsSeenByRadar().stream()
-            .filter(t -> t.getId().equals("roadsign_speed_40_1")).findFirst().isPresent());
-        assertFalse(radar.getObjectsSeenByRadar().stream()
-            .filter(t -> t.getId().equals("parking_2")).findFirst().isPresent());
+        assertTrue(radar.getObjectsSeenByRadar().stream().anyMatch(t -> t.getId().equals("roadsign_speed_40_1")));
+        assertFalse(radar.getObjectsSeenByRadar().stream().anyMatch(t -> t.getId().equals("parking_2")));
     }
 
     /**
@@ -230,11 +184,9 @@ public class RadarTest {
     @Test
     public void collidableRemoved() {
         radar.loop();
-        assertTrue(radar.getObjectsSeenByRadar().stream()
-            .filter(t -> t.getId().equals("tree_3")).findFirst().isPresent());
+        assertTrue(radar.getObjectsSeenByRadar().stream().anyMatch(t -> t.getId().equals("tree_3")));
         radar.loop();
-        assertFalse(radar.getObjectsSeenByRadar().stream()
-            .filter(t -> t.getId().equals("tree_3")).findFirst().isPresent());
+        assertFalse(radar.getObjectsSeenByRadar().stream().anyMatch(t -> t.getId().equals("tree_3")));
     }
 
     /**
@@ -258,7 +210,7 @@ public class RadarTest {
     @Test
     public void nearestCollidableElement() {
         radar.loop();
-        assertTrue(radar.getNearestCollideableElement().getId().equals("roadsign_speed_40_1"));
+        assertEquals("roadsign_speed_40_1", radar.getNearestCollideableElement().getId());
     }
 
     /**
@@ -269,12 +221,11 @@ public class RadarTest {
         radar.loop();
         radar.loop();
         radar.loop();
-        assertTrue(radar.getObjectsSeenByRadar().stream()
-            .filter(t -> t.getId().equals("tree_3")).findFirst().isPresent());
+        assertTrue(radar.getObjectsSeenByRadar().stream().anyMatch(t -> t.getId().equals("tree_3")));
     }
 
     /**
-     * Checks whether the nearest object is highlihgted in the World class instance
+     * Checks whether the nearest object is highlighted in the World class instance
      */
     @Test
     public void nearestObjectHighlighted() {
@@ -293,10 +244,8 @@ public class RadarTest {
         radar.loop();
         radar.loop();
         MovingWorldObject obj = radar.getNearestCollideableElement();
-        assertFalse(world.getWorldObjects().stream()
-            .filter(t -> t.isHighlightedWhenRadarIsOn() == true).findAny().isPresent());
-        assertFalse(world.getDynamics().stream()
-            .filter(t -> t.isHighlightedWhenRadarIsOn() == true).findAny().isPresent());
+        assertFalse(world.getWorldObjects().stream().anyMatch(WorldObject::isHighlightedWhenRadarIsOn));
+        assertFalse(world.getDynamics().stream().anyMatch(WorldObject::isHighlightedWhenRadarIsOn));
     }
 
     /**
@@ -308,7 +257,7 @@ public class RadarTest {
         radar.loop();
         radar.loop();
         List<WorldObject> list = radar.getRelevantObjectsForAEB();
-        assertTrue(list.stream().filter(t -> t.getId().equals("roadsign_speed_40_1")).findAny().isPresent());
+        assertTrue(list.stream().anyMatch(t -> t.getId().equals("roadsign_speed_40_1")));
         radar.loop();
         list = radar.getRelevantObjectsForAEB();
         assertEquals(0, list.size());
