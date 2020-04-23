@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.math;
 
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
 import static java.lang.Math.*;
 import static java.lang.Math.PI;
 
@@ -62,13 +63,11 @@ public enum Axis {
             }
         }
 
-        @Override
-        public double getLength() {
+        @Override public double getLength() {
             return 1.0;
         }
 
-        @Override
-        public double getRadiansRelativeTo(Axis axis) {
+        @Override public double getRadiansRelativeTo(Axis axis) {
             if (axis == this.axis) {
                 return positive ? 0 : PI;
             } else {
@@ -146,9 +145,9 @@ public enum Axis {
             double alpha2 = (PI / 2) - rad;
             switch (this.axis) {
                 case X:
-                    return IVector.vectorFromXY(sin(alpha2), cos(alpha2));
+                    return vectorFromXY(sin(alpha2), cos(alpha2));
                 case Y:
-                    return IVector.vectorFromXY(-cos(alpha2), sin(alpha2));
+                    return vectorFromXY(-cos(alpha2), sin(alpha2));
                 default:
                     throw new IllegalStateException();
             }
@@ -160,4 +159,14 @@ public enum Axis {
         }
 
     }
+
+    /**The axis of default forward and backward direction.*/
+    public static Axis BASE = X;
+
+    /**The standard positive/neutral direction.
+     * <p>Should be used for vectors only representing angle, length or both, but relative to no specific axis.</p>*/
+    public static IVector baseDirection() {
+        return Axis.BASE.positiveDirection();
+    }
+
 }

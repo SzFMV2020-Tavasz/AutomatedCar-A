@@ -206,7 +206,7 @@ public class Dashboard extends JPanel {
         this.virtualFunctionBus = virtualFunctionBus;
     }
 
-    public void refresh(int yCoord, int xCoord) {
+    public void refresh(int xCoord, int yCoord) {
         gasProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
         breakProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getBreakPedalValue());
         steeringWheelValueText.setText(Double.toString(virtualFunctionBus.guiInputPacket.getSteeringWheelValue()));

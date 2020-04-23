@@ -16,18 +16,15 @@ public class Main {
     private AutomatedCar car;
     private World world;
     private DisplayWorld displayWorld;
-    private  Radar radar;
+    private Radar radar;
 
     public static void main(String[] args) {
-
         new Main().run();
-
     }
 
     public void run() {
         init();
         loop();
-
     }
 
     private void init() {
