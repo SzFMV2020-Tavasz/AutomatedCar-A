@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.math;
 
 import static hu.oe.nik.szfmv.automatedcar.math.Axis.baseDirection;
+import static hu.oe.nik.szfmv.automatedcar.math.MathUtils.inPeriodOfPI;
 import static java.lang.Math.*;
 
 /**Represents a mathematical 2-dimensional vector with X and Y difference, which also define its length and angle.
@@ -239,6 +240,7 @@ public interface IVector {
             public String toString() {
                 return "XYVector{ x:" + x + ", y:" + y + " }";
             }
+
         };
     }
 
@@ -254,22 +256,6 @@ public interface IVector {
      * <p>Length of the vector is one unit (with epsilon error of floating point numbers).</p>*/
     static IVector vectorWithAngle(double radians) {
         return baseDirection().rotateByRadians(radians);
-    }
-
-    /**Puts the given radian value within the bounds of {@code -}{@link Math#PI PI} to {@code +}{@link Math#PI PI}.
-     * @return Value between {@code -}{@link Math#PI PI} and {@code +}{@link Math#PI PI} (both inclusive).*/
-    private static double inPeriodOfPI(double radians) {
-        radians = radians % (2 * PI);
-
-        while (radians < -PI) {
-            radians += 2*PI;
-        }
-
-        while (radians > PI) {
-            radians -= 2*PI;
-        }
-
-        return radians;
     }
 
 }
