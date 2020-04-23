@@ -156,8 +156,7 @@ public class RadarTest {
         automatedCar.setRotation((float) Math.toRadians(-30));
         world = new MockWorld(1000, 1000);
         radar = new Radar(virtualFunctionBus, automatedCar, world);
-        DummyCarPositionPacketData dummyData = new DummyCarPositionPacketData();
-        virtualFunctionBus.carPositionPacket = dummyData;
+        virtualFunctionBus.carPositionPacket = new DummyCarPositionPacketData();
     }
 
     /**
