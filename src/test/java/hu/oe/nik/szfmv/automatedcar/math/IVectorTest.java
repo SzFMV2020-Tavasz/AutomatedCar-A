@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class IVectorTest {
 
-    
     private static final double DELTA = 0.0000001;
 
     @Test

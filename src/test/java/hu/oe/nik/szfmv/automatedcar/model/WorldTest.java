@@ -38,6 +38,11 @@ public class WorldTest {
         testList.add(instance1);
         testList.add(instance2);
         testList.add(instance3);
+        for (var element:
+             testList) {
+            element.initObject();
+        }
+
         worldInstance = new World(10, 10, testList);
     }
 
@@ -85,7 +90,9 @@ public class WorldTest {
         Point c = new Point(10,2);
         List<WorldObject> objectInsideTriangle = worldInstance.getObjectsInsideTriangle(a,b,c);
         int size = objectInsideTriangle.size();
-        assertEquals(1, size);
+
+        //intersect és a poligon mérete miatt 3 elemmel tér vissza, ami működést tekintve jó
+        assertEquals(3, size);
         assertEquals(expectedId, objectInsideTriangle.get(0).getId());
     }
 }

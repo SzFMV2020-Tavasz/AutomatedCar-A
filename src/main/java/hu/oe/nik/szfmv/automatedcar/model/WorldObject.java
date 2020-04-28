@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-
 public class WorldObject {
 
     private static int uid = 1;
@@ -161,14 +160,9 @@ public class WorldObject {
             setId(type + "_" + (uid++));
         }
 
-
         setImageFileName(this.type + ".png");
         initImage();
         PolygonCreating polygonCreating = new PolygonCreating(this.type);
         this.polygon = polygonCreating.getPolygon();
     }
-
-
-
-
 }

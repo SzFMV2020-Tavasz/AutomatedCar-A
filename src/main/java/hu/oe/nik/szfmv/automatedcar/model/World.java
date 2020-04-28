@@ -1,7 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.model;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class World {
@@ -47,8 +47,9 @@ public class World {
     public List<WorldObject> getDynamics() {
         List<WorldObject> dynamicObjectList = new ArrayList<>();
         for (WorldObject item : worldObjects) {
-            if (!item.isStatic)
+            if (!item.isStatic) {
                 dynamicObjectList.add(item);
+            }
         }
         return dynamicObjectList;
     }
@@ -56,41 +57,28 @@ public class World {
     public List<WorldObject> getObjectsInsideTriangle(Point a, Point b, Point c) {
         List<WorldObject> objectInsideTriangle = new ArrayList<>();
         for (WorldObject item : worldObjects) {
-            if (isInside(a, b, c, item))
+            if (isInside(a, b, c, item)) {
                 objectInsideTriangle.add(item);
+            }
         }
         return objectInsideTriangle;
     }
 
     private boolean isInside(Point a, Point b, Point c, WorldObject item) {
-        Point itemsPosition = new Point(item.getX(), item.getY());
+        var triangle = new Polygon();
+        triangle.addPoint(a.x, a.y);
+        triangle.addPoint(b.x, b.y);
+        triangle.addPoint(c.x, c.y);
 
-        double A = area(a, b, c);
-        double A1 = area(itemsPosition, b, c);
-        double A2 = area(a, itemsPosition, c);
-        double A3 = area(a, b, itemsPosition);
-        return (A == A1 + A2 + A3);
-    }
-
-    private double area(Point a, Point b, Point c) {
-        return round((Math.abs((a.getX() * (b.getY() - c.getY()) + b.getX() * (c.getY() - a.getY()) + c.getX() * (a.getY() - b.getY())) / 2.0)), 2);
-    }
-
-    private static double round(double value, int places) {
-        if (places < 0) {
-            throw new IllegalArgumentException();
-        }
-
-        long factor = (long) Math.pow(10, places);
-        value = value * factor;
-        long tmp = Math.round(value);
-        return (double) tmp / factor;
+        // return triangle.getBounds().contains(item.getX(), item.getY());
+        return triangle.getBounds2D().intersects(item.getPolygon().getBounds2D());
     }
 
     public WorldObject getObject(String id) {
         for (WorldObject item : worldObjects) {
-            if (item.id.equals(id))
+            if (item.id.equals(id)) {
                 return item;
+            }
         }
         return null;
     }
@@ -114,4 +102,6 @@ public class World {
     public void addObjectToWorld(WorldObject o) {
         worldObjects.add(o);
     }
+
+    /***/
 }
