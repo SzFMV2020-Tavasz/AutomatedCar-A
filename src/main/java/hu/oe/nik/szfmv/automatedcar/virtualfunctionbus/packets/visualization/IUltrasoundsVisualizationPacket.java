@@ -16,7 +16,7 @@ public interface IUltrasoundsVisualizationPacket {
      *
      * @return corner1 points
      */
-     public Point2D[] getCorner1s();
+    public Point2D[] getCorner1s();
 
     /**
      * Gets the world corner2 points of the ultrasound sensor triangles
