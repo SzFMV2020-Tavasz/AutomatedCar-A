@@ -60,8 +60,8 @@ public class CourseDisplayTest {
         }
 
         @Override
-        public List<DisplayObject> getDisplayObjects() {
-            List<DisplayObject> returnlist = new ArrayList<DisplayObject>();
+        public ArrayList<DisplayObject> getDisplayObjects() {
+            ArrayList<DisplayObject> returnlist = new ArrayList<DisplayObject>();
 
             MockDisplayObject mockDisplayObject = new MockDisplayObject();
             mockDisplayObject.setDisplayImageData(0, 0);
