@@ -45,7 +45,7 @@ public class DisplayObject extends WorldObject {
         super();
         this.x = worldObject.getX();
         this.y = worldObject.getY();
-        if (worldObject.getImageFileName() == null){
+        if (worldObject.getImageFileName() == null) {
             this.imageFileName = worldObject.getType() + ".png";
         } else {
             this.imageFileName = worldObject.getImageFileName();
