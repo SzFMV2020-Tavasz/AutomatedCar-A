@@ -1,5 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static java.lang.System.currentTimeMillis;
 
 /***
@@ -61,7 +63,7 @@ public class SimpleTransmission implements ITransmission2 {
         double hasPedalEffect = (gasPedalPressRatio * 1.25 - 0.25);
 
         long newTargetRPM = (long)(elapsedSeconds * currentRPMPerSec * hasPedalEffect);
-        this.currentRPM = Math.min(newTargetRPM, MAX_RPM);
+        this.currentRPM = max(0, min(newTargetRPM, MAX_RPM));
     }
 
     private long getMillisSinceLastUpdateAndReset() {
