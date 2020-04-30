@@ -72,7 +72,19 @@ public class Ultrasonic {
     private void getAllCollidablesInRange() {
         collidableObjectsInRange = new ArrayList<>();
         for (Sensor sensor : sensors) {
-            
+            for (WorldObject object : world.getObjectsInsideTriangle(sensor.getTriangleSource(),
+                    sensor.getTriangleCorner1(), sensor.getTriangleCorner2())) {
+                if (object.getZ() > 0) {
+                    collidableObjectsInRange.add(object);
+                }
+            }
+
         }
+    }
+
+
+    public List<WorldObject> getCollidableObjectsInRange() {
+        getAllCollidablesInRange();
+        return collidableObjectsInRange;
     }
 }
