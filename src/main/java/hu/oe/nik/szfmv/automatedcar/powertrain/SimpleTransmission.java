@@ -51,7 +51,10 @@ public class SimpleTransmission implements ITransmission2 {
     @Override
     public void update(double gasPedalPressRatio, CarTransmissionMode requestedMode, int requestedTransmissionLevel) {
         long elapsedMillis = getMillisSinceLastUpdateAndReset();
-        handleShifting(requestedMode, requestedTransmissionLevel);
+
+        if (requestedMode != null) {
+            handleShifting(requestedMode, requestedTransmissionLevel);
+        }
 
         long currentRPMPerSec = getRPMPerSecond(currentTransmissionMode, currentTransmissionLevel);
         double elapsedSeconds = (elapsedMillis / 1000.0);

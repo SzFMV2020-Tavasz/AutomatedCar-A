@@ -17,21 +17,16 @@ public enum CarTransmissionMode {
     D_DRIVE;
 
     public static CarTransmissionMode fromShiftPos(Shitfer.ShiftPos pos) {
-        if (pos != null) {
-            switch (pos) {
-                case D:
-                    return CarTransmissionMode.D_DRIVE;
-                case N:
-                    return CarTransmissionMode.N_NEUTRAL;
-                case R:
-                    return CarTransmissionMode.R_REVERSE;
-                default:
-                    return CarTransmissionMode.P_PARKING;
-            }
+        switch (pos) {
+            case D:
+                return CarTransmissionMode.D_DRIVE;
+            case N:
+                return CarTransmissionMode.N_NEUTRAL;
+            case R:
+                return CarTransmissionMode.R_REVERSE;
+            default:
+                return CarTransmissionMode.P_PARKING;
         }
-
-        System.err.println("Shift position not given!");
-        return CarTransmissionMode.P_PARKING;
     }
 
     public boolean supportsLevel(int level) {

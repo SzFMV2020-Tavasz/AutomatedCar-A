@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
@@ -46,12 +47,20 @@ public class PowerTrain extends SystemComponent {
     public void loop() {
         this.input = virtualFunctionBus.toPowerTrainPacket;
         double gasPedalPressRatio = virtualFunctionBus.toPowerTrainPacket.getGasPedalValue() / MAX_GAS_PEDAL_VALUE;
-        CarTransmissionMode targetMode = CarTransmissionMode.fromShiftPos(input.getShiftChangeRequest());
-        int targetLevel = targetMode == CarTransmissionMode.D_DRIVE ? 1 : 0;
+        CarTransmissionMode targetMode = getRequestedCarTransmissionMode();
+        int targetLevel = targetMode == CarTransmissionMode.D_DRIVE ? 1 : 0; //TODO input.getTempomatValue(); ??
 
         transmission.update(gasPedalPressRatio, targetMode, targetLevel);
 
         provideOutput(producePositionOutput(), transmission.provideInfo());
+    }
+
+    /**@return {@link CarTransmissionMode} instance or {@code null}.*/
+    private CarTransmissionMode getRequestedCarTransmissionMode() {
+        Shitfer.ShiftPos requestedShiftPosition = input.getShiftChangeRequest();
+        return requestedShiftPosition != null
+                ? CarTransmissionMode.fromShiftPos(requestedShiftPosition)
+                : null;
     }
 
     private IVector calculateMove() {
