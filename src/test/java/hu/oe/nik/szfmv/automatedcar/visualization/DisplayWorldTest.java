@@ -22,7 +22,9 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 public class DisplayWorldTest {
@@ -34,10 +36,8 @@ public class DisplayWorldTest {
     /**
      * Extend AutomatedCar to control virtualbus data
      */
-    static class DummyAutomatedCar extends AutomatedCar {
-
-        //TODO WTF, dummy object is dummy because it is not the real object! Do not extend the original class!
-        DummyAutomatedCar(int x, int y, CarVariant variant) {
+    class MockAutomatedCar extends AutomatedCar {
+        MockAutomatedCar(int x, int y, CarVariant variant) {
             super(x, y, variant);
         }
 
@@ -101,7 +101,9 @@ public class DisplayWorldTest {
 
         @Override
         public VirtualFunctionBus getVirtualFunctionBus() {
-            return new VirtualFunctionBus();
+
+            VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
+            return virtualFunctionBus;
         }
     }
 
@@ -119,7 +121,10 @@ public class DisplayWorldTest {
             fixWorldObject1.setHighlightedWhenCameraIsOn(true);
             WorldObject fixWorldObject2 = new WorldObject(30, 40, "road_2lane_90right.png");
             fixWorldObject2.setZ(2);
-            return List.of(fixWorldObject1, fixWorldObject2);
+            List<WorldObject> fixObjects = List.of(
+                    fixWorldObject1,
+                    fixWorldObject2);
+            return fixObjects;
         }
 
         @Override
@@ -131,7 +136,11 @@ public class DisplayWorldTest {
             dynamicWorldObject2.setId("2_crossroad_1_4");
             dynamicWorldObject2.setHighlightedWhenRadarIsOn(true);
 
-            return List.of(dynamicWorldObject1, dynamicWorldObject2);
+            List<WorldObject> dynamicObjects = List.of(
+                    dynamicWorldObject1,
+                    dynamicWorldObject2);
+
+            return dynamicObjects;
         }
     }
 
@@ -139,7 +148,7 @@ public class DisplayWorldTest {
     @DisplayName("Packets are on the virtualfuncionbus")
     class NotNulls {
 
-        private DummyAutomatedCar automatedCar;
+        private MockAutomatedCar automatedCar;
 
         /**
          * Setting up the test
@@ -148,7 +157,7 @@ public class DisplayWorldTest {
         public void init() {
             mockWorld = new MockWorld();
 
-            automatedCar = new DummyAutomatedCar(200, 200, CarVariant.RED_2);
+            automatedCar = new MockAutomatedCar(200, 200, CarVariant.RED_2);
             automatedCar.setRotation((float) Math.PI / 2);  // No rotation
 
             displayWorld = new DisplayWorld(mockWorld, automatedCar);
@@ -173,22 +182,22 @@ public class DisplayWorldTest {
 
         @Test
         public void debugModeSet() {
-            assertTrue(displayWorld.isDebugOn());
+            assertEquals(true, displayWorld.isDebugOn());
         }
 
         @Test
         public void cameraSensorDisplayOn() {
-            assertTrue(displayWorld.isCameraShown());
+            assertEquals(true, displayWorld.isCameraShown());
         }
 
         @Test
         public void radarSensorDisplayOn() {
-            assertTrue(displayWorld.isRadarShown());
+            assertEquals(true, displayWorld.isRadarShown());
         }
 
         @Test
         public void ultrasSoundSensorDisplayOn() {
-            assertTrue(displayWorld.isUltrasoundShown());
+            assertEquals(true, displayWorld.isUltrasoundShown());
         }
 
         @Test
