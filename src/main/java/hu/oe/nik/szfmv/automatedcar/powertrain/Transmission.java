@@ -9,23 +9,23 @@ public class Transmission implements ITransmission {
      * Tweak carefully.
      * TODO: calibrate !!!
      */
-    private static int RPM_GEAR_0_UPSHIFT_THRESHOLD = 2000;
-    private static int RPM_GEAR_1_DOWNSHIFT_THRESHOLD = 1500;
-    private static int RPM_GEAR_1_UPSHIFT_THRESHOLD = 6000;
-    private static int RPM_GEAR_2_DOWNSHIFT_THRESHOLD = 3000;
-    private static int RPM_GEAR_2_UPSHIFT_THRESHOLD = 6000;
-    private static int RPM_GEAR_3_DOWNSHIFT_THRESHOLD = 3000;
-    private static int RPM_GEAR_3_UPSHIFT_THRESHOLD = 6000;
-    private static int RPM_GEAR_4_DOWNSHIFT_THRESHOLD = 3000;
-    private static int RPM_GEAR_4_UPSHIFT_THRESHOLD = 6000;
-    private static int RPM_GEAR_5_DOWNSHIFT_THRESHOLD = 3000;
+    private static final int RPM_GEAR_0_UPSHIFT_THRESHOLD = 2000;
+    private static final int RPM_GEAR_1_DOWNSHIFT_THRESHOLD = 1500;
+    private static final int RPM_GEAR_1_UPSHIFT_THRESHOLD = 6000;
+    private static final int RPM_GEAR_2_DOWNSHIFT_THRESHOLD = 3000;
+    private static final int RPM_GEAR_2_UPSHIFT_THRESHOLD = 6000;
+    private static final int RPM_GEAR_3_DOWNSHIFT_THRESHOLD = 3000;
+    private static final int RPM_GEAR_3_UPSHIFT_THRESHOLD = 6000;
+    private static final int RPM_GEAR_4_DOWNSHIFT_THRESHOLD = 3000;
+    private static final int RPM_GEAR_4_UPSHIFT_THRESHOLD = 6000;
+    private static final int RPM_GEAR_5_DOWNSHIFT_THRESHOLD = 3000;
 
     /**
      * Field storing the automatic transmissions internal gear state in {@link CarTransmissionMode#D_DRIVE D} mode.
      * Zero equals neutral.
      * Range: 0-5
      */
-    private int driveinternalgear = 0;
+    private int driveInternalGear = 0;
 
     /**
      * Field storing the transmission's actual gear.
@@ -37,7 +37,7 @@ public class Transmission implements ITransmission {
      * @return Returns the actual gear. 
      */
     public int getDriveInternalGear(){
-        return driveinternalgear;
+        return driveInternalGear;
     }
 
     /**
@@ -81,16 +81,16 @@ public class Transmission implements ITransmission {
      * @param rpm The actual RPM value.
      */
     private void switchGearsReverse(int rpm) {
-        if(gearMode == CarTransmissionMode.R_REVERSE){
-            switch (driveinternalgear){
+        if (gearMode == CarTransmissionMode.R_REVERSE) {
+            switch (driveInternalGear) {
                 case 0:
                     if(rpm > RPM_GEAR_0_UPSHIFT_THRESHOLD){
-                        driveinternalgear++;
+                        driveInternalGear++;
                     }
                     break;
                 case 1:
                     if(rpm < RPM_GEAR_1_DOWNSHIFT_THRESHOLD){
-                        driveinternalgear--;
+                        driveInternalGear--;
                     }
                     break;
             }
@@ -104,47 +104,47 @@ public class Transmission implements ITransmission {
     private void switchGearsForward(int rpm) {
         //switching gears in drive mode
         if(gearMode == CarTransmissionMode.D_DRIVE){
-            switch (driveinternalgear){
+            switch (driveInternalGear){
                 case 0:
                     if(rpm > RPM_GEAR_0_UPSHIFT_THRESHOLD) {
-                        driveinternalgear++;
+                        driveInternalGear++;
                     }
                     break;
                 case 1:
                     if(rpm > RPM_GEAR_1_UPSHIFT_THRESHOLD) {
-                        driveinternalgear++;
+                        driveInternalGear++;
                     }
                     if(rpm < RPM_GEAR_1_DOWNSHIFT_THRESHOLD){
-                        driveinternalgear--;
+                        driveInternalGear--;
                     }
                     break;
                 case 2:
                     if(rpm > RPM_GEAR_2_UPSHIFT_THRESHOLD){
-                        driveinternalgear++;
+                        driveInternalGear++;
                     }
                     if(rpm < RPM_GEAR_2_DOWNSHIFT_THRESHOLD){
-                        driveinternalgear--;
+                        driveInternalGear--;
                     }
                     break;
                 case 3:
                     if(rpm > RPM_GEAR_3_UPSHIFT_THRESHOLD){
-                        driveinternalgear++;
+                        driveInternalGear++;
                     }
                     if(rpm < RPM_GEAR_3_DOWNSHIFT_THRESHOLD){
-                        driveinternalgear--;
+                        driveInternalGear--;
                     }
                     break;
                 case 4:
                     if(rpm > RPM_GEAR_4_UPSHIFT_THRESHOLD){
-                        driveinternalgear++;
+                        driveInternalGear++;
                     }
                     if(rpm < RPM_GEAR_4_DOWNSHIFT_THRESHOLD){
-                        driveinternalgear--;
+                        driveInternalGear--;
                     }
                     break;
                 case 5:
                     if(rpm < RPM_GEAR_5_DOWNSHIFT_THRESHOLD){
-                        driveinternalgear--;
+                        driveInternalGear--;
                     }
                     break;
             }

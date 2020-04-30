@@ -79,7 +79,7 @@ public class AutomatedCar extends WorldObject {
      * <p>- its direction is interpreted as facing direction of the front wheels.</p>
      * <p>- its length is interpreted as the speed of movement.</p>*/
     private void moveCar(IVector move) {
-        switch (powerTrain.transmission.getGearMode()) {
+        switch (powerTrain.transmission.getCurrentTransmissionMode()) {
             case D_DRIVE:
                 this.moveForward(move);
                 break;
