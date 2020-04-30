@@ -24,7 +24,7 @@ public class MovingWorldObjectTest {
         DummyCarMovePacketData( ){ }
 
         @Override
-        public IVector getAccelerationVector() {
+        public IVector getMoveVector() {
             calledNumber++;
             if (calledNumber <= 2) {
                 return vectorFromXY(25, 35);

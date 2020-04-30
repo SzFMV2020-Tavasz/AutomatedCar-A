@@ -142,7 +142,7 @@ public class RadarTest {
     private static class DummyCarPositionPacketData implements ICarMovePacket {
 
         @Override
-        public IVector getAccelerationVector() {
+        public IVector getMoveVector() {
             return vectorFromXY(10, -5);
         }
 

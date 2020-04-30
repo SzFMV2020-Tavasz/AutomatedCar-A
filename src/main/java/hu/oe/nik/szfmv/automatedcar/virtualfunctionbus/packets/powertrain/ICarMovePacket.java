@@ -6,10 +6,10 @@ public interface ICarMovePacket {
 
     /**Gets moving direction and amount of force produced by the {@link hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain powertrain}.
      * Magnitude is Newtons.*/
-    IVector getAccelerationVector();
+    IVector getMoveVector();
 
-    default double getAcceleration() {
-        return getAccelerationVector().getLength();
+    default double getSpeed() {
+        return getMoveVector().getLength();
     }
 
     IVector getWheelFacingDirection();
