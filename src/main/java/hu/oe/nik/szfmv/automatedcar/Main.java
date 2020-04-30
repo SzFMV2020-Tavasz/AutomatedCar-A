@@ -57,6 +57,7 @@ public class Main {
                 window.getCourseDisplay().drawWorld(displayWorld);
                 window.getDashboard().refresh(car.getX(), car.getY());
 //                window.getCourseDisplay().refreshFrame();
+                ultrasonic.getCollidableObjectsInRange();
                 Thread.sleep(CYCLE_PERIOD);
             } catch (InterruptedException e) {
                 LOGGER.error(e.getMessage());

@@ -377,4 +377,19 @@ public class Sensor extends SystemComponent {
     private boolean isCollideable(WorldObject object) {
         return object.getZ() >= 1;
     }
+
+    public Point getTriangleSource() {
+        Point2D cache = getSource();
+        return new Point((int) cache.getX(), (int) cache.getY());
+    }
+
+    public Point getTriangleCorner1() {
+        Point2D cache = getCorner1();
+        return new Point((int) cache.getX(), (int) cache.getY());
+    }
+
+    public Point getTriangleCorner2() {
+        Point2D cache = getCorner2();
+        return new Point((int) cache.getX(), (int) cache.getY());
+    }
 }
