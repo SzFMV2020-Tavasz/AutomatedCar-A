@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
+import hu.oe.nik.szfmv.automatedcar.CarVariant;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,7 +32,7 @@ public class CourseDisplayTest {
 
         public MockDisplayObject() {
             super (new WorldObject(100, 100, "car_2_red.png"),
-                new AutomatedCar(0, 0, "car_2_red.png"));
+                new AutomatedCar(0, 0, CarVariant.RED_2));
 
         }
 
@@ -61,12 +61,12 @@ public class CourseDisplayTest {
 
         @Override
         public ArrayList<DisplayObject> getDisplayObjects() {
-            ArrayList<DisplayObject> returnlist = new ArrayList<DisplayObject>();
+            ArrayList<DisplayObject> returnList = new ArrayList<>();
 
             MockDisplayObject mockDisplayObject = new MockDisplayObject();
             mockDisplayObject.setDisplayImageData(0, 0);
-            returnlist.add(mockDisplayObject);
-            return returnlist;
+            returnList.add(mockDisplayObject);
+            return returnList;
 
         }
     }
@@ -78,7 +78,7 @@ public class CourseDisplayTest {
         bi = new BufferedImage(32, 16, BufferedImage.TYPE_INT_RGB);
         g2 = bi.createGraphics();
 
-        automatedCar = new AutomatedCar(0, 0, "car_2_red.png");
+        automatedCar = new AutomatedCar(0, 0, CarVariant.RED_2);
         world = new World(100, 100);
         displayWorld = new MockDisplayWorld(world, automatedCar);
 

@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.sensors;
 
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
+import hu.oe.nik.szfmv.automatedcar.CarVariant;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
@@ -152,7 +153,7 @@ public class RadarTest {
     @BeforeEach
     public void init() {
         virtualFunctionBus = new VirtualFunctionBus();
-        automatedCar = new AutomatedCar(10, 10, "car_1_white.png");
+        automatedCar = new AutomatedCar(10, 10, CarVariant.WHITE_1);
         automatedCar.setRotation((float) Math.toRadians(-30));
         world = new MockWorld(1000, 1000);
         radar = new Radar(virtualFunctionBus, automatedCar, world);

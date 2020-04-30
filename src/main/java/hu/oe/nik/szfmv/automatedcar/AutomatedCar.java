@@ -9,10 +9,9 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.Polygon;
-
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.average;
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
+import static hu.oe.nik.szfmv.automatedcar.model.PolygonLoader.loadPolygon;
 
 /**Represents a car object with all its inner components contained.*/
 public class AutomatedCar extends WorldObject {
@@ -28,21 +27,12 @@ public class AutomatedCar extends WorldObject {
     /**Not necessarily a unit vector, can have any length.*/
     private IVector facingDirection = Axis.Y.negativeDirection();
 
-    // may or may not be permanent: the egocar's debug polygon
-    private final Polygon debugPoly = new Polygon(
-        new int[]{50, 38, 27, 18, 12, 7, 6, 6, 3, 1, 0, 7, 7, 6, 6, 6, 9, 13, 17, 21, 26, 31, 37, 42, 50, 58, 63,
-            69, 76, 79, 83, 87, 91, 94, 94, 94, 93, 93, 100, 99, 97, 94, 94, 93, 88, 82, 73, 62},
-        new int[]{1, 2, 4, 8, 14, 23, 33, 63, 65, 67, 70, 69, 150, 152, 188, 191, 194, 198, 201, 203, 205, 206,
-            207, 208, 208, 208, 207, 206, 205, 203, 201, 198, 194, 191, 188, 152, 150, 69, 70, 67, 65,
-            63, 33, 23, 14, 8, 4, 2},
-        48);
-
-    public AutomatedCar(int x, int y, String imageFileName) {
-        super(x, y, imageFileName);
+    public AutomatedCar(int x, int y, CarVariant variant) {
+        super(x, y, variant.getImageResourceName());
 
         new Driver(virtualFunctionBus);
 
-        this.polygon = debugPoly;
+        this.polygon = loadPolygon("egocar-debug"); // may or may not be permanent: the egocar's debug polygon
     }
 
     public void drive() {
@@ -74,7 +64,8 @@ public class AutomatedCar extends WorldObject {
         this.moveCar(carMove);
     }
 
-    /**Applies movement to the car.
+    /**Applies movement to the car, although not the given vector directly.
+     * Moves the car approximately in the direction of the given move also considering the rotation of the car.
      * @param move The movement to apply.
      * <p>- its direction is interpreted as facing direction of the front wheels.</p>
      * <p>- its length is interpreted as the speed of movement.</p>*/
@@ -87,7 +78,7 @@ public class AutomatedCar extends WorldObject {
                 this.moveBackward(move);
                 break;
             case N_NEUTRAL:
-                this.neturalGear();
+                this.neutralGear();
                 break;
             default:
                 this.parkingGear();
@@ -95,6 +86,8 @@ public class AutomatedCar extends WorldObject {
         }
     }
 
+    /**Moves the car forwards considering its rotation as it being front-wheel powered.
+     * <p>{@link Axis#baseDirection() Base direction} is straight forwards from the points of view of the car.</p>*/
     private void moveForward(IVector forwardMove) {
         IVector currentPosition = this.getPosition();
         IVector toCarFrontVector = this.facingDirection.withLength(getHeight() / 2.0);
@@ -112,6 +105,10 @@ public class AutomatedCar extends WorldObject {
         this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
     }
 
+    /**Moves the car backwards considering its rotation as it being front-wheel powered.
+     * <p>Given vector should points forwards and the car will move on the same axis, but backwards,
+     * so direction of vector must not be reversed for calling this method.</p>
+     * <p>{@link Axis#baseDirection() Base direction} is straight forwards from the points of view of the car.</p>*/
     private void moveBackward(IVector backwardMove) {
         IVector currentPosition = this.getPosition();
         IVector toCarBackVector = this.facingDirection.withLength(getHeight() / -2.0);
@@ -129,11 +126,12 @@ public class AutomatedCar extends WorldObject {
         this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
     }
 
-    private void neturalGear() {
-        //FAAAAAAAKE!!!
+    private void neutralGear() {
+        //no throughput generated
     }
 
     private void parkingGear() {
-        //FAAAAAKE as FAF, but it will be probably enough for parking mode.
+        //no throughput generated
     }
+
 }

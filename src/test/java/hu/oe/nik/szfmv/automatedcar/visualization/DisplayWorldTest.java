@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
+import hu.oe.nik.szfmv.automatedcar.CarVariant;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
@@ -21,9 +22,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class DisplayWorldTest {
@@ -35,9 +34,11 @@ public class DisplayWorldTest {
     /**
      * Extend AutomatedCar to control virtualbus data
      */
-    class MockAutomatedCar extends AutomatedCar {
-        MockAutomatedCar(int x, int y, String imageFileName) {
-            super(x, y, imageFileName);
+    static class DummyAutomatedCar extends AutomatedCar {
+
+        //TODO WTF, dummy object is dummy because it is not the real object! Do not extend the original class!
+        DummyAutomatedCar(int x, int y, CarVariant variant) {
+            super(x, y, variant);
         }
 
         @Override
@@ -60,7 +61,7 @@ public class DisplayWorldTest {
 
             UltrasoundsVisualizationPacket ultrasoundsVisualizationPacket = new UltrasoundsVisualizationPacket();
             ultrasoundsVisualizationPacket.setSensorTriangle(
-                UltrasoundPositions.REAR_LEFT_SIDE, source, corner1, corner2);
+                    UltrasoundPositions.REAR_LEFT_SIDE, source, corner1, corner2);
             virtualFunctionBus.ultrasoundsVisualizationPacket = ultrasoundsVisualizationPacket;
 
             debugPacketSets(virtualFunctionBus);
@@ -94,15 +95,13 @@ public class DisplayWorldTest {
      * Extend AutomatedCar to control virtualbus data
      */
     class MockNullAutomatedCar extends AutomatedCar {
-        MockNullAutomatedCar(int x, int y, String imageFileName) {
-            super(x, y, imageFileName);
+        MockNullAutomatedCar(int x, int y, CarVariant variant) {
+            super(x, y, variant);
         }
 
         @Override
         public VirtualFunctionBus getVirtualFunctionBus() {
-
-            VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
-            return virtualFunctionBus;
+            return new VirtualFunctionBus();
         }
     }
 
@@ -120,10 +119,7 @@ public class DisplayWorldTest {
             fixWorldObject1.setHighlightedWhenCameraIsOn(true);
             WorldObject fixWorldObject2 = new WorldObject(30, 40, "road_2lane_90right.png");
             fixWorldObject2.setZ(2);
-            List<WorldObject> fixObjects = List.of(
-                fixWorldObject1,
-                fixWorldObject2);
-            return fixObjects;
+            return List.of(fixWorldObject1, fixWorldObject2);
         }
 
         @Override
@@ -135,11 +131,7 @@ public class DisplayWorldTest {
             dynamicWorldObject2.setId("2_crossroad_1_4");
             dynamicWorldObject2.setHighlightedWhenRadarIsOn(true);
 
-            List<WorldObject> dynamicObjects = List.of(
-                dynamicWorldObject1,
-                dynamicWorldObject2);
-
-            return dynamicObjects;
+            return List.of(dynamicWorldObject1, dynamicWorldObject2);
         }
     }
 
@@ -147,7 +139,7 @@ public class DisplayWorldTest {
     @DisplayName("Packets are on the virtualfuncionbus")
     class NotNulls {
 
-        private MockAutomatedCar automatedCar;
+        private DummyAutomatedCar automatedCar;
 
         /**
          * Setting up the test
@@ -156,7 +148,7 @@ public class DisplayWorldTest {
         public void init() {
             mockWorld = new MockWorld();
 
-            automatedCar = new MockAutomatedCar(200, 200, "car_2_red.png");
+            automatedCar = new DummyAutomatedCar(200, 200, CarVariant.RED_2);
             automatedCar.setRotation((float) Math.PI / 2);  // No rotation
 
             displayWorld = new DisplayWorld(mockWorld, automatedCar);
@@ -181,22 +173,22 @@ public class DisplayWorldTest {
 
         @Test
         public void debugModeSet() {
-            assertEquals(true, displayWorld.isDebugOn());
+            assertTrue(displayWorld.isDebugOn());
         }
 
         @Test
         public void cameraSensorDisplayOn() {
-            assertEquals(true, displayWorld.isCameraShown());
+            assertTrue(displayWorld.isCameraShown());
         }
 
         @Test
         public void radarSensorDisplayOn() {
-            assertEquals(true, displayWorld.isRadarShown());
+            assertTrue(displayWorld.isRadarShown());
         }
 
         @Test
         public void ultrasSoundSensorDisplayOn() {
-            assertEquals(true, displayWorld.isUltrasoundShown());
+            assertTrue(displayWorld.isUltrasoundShown());
         }
 
         @Test
@@ -248,7 +240,7 @@ public class DisplayWorldTest {
         public void init() {
             mockWorld = new MockWorld();
 
-            automatedCar = new MockNullAutomatedCar(200, 200, "car_2_red.png");
+            automatedCar = new MockNullAutomatedCar(200, 200, CarVariant.RED_2);
             automatedCar.setRotation((float) Math.PI / 2);  // No rotation
 
             displayWorld = new DisplayWorld(mockWorld, automatedCar);

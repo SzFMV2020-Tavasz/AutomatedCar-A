@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
+import hu.oe.nik.szfmv.automatedcar.CarVariant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +22,7 @@ public class DisplaySensorObjectTest {
 
     @BeforeEach
     public void init() {
-        automatedCar = new AutomatedCar(292, 230, "car_2_red.png");
+        automatedCar = new AutomatedCar(292, 230, CarVariant.RED_2);
         automatedCar.setRotation((float)-Math.PI / 4);
         displaySensorObject = new DisplaySensorObject(automatedCar);
     }
