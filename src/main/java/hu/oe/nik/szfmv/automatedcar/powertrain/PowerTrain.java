@@ -8,6 +8,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.*;
+import static java.lang.Math.max;
 import static java.lang.Math.toRadians;
 
 /**<p>The powertrain encompasses every component that converts the engine’s power into movement.</p>
@@ -17,8 +18,12 @@ public class PowerTrain extends SystemComponent {
     static final double MAX_STEERING_ROTATION = 180.0;
     static final double MAX_WHEEL_ROTATION = 60.0;
     private static final double MAX_GAS_PEDAL_VALUE = 100.0;
+    private static final double MAX_BREAK_PEDAL_VALUE = 100.0;
 
     public ITransmission2 transmission = new SimpleTransmission();
+
+    private IVector currentMovement = nullVector();
+    private IVector currentWheelRotation = nullVector();
 
     private ToPowerTrainPacket input;
 
@@ -39,7 +44,7 @@ public class PowerTrain extends SystemComponent {
     }
 
     private CarMovePacketData produceMovementOutput() {
-        IVector move = calculateMove();
+        IVector move = calculateAcceleration();
         if (move.isDirectional()) {
             return new CarMovePacketData(move, move);
         } else {
@@ -71,8 +76,24 @@ public class PowerTrain extends SystemComponent {
                 : null;
     }
 
-    private IVector calculateMove() {
-        return calculateWheelRotation().multiplyBy(this.transmission.getCurrentRPM() / 100.0);
+    private IVector calculateAcceleration() {
+        this.currentWheelRotation = calculateWheelRotation();
+        applyTrust();
+        applySlowing();
+        return this.currentMovement;
+    }
+
+    private void applyTrust() {
+        IVector trust = currentWheelRotation.multiplyBy(this.transmission.getCurrentRPM() / 500.0);
+        this.currentMovement = this.currentMovement.add(trust).withDirection(currentWheelRotation);
+    }
+
+    private void applySlowing() {
+        double speed = this.currentMovement.getLength();
+        double resistance = speed / 5;
+        double breaking = 0.005 + input.getBreakPedalValue() / MAX_BREAK_PEDAL_VALUE * 5;
+        double decreasedAcceleration = max(0, speed - resistance - breaking);
+        this.currentMovement = this.currentMovement.withLength(decreasedAcceleration);
     }
 
     private IVector calculateWheelRotation() {
