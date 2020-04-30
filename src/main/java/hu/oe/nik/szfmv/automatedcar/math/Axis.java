@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.math;
 
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
 import static java.lang.Math.*;
 import static java.lang.Math.PI;
 
@@ -44,12 +45,22 @@ public enum Axis {
             this.positive = positive;
         }
 
-        @Override public double getXDiff() {
-            return axis == Axis.X ? (positive ? +1 : -1) : 0;
+        @Override
+        public double getXDiff() {
+            if (this.axis == Axis.X) {
+                return (positive ? +1.0 : -1.0);
+            } else {
+                return 0;
+            }
         }
 
-        @Override public double getYDiff() {
-            return axis == Axis.Y ? (positive ? +1 : -1) : 0;
+        @Override
+        public double getYDiff() {
+            if (this.axis == Axis.Y) {
+                return (positive ? +1.0 : -1.0);
+            } else {
+                return 0;
+            }
         }
 
         @Override public double getLength() {
@@ -64,21 +75,27 @@ public enum Axis {
             }
         }
 
-        @Override public double getRadiansRelativeTo(IVector direction) {
-            double toPositive; switch (this.axis) {
+        @Override
+        public double getRadiansRelativeTo(IVector direction) {
+            double towardsPositive = getRadiansRelativeToOwnAxis(direction);
+            if (positive) {
+                return towardsPositive;
+            } else {
+                return towardsPositive > 0
+                        ? -(PI - towardsPositive)
+                        : +(PI + towardsPositive);
+            }
+        }
+
+        private double getRadiansRelativeToOwnAxis(IVector direction) {
+            switch (this.axis) {
                 case X:
-                    toPositive = getRadiansRelativeToAxisX(direction);
-                    break;
+                    return getRadiansRelativeToAxisX(direction);
                 case Y:
-                    toPositive = getRadiansRelativeToAxisY(direction);
-                    break;
+                    return getRadiansRelativeToAxisY(direction);
                 default:
                     throw new IllegalStateException();
             }
-
-            return positive ? toPositive : toPositive > 0
-                    ? -(PI - toPositive)
-                    : +(PI + toPositive);
         }
 
         /**Rotation is mathematical, positive is towards the left.*/
@@ -123,21 +140,33 @@ public enum Axis {
             return positive;
         }
 
-        @Override public IVector rotateByRadians(double rad) {
+        @Override
+        public IVector rotateByRadians(double rad) {
             double alpha2 = (PI / 2) - rad;
             switch (this.axis) {
                 case X:
-                    return IVector.vectorFromXY(sin(alpha2), cos(alpha2));
+                    return vectorFromXY(sin(alpha2), cos(alpha2));
                 case Y:
-                    return IVector.vectorFromXY(-cos(alpha2), sin(alpha2));
+                    return vectorFromXY(-cos(alpha2), sin(alpha2));
                 default:
                     throw new IllegalStateException();
             }
         }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return "AxisVector{ " + axis + (positive ? "+": "-") + " }";
         }
 
     }
+
+    /**The axis of default forward and backward direction.*/
+    public static Axis BASE = X;
+
+    /**The standard positive/neutral direction.
+     * <p>Should be used for vectors only representing angle, length or both, but relative to no specific axis.</p>*/
+    public static IVector baseDirection() {
+        return Axis.BASE.positiveDirection();
+    }
+
 }

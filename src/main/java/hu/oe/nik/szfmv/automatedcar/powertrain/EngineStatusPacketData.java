@@ -1,8 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.EngineStatusPacket;
-
-class EngineStatusPacketData implements EngineStatusPacket {
+class EngineStatusPacketData implements IEngineStatusPacket {
 
     private final double rpm;
 

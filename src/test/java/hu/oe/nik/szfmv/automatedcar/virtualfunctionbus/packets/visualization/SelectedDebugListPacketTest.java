@@ -9,6 +9,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * WILL BE REMOVED AT THE BEGINING OF SRPINT 3
+ * SelectedDebugListPacket is already removed from Virtualfunctionbus
+ * use WorldObject ..Highlight.. methods for emphasizing objects for sensors
+ */
 public class SelectedDebugListPacketTest {
     SelectedDebugListPacket selectedDebugListPacket;
 

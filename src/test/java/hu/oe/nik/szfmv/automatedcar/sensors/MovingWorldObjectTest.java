@@ -2,8 +2,8 @@ package hu.oe.nik.szfmv.automatedcar.sensors;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.CarPositionPacket;
 
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,19 +17,9 @@ public class MovingWorldObjectTest {
     /**
      * implementing interfaces for testing
      */
-    class MockCarPostionPacketData implements CarPositionPacket{
+    private class MockCarMovePacketData implements ICarMovePacket {
         int calledNumber = 0;
-        MockCarPostionPacketData( ){ };
-
-        @Override
-        public double getX() {
-            return 0;
-        }
-
-        @Override
-        public double getY() {
-            return 0;
-        }
+        MockCarMovePacketData( ){ }
 
         @Override
         public IVector getMoveVector() {
@@ -41,13 +31,13 @@ public class MovingWorldObjectTest {
             }
         }
     }
-    class MockVector implements IVector{
+    private class MockVector implements IVector{
         int xDiff;
         int yDiff;
         MockVector(int xDiff, int yDiff){
             this.xDiff = xDiff;
             this.yDiff = yDiff;
-        };
+        }
 
         @Override
         public double getXDiff() {
@@ -75,14 +65,13 @@ public class MovingWorldObjectTest {
     public void init() {
         WorldObject worldObject = new WorldObject(10, 20, "tree.png");
         virtualFunctionBus = new VirtualFunctionBus();
-        CarPositionPacket carPositionPacket = new MockCarPostionPacketData();
-        virtualFunctionBus.carPositionPacket = carPositionPacket;
+        virtualFunctionBus.carPositionPacket = new MockCarMovePacketData();
 
         movingWorldObject = new MovingWorldObject(worldObject, virtualFunctionBus);
     }
 
     /**
-     * Check whether the class gets instantiatied when new Radar() called.
+     * Check whether the class gets instantiated when new Radar() called.
      */
     @Test
     public void classInstantiated() {
@@ -90,7 +79,7 @@ public class MovingWorldObjectTest {
     }
 
     /**
-     * Checks if the movement vector of the object is calulated right
+     * Checks if the movement vector of the object is calculated right
      */
     @Test
     public void movementVector(){
@@ -104,11 +93,12 @@ public class MovingWorldObjectTest {
 
     @Test
     public void relativeMovementVector(){
-        assertEquals(25, movingWorldObject.getRelativeMovementVectorX());
-        assertEquals(35, movingWorldObject.getRelativeMovementVectorY());
+        assertEquals(-25, movingWorldObject.getRelativeMovementVectorX());
+        assertEquals(-35, movingWorldObject.getRelativeMovementVectorY());
         movingWorldObject.setX(20);
-        movingWorldObject.setY(40);
-        assertEquals(45, movingWorldObject.getRelativeMovementVectorX());
-        assertEquals(65, movingWorldObject.getRelativeMovementVectorY());
+        movingWorldObject.setY(30);
+        assertEquals(-25, movingWorldObject.getRelativeMovementVectorX());
+        assertEquals(-35, movingWorldObject.getRelativeMovementVectorY());
     }
+
 }

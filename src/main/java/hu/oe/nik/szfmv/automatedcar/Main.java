@@ -20,16 +20,14 @@ public class Main {
     private Radar radar;
     private Ultrasonic ultrasonic;
 
+
     public static void main(String[] args) {
-
         new Main().run();
-
     }
 
     public void run() {
         init();
         loop();
-
     }
 
     private void init() {
