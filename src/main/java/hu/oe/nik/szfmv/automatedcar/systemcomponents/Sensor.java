@@ -214,6 +214,7 @@ public class Sensor extends SystemComponent {
                 automatedCar.getY() + RADAR_SENSOR_DY + sourceT.getTranslateY());
         return source;
     }
+    /**/
 
     /**
      * Calculates the world position of the radar sensor polygon's second point
