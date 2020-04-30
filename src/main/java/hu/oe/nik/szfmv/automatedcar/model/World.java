@@ -71,8 +71,7 @@ public class World {
         sensor.addPoint(c.x, c.y);
 
         Polygon obj = ObjectTransform.transformPolygon(item);
-        if (obj == null) { //TODO Why is this null? Caused NPE. Please fix this!
-            System.err.println("Transformed object for radar is null!");
+        if (obj == null) {
             return false;
         }
 

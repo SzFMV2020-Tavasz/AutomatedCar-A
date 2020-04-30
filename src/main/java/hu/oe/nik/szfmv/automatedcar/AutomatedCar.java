@@ -28,12 +28,21 @@ public class AutomatedCar extends WorldObject {
     /**Not necessarily a unit vector, can have any length.*/
     private IVector facingDirection = Axis.Y.negativeDirection();
 
+    // may or may not be permanent: the egocar's debug polygon
+    private final Polygon debugPoly = new Polygon(
+        new int[]{50, 38, 27, 18, 12, 7, 6, 6, 3, 1, 0, 7, 7, 6, 6, 6, 9, 13, 17, 21, 26, 31, 37, 42, 50, 58, 63,
+            69, 76, 79, 83, 87, 91, 94, 94, 94, 93, 93, 100, 99, 97, 94, 94, 93, 88, 82, 73, 62},
+        new int[]{1, 2, 4, 8, 14, 23, 33, 63, 65, 67, 70, 69, 150, 152, 188, 191, 194, 198, 201, 203, 205, 206,
+            207, 208, 208, 208, 207, 206, 205, 203, 201, 198, 194, 191, 188, 152, 150, 69, 70, 67, 65,
+            63, 33, 23, 14, 8, 4, 2},
+        48);
+
     public AutomatedCar(int x, int y, String imageFileName) {
         super(x, y, imageFileName);
 
         new Driver(virtualFunctionBus);
 
-        this.polygon = createDebugPolygon(); //may or may not be permanent: the egocar's debug polygon
+        this.polygon = debugPoly;
     }
 
     public void drive() {
@@ -126,18 +135,5 @@ public class AutomatedCar extends WorldObject {
 
     private void parkingGear() {
         //FAAAAAKE as FAF, but it will be probably enough for parking mode.
-    }
-
-    private Polygon createDebugPolygon() {
-        int[] xPoints = {
-                50, 38, 27, 18, 12, 7, 6, 6, 3, 1, 0, 7, 7, 6, 6, 6, 9, 13, 17, 21, 26, 31, 37, 42, 50, 58, 63,
-                69, 76, 79, 83, 87, 91, 94, 94, 94, 93, 93, 100, 99, 97, 94, 94, 93, 88, 82, 73, 62
-        };
-        int[] yPoints = {
-                1, 2, 4, 8, 14, 23, 33, 63, 65, 67, 70, 69, 150, 152, 188, 191, 194, 198, 201, 203, 205, 206,
-                207, 208, 208, 208, 207, 206, 205, 203, 201, 198, 194, 191, 188, 152, 150, 69, 70, 67, 65,
-                63, 33, 23, 14, 8, 4, 2
-        };
-        return new Polygon(xPoints, yPoints, 48);
     }
 }

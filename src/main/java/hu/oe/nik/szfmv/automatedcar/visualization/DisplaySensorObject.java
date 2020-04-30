@@ -8,11 +8,11 @@ import java.awt.geom.Point2D;
 
 class DisplaySensorObject {
 
-    private AutomatedCar automatedCar;
     protected Point2D source;
     protected Point2D corner1;
     protected Point2D corner2;
     protected Color sensorColor;
+    private AutomatedCar automatedCar;
 
     /**
      * Class for holding the sensor triangle data for display.
