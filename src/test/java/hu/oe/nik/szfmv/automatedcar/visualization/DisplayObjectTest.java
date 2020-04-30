@@ -49,7 +49,7 @@ public class DisplayObjectTest {
     @BeforeEach
     public void init() {
         VisualizationConfig.loadReferencePoints("reference_points.xml");
-        automatedCar = new AutomatedCar(292, 230, CarVariant.RED_2);
+        automatedCar = new AutomatedCar(292, 230, CarVariant.TYPE_2_RED);
         automatedCar.setRotation(-(float) Math.PI / 4) ;  // 45 +
         worldObject = new MockWorldObject(399, 540, "road_2lane_90right.png");
         displayObject = new MockDisplayObject(worldObject, automatedCar);

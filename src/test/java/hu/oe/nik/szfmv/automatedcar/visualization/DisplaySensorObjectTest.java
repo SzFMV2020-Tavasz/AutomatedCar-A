@@ -22,7 +22,7 @@ public class DisplaySensorObjectTest {
 
     @BeforeEach
     public void init() {
-        automatedCar = new AutomatedCar(292, 230, CarVariant.RED_2);
+        automatedCar = new AutomatedCar(292, 230, CarVariant.TYPE_2_RED);
         automatedCar.setRotation((float)-Math.PI / 4);
         displaySensorObject = new DisplaySensorObject(automatedCar);
     }

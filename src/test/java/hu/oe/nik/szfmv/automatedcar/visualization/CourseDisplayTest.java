@@ -32,7 +32,7 @@ public class CourseDisplayTest {
 
         public MockDisplayObject() {
             super (new WorldObject(100, 100, "car_2_red.png"),
-                new AutomatedCar(0, 0, CarVariant.RED_2));
+                new AutomatedCar(0, 0, CarVariant.TYPE_2_RED));
 
         }
 
@@ -78,7 +78,7 @@ public class CourseDisplayTest {
         bi = new BufferedImage(32, 16, BufferedImage.TYPE_INT_RGB);
         g2 = bi.createGraphics();
 
-        automatedCar = new AutomatedCar(0, 0, CarVariant.RED_2);
+        automatedCar = new AutomatedCar(0, 0, CarVariant.TYPE_2_RED);
         world = new World(100, 100);
         displayWorld = new MockDisplayWorld(world, automatedCar);
 

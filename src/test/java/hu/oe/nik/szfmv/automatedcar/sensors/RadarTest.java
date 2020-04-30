@@ -153,7 +153,7 @@ public class RadarTest {
     @BeforeEach
     public void init() {
         virtualFunctionBus = new VirtualFunctionBus();
-        automatedCar = new AutomatedCar(10, 10, CarVariant.WHITE_1);
+        automatedCar = new AutomatedCar(10, 10, CarVariant.TYPE_1_WHITE);
         automatedCar.setRotation((float) Math.toRadians(-30));
         world = new MockWorld(1000, 1000);
         radar = new Radar(virtualFunctionBus, automatedCar, world);

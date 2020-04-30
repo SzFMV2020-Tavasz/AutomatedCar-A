@@ -157,7 +157,7 @@ public class DisplayWorldTest {
         public void init() {
             mockWorld = new MockWorld();
 
-            automatedCar = new MockAutomatedCar(200, 200, CarVariant.RED_2);
+            automatedCar = new MockAutomatedCar(200, 200, CarVariant.TYPE_2_RED);
             automatedCar.setRotation((float) Math.PI / 2);  // No rotation
 
             displayWorld = new DisplayWorld(mockWorld, automatedCar);
@@ -249,7 +249,7 @@ public class DisplayWorldTest {
         public void init() {
             mockWorld = new MockWorld();
 
-            automatedCar = new MockNullAutomatedCar(200, 200, CarVariant.RED_2);
+            automatedCar = new MockNullAutomatedCar(200, 200, CarVariant.TYPE_2_RED);
             automatedCar.setRotation((float) Math.PI / 2);  // No rotation
 
             displayWorld = new DisplayWorld(mockWorld, automatedCar);
