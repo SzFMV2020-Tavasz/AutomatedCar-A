@@ -6,7 +6,7 @@ import static java.lang.Math.PI;
 
 /**A mathematical 2-dimensional axis; either {@link Axis#X} or {@link Axis#Y}.
  *
- * @author Dávid Magyar - davidson996@gmail.com*/
+ * @author Team 3 (Dávid Magyar | aether-fox | davidson996@gmail.com)*/
 public enum Axis {
 
     /**The X axis out of the two 2-dimensional axes.

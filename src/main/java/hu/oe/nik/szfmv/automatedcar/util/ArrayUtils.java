@@ -3,7 +3,8 @@ package hu.oe.nik.szfmv.automatedcar.util;
 import java.util.List;
 import java.util.function.ToIntFunction;
 
-/**Provides some utility functions for array handling.*/
+/**Provides some utility functions for array handling.
+ * @author Team 3 (Dávid Magyar | aether-fox | davidson996@gmail.com)*/
 public enum ArrayUtils {;
 
     /**Puts the values of the given list to a new int array.

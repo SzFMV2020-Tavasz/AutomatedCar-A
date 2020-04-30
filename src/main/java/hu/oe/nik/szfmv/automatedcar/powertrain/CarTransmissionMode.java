@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
+/**@author Team 3*/
 public enum CarTransmissionMode {
 
     /**Tolató állás.*/

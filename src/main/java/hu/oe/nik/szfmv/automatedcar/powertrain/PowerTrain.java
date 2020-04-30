@@ -11,7 +11,8 @@ import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorWithAngle;
 import static java.lang.Math.toRadians;
 
 /**<p>The powertrain encompasses every component that converts the engine’s power into movement.</p>
-<p>This includes the engine, transmission, the driveshaft, differentials, axles; basically anything from the engine through to the rotating wheels.</p>*/
+<p>This includes the engine, transmission, the driveshaft, differentials, axles; basically anything from the engine through to the rotating wheels.</p>
+ @author Team 3*/
 public class PowerTrain extends SystemComponent {
 
     static final double RPM_MULTIPLIER = 6000.0;

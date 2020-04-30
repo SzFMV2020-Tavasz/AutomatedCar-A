@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.math;
 
 import static hu.oe.nik.szfmv.automatedcar.math.Axis.baseDirection;
+import static hu.oe.nik.szfmv.automatedcar.math.MathUtils.TWO_PI;
 import static hu.oe.nik.szfmv.automatedcar.math.MathUtils.inPeriodOfPI;
 import static java.lang.Math.*;
 
@@ -8,7 +9,7 @@ import static java.lang.Math.*;
  * Can be {@link IVector#rotateByRadians(double) rotated}, {@link IVector#multiplyBy(double) resized},
  * made into {@link IVector#unit() unit vector}, etc...
  *
- * @author Dávid Magyar - davidson996@gmail.com*/
+ * @author Team 3 (Dávid Magyar | aether-fox | davidson996@gmail.com)*/
 public interface IVector {
 
     /**Returns the X difference represented by this vector.*/
@@ -56,14 +57,14 @@ public interface IVector {
     /**Gets the angle of the vector in degrees relative to given axis.
      * <p>Rotation is mathematical, positive is towards the left.</p>*/
     default double getDegreesRelativeTo(Axis axis) {
-        return getRadiansRelativeTo(axis.positiveDirection()) / PI * 180;
+        return getRadiansRelativeTo(axis.positiveDirection()) / TWO_PI * 360;
     }
 
     /**Gets the angle of the vector in degrees relative to the given direction.
      * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value from -180° to +180°.*/
     default double getDegreesRelativeTo(IVector direction) {
-        return getRadiansRelativeTo(direction) / PI * 180;
+        return getRadiansRelativeTo(direction) / TWO_PI * 360;
     }
 
     /**Gets angle of vector in absolute radians relative to the given axis.
@@ -72,7 +73,7 @@ public interface IVector {
     default double getAbsRadiansRelativeTo(Axis axis) {
         double signedRads = getRadiansRelativeTo(axis);
         return (signedRads < 0)
-                ? (2*PI + signedRads)
+                ? (TWO_PI + signedRads)
                 : signedRads;
     }
 
@@ -82,7 +83,7 @@ public interface IVector {
     default double getAbsRadiansRelativeTo(IVector direction) {
         double signedRads = getRadiansRelativeTo(direction);
         return (signedRads < 0)
-                ? (2*PI + signedRads)
+                ? (TWO_PI + signedRads)
                 : signedRads;
     }
 
@@ -90,14 +91,14 @@ public interface IVector {
      * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value between 0° and 360°.*/
     default double getAbsDegreesRelativeTo(Axis axis) {
-        return getAbsRadiansRelativeTo(axis.positiveDirection()) / PI * 180;
+        return getAbsRadiansRelativeTo(axis.positiveDirection()) / TWO_PI * 360;
     }
 
     /**Gets angle of vector in absolute degrees relative to the given direction.
      * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value between 0° and 360°.*/
     default double getAbsDegreesRelativeTo(IVector direction) {
-        return getAbsRadiansRelativeTo(direction) / PI * 180;
+        return getAbsRadiansRelativeTo(direction) / TWO_PI * 360;
     }
 
     /**Flips the vector around, keeping its length, but changing its direction to its opposite.
@@ -150,7 +151,7 @@ public interface IVector {
      * @see #rotateByDegrees(double)
      * @return A new vector rotated by the given gradians.*/
     default IVector rotateByGradians(double grads) {
-        return rotateByRadians(grads / 200 * PI);
+        return rotateByRadians(grads / 400 * TWO_PI);
     }
 
     /**Returns a clone of the vector incremented its {@code x} and {@code y} coordinates with the given values.*/
