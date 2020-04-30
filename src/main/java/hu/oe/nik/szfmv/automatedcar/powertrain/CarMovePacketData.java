@@ -3,17 +3,22 @@ package hu.oe.nik.szfmv.automatedcar.powertrain;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 
-import static java.lang.Double.NaN;
-
 class CarMovePacketData implements ICarMovePacket {
-    private final IVector moveVector;
+    private final IVector accelerationVector;
+    private final IVector wheelFacingDirection;
 
-    public CarMovePacketData(IVector moveVector) {
-        this.moveVector = moveVector;
+    public CarMovePacketData(IVector accelerationVector, IVector wheelFacingDirection) {
+        this.accelerationVector = accelerationVector;
+        this.wheelFacingDirection = wheelFacingDirection;
     }
 
     @Override
-    public IVector getMoveVector() {
-        return moveVector;
+    public IVector getAccelerationVector() {
+        return accelerationVector;
+    }
+
+    @Override
+    public IVector getWheelFacingDirection() {
+        return this.wheelFacingDirection;
     }
 }

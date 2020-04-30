@@ -1,5 +1,8 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
+import hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode;
+import hu.oe.nik.szfmv.automatedcar.powertrain.EngineStatusPacketData;
+
 /***
  * @author Team 3 (Magyar Dávid | aether-fox | davidson996@gmail.com)
  */

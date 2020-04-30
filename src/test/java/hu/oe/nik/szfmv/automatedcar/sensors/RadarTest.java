@@ -13,11 +13,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hu.oe.nik.szfmv.automatedcar.math.Axis.baseDirection;
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class RadarTest {
@@ -144,8 +142,13 @@ public class RadarTest {
     private static class DummyCarPositionPacketData implements ICarMovePacket {
 
         @Override
-        public IVector getMoveVector() {
+        public IVector getAccelerationVector() {
             return vectorFromXY(10, -5);
+        }
+
+        @Override
+        public IVector getWheelFacingDirection() {
+            return baseDirection();
         }
     }
 
@@ -156,7 +159,7 @@ public class RadarTest {
         automatedCar.setRotation((float) Math.toRadians(-30));
         world = new MockWorld(1000, 1000);
         radar = new Radar(virtualFunctionBus, automatedCar, world);
-        virtualFunctionBus.carPositionPacket = new DummyCarPositionPacketData();
+        virtualFunctionBus.carMovePacket = new DummyCarPositionPacketData();
     }
 
     /**

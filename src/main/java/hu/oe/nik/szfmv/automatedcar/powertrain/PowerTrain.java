@@ -1,13 +1,13 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
+import hu.oe.nik.szfmv.automatedcar.math.Axis;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
 
-import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
-import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorWithAngle;
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.*;
 import static java.lang.Math.toRadians;
 
 /**<p>The powertrain encompasses every component that converts the engine’s power into movement.</p>
@@ -28,19 +28,23 @@ public class PowerTrain extends SystemComponent {
     }
 
     private void provideInitialOutput() {
-        CarMovePacketData initialPositionOutput = new CarMovePacketData(vectorFromXY(0, 0));
-        EngineStatusPacketData initialEngineOutput = this.transmission.provideInfo();
+        CarMovePacketData initialPositionOutput = new CarMovePacketData(vectorFromXY(0, 0), Axis.Y.positiveDirection());
+        EngineStatusPacketData initialEngineOutput = this.produceEngineInfoOutput();
         this.provideOutput(initialPositionOutput, initialEngineOutput);
     }
 
     private void provideOutput(CarMovePacketData positionData, EngineStatusPacketData engineData) {
-        this.virtualFunctionBus.carPositionPacket = positionData;
+        this.virtualFunctionBus.carMovePacket = positionData;
         this.virtualFunctionBus.engineStatusPacket = engineData;
     }
 
-    private CarMovePacketData producePositionOutput() {
+    private CarMovePacketData produceMovementOutput() {
         IVector move = calculateMove();
-        return new CarMovePacketData(move);
+        if (move.isDirectional()) {
+            return new CarMovePacketData(move, move);
+        } else {
+            return new CarMovePacketData(nullVector(), calculateWheelRotation());
+        }
     }
 
     @Override
@@ -52,7 +56,11 @@ public class PowerTrain extends SystemComponent {
 
         transmission.update(gasPedalPressRatio, targetMode, targetLevel);
 
-        provideOutput(producePositionOutput(), transmission.provideInfo());
+        provideOutput(produceMovementOutput(), produceEngineInfoOutput());
+    }
+
+    private EngineStatusPacketData produceEngineInfoOutput() {
+        return transmission.provideInfo();
     }
 
     /**@return {@link CarTransmissionMode} instance or {@code null}.*/
@@ -64,7 +72,7 @@ public class PowerTrain extends SystemComponent {
     }
 
     private IVector calculateMove() {
-        return calculateWheelRotation().multiplyBy(input.getGasPedalValue() / 10);
+        return calculateWheelRotation().multiplyBy(this.transmission.getCurrentRPM() / 100.0);
     }
 
     private IVector calculateWheelRotation() {

@@ -20,10 +20,12 @@ public class SimpleTransmission implements ITransmission2 {
     private static final double RATIO_4_TO_1 = RATIO_4_TO_3 * RATIO_3_TO_2 * RATIO_2_TO_1;
     private static final double RATIO_5_TO_1 = RATIO_5_TO_4 * RATIO_4_TO_3 * RATIO_3_TO_2 * RATIO_2_TO_1;
 
+    private static final double MOTORIC_BREAK_RATIO = 0.25;
+
     private CarTransmissionMode currentTransmissionMode = CarTransmissionMode.N_NEUTRAL;
     private int currentTransmissionLevel = 0;
 
-    private long currentRPM = 1000;
+    private long currentRPM = 0;
 
     private long lastUpdateTimeStamp;
 
@@ -60,10 +62,12 @@ public class SimpleTransmission implements ITransmission2 {
 
         long currentRPMPerSec = getRPMPerSecond(currentTransmissionMode, currentTransmissionLevel);
         double elapsedSeconds = (elapsedMillis / 1000.0);
-        double hasPedalEffect = (gasPedalPressRatio * 1.25 - 0.25);
+        double hasPedalEffect = (gasPedalPressRatio * (1.0 + MOTORIC_BREAK_RATIO) - MOTORIC_BREAK_RATIO);
 
-        long newTargetRPM = (long)(elapsedSeconds * currentRPMPerSec * hasPedalEffect);
+        long newTargetRPM = this.currentRPM + (long)(elapsedSeconds * currentRPMPerSec * hasPedalEffect);
         this.currentRPM = max(0, min(newTargetRPM, MAX_RPM));
+
+        System.out.println(this.currentRPM); //TODO remove this debug line
     }
 
     private long getMillisSinceLastUpdateAndReset() {

@@ -6,13 +6,15 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.awt.Polygon;
 
-import static hu.oe.nik.szfmv.automatedcar.math.IVector.average;
-import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.*;
+import static java.lang.Double.isNaN;
+import static java.lang.Math.max;
 
 /**Represents a car object with all its inner components contained.*/
 public class AutomatedCar extends WorldObject {
@@ -27,6 +29,8 @@ public class AutomatedCar extends WorldObject {
 
     /**Not necessarily a unit vector, can have any length.*/
     private IVector facingDirection = Axis.Y.negativeDirection();
+
+    private IVector currentMovement = nullVector();
 
     // may or may not be permanent: the egocar's debug polygon
     private final Polygon debugPoly = new Polygon(
@@ -70,8 +74,26 @@ public class AutomatedCar extends WorldObject {
     }
 
     private void updatePositionAndOrientation() {
-        IVector carMove = virtualFunctionBus.carPositionPacket.getMoveVector();
-        this.moveCar(carMove);
+        applyTrust();
+        applySlowing();
+
+        double currentAcceleration = this.currentMovement.getLength();
+        if (isNaN(currentAcceleration) || currentAcceleration == 0) {
+            return;
+        }
+        this.moveCar(this.currentMovement);
+    }
+
+    private void applySlowing() {
+        double currentAcceleration = this.currentMovement.getLength();
+        double newAcceleration = max(0, currentAcceleration - currentAcceleration / 5);
+        this.currentMovement = this.currentMovement.withLength(newAcceleration);
+    }
+
+    private void applyTrust() {
+        ICarMovePacket propulsionData = virtualFunctionBus.carMovePacket;
+        IVector trust = virtualFunctionBus.carMovePacket.getAccelerationVector();
+        this.currentMovement = this.currentMovement.add(trust).withDirection(propulsionData.getWheelFacingDirection());
     }
 
     /**Applies movement to the car.
