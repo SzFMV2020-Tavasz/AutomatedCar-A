@@ -5,8 +5,9 @@ import hu.oe.nik.szfmv.automatedcar.Main;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.sensors.MovingWorldObject;
+import hu.oe.nik.szfmv.automatedcar.sensors.ObjectTransform;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.SelectedDebugListPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundsVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.visualization.UltrasoundPositions;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class Sensor extends SystemComponent {
     // when the egocar is looking north
     private final int RADAR_SENSOR_DX;
     private final int RADAR_SENSOR_DY;
-    private final SelectedDebugListPacket selectedDebugListPacket;
+    private final DebugModePacket debugModePacket;
     private UltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
     private UltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
     // objects references for reference(eh...)
@@ -57,8 +59,8 @@ public class Sensor extends SystemComponent {
         virtualFunctionBus.ultrasoundsVisualizationPacket = ultrasoundsVisualizationPacket;
         this.ultrasoundDisplayStatePacket = ultrasoundDisplayStatePacket;
         virtualFunctionBus.ultrasoundDisplayStatePacket = ultrasoundDisplayStatePacket;
-        selectedDebugListPacket = new SelectedDebugListPacket();
-        virtualFunctionBus.selectedDebugListPacket = selectedDebugListPacket;
+        debugModePacket = new DebugModePacket();
+        virtualFunctionBus.debugModePacket = debugModePacket;
         this.sensorPosition = sensorPosition;
 
         this.automatedCar = automatedCar;
@@ -80,7 +82,7 @@ public class Sensor extends SystemComponent {
         // get elements in triangle
         java.util.List<WorldObject> selectedInTriangle = getCollideableElementsInRadarTriangle(source, corner1, corner2);
         updateElementsSeenByRadar(selectedInTriangle);
-        showElementsInTriangle(selectedDebugListPacket);
+        showNearestElementInTriangle();
 
         // send radar display data
         ultrasoundsVisualizationPacket.setSensorTriangle(sensorPosition, source, corner1, corner2);
@@ -153,17 +155,88 @@ public class Sensor extends SystemComponent {
 
     /**
      * Sets the list of elements that are shown with different color inside the radar triangle
-     *
-     * @param selectedDebugListPacket the packet that will pass o the list
+     * Gets the geometrically nearest element and passes it to the selectedDebuglistpacket
      */
-    private void showElementsInTriangle(SelectedDebugListPacket selectedDebugListPacket) {
-        // select elemets for debugpolygons that are collideable and in the triangle
-        java.util.List<String> selectedIds = new ArrayList<>();
-        for (WorldObject object : elementsSeenByRadar) {
-            selectedIds.add(object.getId());
+    private void showNearestElementInTriangle() {
+        // turn off highlight on all world elements to avoid stuck highlights
+        setRadarHighglightOffOnElements();
+        // show nearest element in triangle
+        MovingWorldObject nearestElement = getNearestCollideableElement();
+        if (nearestElement != null) {
+            nearestElement.getWorldObject().setHighlightedWhenRadarIsOn(true);
         }
-        selectedDebugListPacket.setDebugListElements(selectedIds);
     }
+
+    private void setRadarHighglightOffOnElements() {
+        for (WorldObject object : world.getWorldObjects()) {
+            object.setHighlightedWhenRadarIsOn(false);
+        }
+        for (WorldObject object : world.getDynamics()) {
+            object.setHighlightedWhenRadarIsOn(false);
+        }
+    }
+
+    /**
+     * Calculates the nearest collideable element. No lateral offset, just the geometically nearest object
+     * based on the debug polygons
+     *
+     * @return the nearest object if exists, null if none seen by radar
+     */
+    public MovingWorldObject getNearestCollideableElement() {
+        MovingWorldObject nearestObject = null;
+        double distance = Double.MAX_VALUE;
+        for (MovingWorldObject mo : elementsSeenByRadar) {
+            if (mo.getPolygon() != null) {
+                Shape moPolyInplace = ObjectTransform.transformPolygon(mo);
+                Shape egocarPolyInPlace = ObjectTransform.transformPolygon(automatedCar);
+                double moDistance = calculateMinimumDistance(moPolyInplace, mo.getPolygon().npoints,
+                        egocarPolyInPlace, automatedCar.getPolygon().npoints);
+                if (moDistance < Double.MAX_VALUE && moDistance < distance) {
+                    distance = moDistance;
+                    nearestObject = mo;
+                }
+            }
+        }
+
+        return nearestObject != null ? nearestObject : null;
+    }
+
+    private double calculateMinimumDistance(Shape poly1, int poly1N, Shape poly2, int poly2N) {
+        double distance = Double.MAX_VALUE;
+
+        // check all poly1 points against all poly points and select the smallest distance
+        PathIterator it1 = poly1.getPathIterator(null);
+        int it1Index = 0;
+        while (it1Index < poly1N && !it1.isDone()) {
+            float[] p1 = new float[2];
+            it1.currentSegment(p1);
+            double tempDistance = getShapeMinimumDistanceFromPoint(poly2, poly2N, p1);
+            if (tempDistance < distance) {
+                distance = tempDistance;
+            }
+            it1.next();
+            it1Index++;
+        }
+        return distance;
+    }
+
+    private double getShapeMinimumDistanceFromPoint(Shape poly, int polyN, float[] p1) {
+        double distance = Double.MAX_VALUE;
+        PathIterator it2 = poly.getPathIterator(null);
+        int it2Index = 0;
+        while (it2Index < polyN && !it2.isDone()) {
+            float[] p2 = new float[2];
+            it2.currentSegment(p2);
+            double tempDistance = Point2D.distance(p1[0], p1[1], p2[0], p2[1]);
+            if (tempDistance < distance) {
+                distance = tempDistance;
+            }
+            it2.next();
+            it2Index++;
+        }
+        return distance;
+    }
+
 
     /**
      * Gets the collideable objects inside the triangle defined by the 3 points
@@ -223,31 +296,31 @@ public class Sensor extends SystemComponent {
     private Point2D getCorner1() {
         // get the x and y components of the segment line between the egocars rotation origo
         // and the corner of the radar triangle
-        
+
         int corner1DiffX = 0;
         int corner1DiffY = 0;
-        
+
         // look forward
-        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT){
+        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT) {
             corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
             corner1DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
         }
         // look left
-        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE){
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE) {
             corner1DiffX = (RADAR_SENSOR_DX - RADAR_SENSOR_RANGE);
             corner1DiffY = (RADAR_SENSOR_DY - RADAR_TRIANGLE_HALF_X);
         }
         // look right
-        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE){
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE) {
             corner1DiffX = (RADAR_SENSOR_DX + RADAR_SENSOR_RANGE);
             corner1DiffY = (RADAR_SENSOR_DY + RADAR_TRIANGLE_HALF_X);
         }
         // look backward
-        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT){
+        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT) {
             corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
             corner1DiffY = (RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         }
-                
+
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
                 -corner1DiffX, -corner1DiffY);
         Point2D corner1 = new Point2D.Double(automatedCar.getX() + corner1DiffX + corner1T.getTranslateX(),
@@ -266,22 +339,22 @@ public class Sensor extends SystemComponent {
         int corner2DiffX = 0;
         int corner2DiffY = 0;
         // look forward
-        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT){
+        if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT || this.sensorPosition == UltrasoundPositions.FRONT_RIGHT) {
             corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
             corner2DiffY = (RADAR_SENSOR_DY - RADAR_SENSOR_RANGE);
         }
         // look left
-        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE){
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_LEFT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_LEFT_SIDE) {
             corner2DiffX = (RADAR_SENSOR_DX - RADAR_SENSOR_RANGE);
             corner2DiffY = (RADAR_SENSOR_DY + RADAR_TRIANGLE_HALF_X);
         }
         // look right
-        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE){
+        else if (this.sensorPosition == UltrasoundPositions.FRONT_RIGHT_SIDE || this.sensorPosition == UltrasoundPositions.REAR_RIGHT_SIDE) {
             corner2DiffX = (RADAR_SENSOR_DX + RADAR_SENSOR_RANGE);
             corner2DiffY = (RADAR_SENSOR_DY - RADAR_TRIANGLE_HALF_X);
         }
         // look backward
-        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT){
+        else if (this.sensorPosition == UltrasoundPositions.REAR_LEFT || this.sensorPosition == UltrasoundPositions.REAR_RIGHT) {
             corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
             corner2DiffY = (RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         }
