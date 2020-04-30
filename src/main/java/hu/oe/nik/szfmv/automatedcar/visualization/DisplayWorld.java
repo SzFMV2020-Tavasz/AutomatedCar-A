@@ -92,9 +92,8 @@ public class DisplayWorld {
      *
      * @return List of DisplayObjects rotated and moved according to the egocar's position
      */
-    List<DisplayObject> getDisplayObjects() {
-
-        List<DisplayObject> returnList = new ArrayList<>();
+     ArrayList<DisplayObject> getDisplayObjects() {
+        ArrayList<DisplayObject> returnList = new ArrayList<>();
 
         this.getFixWorldObjectsFromWorld();
         // loop through the fix objects and create their DisplayObjects

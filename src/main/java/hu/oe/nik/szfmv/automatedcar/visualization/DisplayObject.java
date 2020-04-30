@@ -42,8 +42,15 @@ public class DisplayObject extends WorldObject {
      * @param automatedCar The AutomatedCar (egocar) that the DisplayObject should keep its relative position to.
      */
     public DisplayObject(final WorldObject worldObject, final AutomatedCar automatedCar) {
-        super(worldObject.getX(), worldObject.getY(),
-            worldObject.getImageFileName() == null ? worldObject.getType() + ".png" : worldObject.getImageFileName());
+        super();
+        this.x = worldObject.getX();
+        this.y = worldObject.getY();
+        if (worldObject.getImageFileName() == null) {
+            this.imageFileName = worldObject.getType() + ".png";
+        } else {
+            this.imageFileName = worldObject.getImageFileName();
+        }
+        this.image = worldObject.getImage();
         this.id = worldObject.getId();
         this.worldObject = worldObject;
         this.automatedCar = automatedCar;
