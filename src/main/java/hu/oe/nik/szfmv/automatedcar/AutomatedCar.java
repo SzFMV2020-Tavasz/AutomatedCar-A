@@ -3,13 +3,15 @@ package hu.oe.nik.szfmv.automatedcar;
 import hu.oe.nik.szfmv.automatedcar.math.Axis;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
+import hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.Polygon;
+import java.awt.*;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.average;
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
@@ -70,41 +72,28 @@ public class AutomatedCar extends WorldObject {
     }
 
     private void updatePositionAndOrientation() {
-        IVector carMove = virtualFunctionBus.carPositionPacket.getMoveVector();
-        this.moveCar(carMove);
+        ICarMovePacket moveInfo = this.virtualFunctionBus.carMovePacket;
+        this.moveCar(moveInfo.getMoveVector());
     }
 
     /**Applies movement to the car.
-     * @param move The movement to apply.
+     * @param movement The movement to apply.
      * <p>- its direction is interpreted as facing direction of the front wheels.</p>
      * <p>- its length is interpreted as the speed of movement.</p>*/
-    private void moveCar(IVector move) {
-        switch (powerTrain.transmission.getGearMode()) {
-            case D_DRIVE:
-                this.moveForward(move);
-                break;
-            case R_REVERSE:
-                this.moveBackward(move);
-                break;
-            case N_NEUTRAL:
-                this.neturalGear();
-                break;
-            default:
-                this.parkingGear();
-                break;
-        }
-    }
-
-    private void moveForward(IVector forwardMove) {
+    private void moveCar(IVector movement) {
         IVector currentPosition = this.getPosition();
         IVector toCarFrontVector = this.facingDirection.withLength(getHeight() / 2.0);
         IVector carFrontPosition = currentPosition.add(toCarFrontVector);
         IVector carBackPosition = currentPosition.subtract(toCarFrontVector);
 
-        IVector moveInDirection = forwardMove.rotateByRadians(this.facingDirection.getRadians());
+        IVector moveInDirection = movement.rotateByRadians(this.facingDirection.getRadians());
 
         IVector newCarFrontPosition = carFrontPosition.add(moveInDirection);
-        IVector newCarBackPosition = carBackPosition.add(forwardMove.withDirection(toCarFrontVector));
+
+        boolean backwards = powerTrain.transmission.getCurrentTransmissionMode() == CarTransmissionMode.R_REVERSE;
+        IVector newCarBackPosition = backwards
+                ? carBackPosition.subtract(movement.withDirection(toCarFrontVector))
+                : carBackPosition.add(movement.withDirection(toCarFrontVector));
 
         this.setPosition(average(newCarFrontPosition, newCarBackPosition));
 
@@ -112,28 +101,4 @@ public class AutomatedCar extends WorldObject {
         this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
     }
 
-    private void moveBackward(IVector backwardMove) {
-        IVector currentPosition = this.getPosition();
-        IVector toCarBackVector = this.facingDirection.withLength(getHeight() / -2.0);
-        IVector carFrontPosition = currentPosition.subtract(toCarBackVector);
-        IVector carBackPosition = currentPosition.add(toCarBackVector);
-
-        IVector moveInDirection = backwardMove.rotateByRadians(this.facingDirection.getRadians()).multiplyBy(-1);
-
-        IVector newCarFrontPosition = carFrontPosition.add(moveInDirection);
-        IVector newCarBackPosition = carBackPosition.add(backwardMove.withDirection(toCarBackVector));
-
-        this.setPosition(average(newCarFrontPosition, newCarBackPosition));
-
-        this.facingDirection = newCarFrontPosition.subtract(newCarBackPosition);
-        this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
-    }
-
-    private void neturalGear() {
-        //FAAAAAAAKE!!!
-    }
-
-    private void parkingGear() {
-        //FAAAAAKE as FAF, but it will be probably enough for parking mode.
-    }
 }

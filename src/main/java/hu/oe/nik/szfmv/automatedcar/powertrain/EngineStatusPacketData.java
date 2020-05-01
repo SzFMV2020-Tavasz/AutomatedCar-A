@@ -9,7 +9,7 @@ class EngineStatusPacketData implements IEngineStatusPacket {
 
     private final CarTransmissionMode mode;
 
-    public EngineStatusPacketData(double rpm, int forwardLevel, CarTransmissionMode mode) {
+    EngineStatusPacketData(double rpm, int forwardLevel, CarTransmissionMode mode) {
         this.rpm = rpm;
         this.forwardLevel = forwardLevel;
         this.mode = mode;

@@ -4,8 +4,6 @@ import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 
-import java.awt.*;
-
 public class MovingWorldObject extends WorldObject {
     VirtualFunctionBus virtualFunctionBus;
     AutomatedCar automatedCar;
@@ -79,7 +77,7 @@ public class MovingWorldObject extends WorldObject {
     public int getRelativeMovementVectorX() {
         // car movement vector needs to be negative
         // as we need the elements' relative movement because of the automated car's movement
-        return (int)-virtualFunctionBus.carPositionPacket.getMoveVector().getXDiff() + movementVectorX;
+        return (int)-virtualFunctionBus.carMovePacket.getMoveVector().getXDiff() + movementVectorX;
     }
 
     /**
@@ -90,7 +88,7 @@ public class MovingWorldObject extends WorldObject {
     public int getRelativeMovementVectorY() {
         // car movement vector needs to be negative
         // as we need the elements' relative movement because of the automated car's movement
-        return (int)-virtualFunctionBus.carPositionPacket.getMoveVector().getYDiff() + movementVectorY;
+        return (int)-virtualFunctionBus.carMovePacket.getMoveVector().getYDiff() + movementVectorY;
     }
 
     public int getMovementVectorX() {
