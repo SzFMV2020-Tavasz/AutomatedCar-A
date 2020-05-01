@@ -19,6 +19,19 @@ public enum Axis {
      * @see Axis#X*/
     Y;
 
+    /**Commonly used value - quarter of a full circle in radians.
+     * Precomputed in order to fasten calculations a bit.*/
+    private static final double RADIAN_QUARTER = PI / 2.0;
+
+    /**The axis of default forward and backward direction.*/
+    public static Axis BASE = X;
+
+    /**The standard positive/neutral direction.
+     * <p>Should be used for vectors only representing angle, length or both, but relative to no specific axis.</p>*/
+    public static IVector baseDirection() {
+        return Axis.BASE.positiveDirection();
+    }
+
     private final AxisVector dirPos = new AxisVector(this, true);
     private final AxisVector dirNeg = new AxisVector(this, false);
 
@@ -63,15 +76,19 @@ public enum Axis {
             }
         }
 
-        @Override public double getLength() {
+        @Override
+        public double getLength() {
             return 1.0;
         }
 
-        @Override public double getRadiansRelativeTo(Axis axis) {
+        @Override
+        public double getRadiansRelativeTo(Axis axis) {
             if (axis == this.axis) {
                 return positive ? 0 : PI;
             } else {
-                return positive ? +(PI / 2) : -(PI / 2);
+                return positive
+                        ? (+1 * RADIAN_QUARTER)
+                        : (-1 * RADIAN_QUARTER);
             }
         }
 
@@ -114,18 +131,18 @@ public enum Axis {
             if (x >= 0) {
                 if (y >= 0) {
                     //Q1 - #1 ON RIGHT - NEGATIVE
-                    return - (PI/2) - atan2(y, x);
+                    return -1 * RADIAN_QUARTER - atan2(y, x);
                 } else {
                     //Q2 - #2 ON RIGHT - NEGATIVE
-                    return -(PI/2) - atan2(y, x);
+                    return -1 * RADIAN_QUARTER - atan2(y, x);
                 }
             } else {
                 if (y < 0) {
                     //Q3 - #2 ON LEFT - POSITIVE
-                    return (PI/2) + (PI + atan2(y, x));
+                    return RADIAN_QUARTER + (PI + atan2(y, x));
                 } else {
                     //Q4 - #1 ON LEFT - POSITIVE
-                    return atan2(y,x) - (PI/2);
+                    return atan2(y,x) - RADIAN_QUARTER;
                 }
             }
         }
@@ -141,15 +158,15 @@ public enum Axis {
         }
 
         @Override
-        public IVector rotateByRadians(double rad) {
-            double alpha2 = (PI / 2) - rad;
+        public IVector rotateByRadians(double radians) {
+            double alpha2 = RADIAN_QUARTER - radians;
             switch (this.axis) {
                 case X:
                     return vectorFromXY(sin(alpha2), cos(alpha2));
                 case Y:
-                    return vectorFromXY(-cos(alpha2), sin(alpha2));
+                    return vectorFromXY(-1 * cos(alpha2), sin(alpha2));
                 default:
-                    throw new IllegalStateException();
+                    throw new IllegalStateException("Unexpected Axis: " + this);
             }
         }
 
@@ -158,15 +175,6 @@ public enum Axis {
             return "AxisVector{ " + axis + (positive ? "+": "-") + " }";
         }
 
-    }
-
-    /**The axis of default forward and backward direction.*/
-    public static Axis BASE = X;
-
-    /**The standard positive/neutral direction.
-     * <p>Should be used for vectors only representing angle, length or both, but relative to no specific axis.</p>*/
-    public static IVector baseDirection() {
-        return Axis.BASE.positiveDirection();
     }
 
 }

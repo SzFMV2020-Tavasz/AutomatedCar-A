@@ -1,8 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.math;
 
 import static hu.oe.nik.szfmv.automatedcar.math.Axis.baseDirection;
-import static hu.oe.nik.szfmv.automatedcar.math.MathUtils.TWO_PI;
-import static hu.oe.nik.szfmv.automatedcar.math.MathUtils.inPeriodOfPI;
+import static hu.oe.nik.szfmv.automatedcar.math.MathUtils.*;
 import static java.lang.Math.*;
 
 /**Represents a mathematical 2-dimensional vector with X and Y difference, which also define its length and angle.
@@ -27,7 +26,8 @@ public interface IVector {
 
     /**Clones this vector, rotates it by the given radians and returns it.
      * Rotation is mathematical, positive is towards the left.
-     * @param rad Radians to rotate the vector with. A whole circle is 2{@link Math#PI PI} radians.
+     * @param rad Radians to rotate the vector with.
+     *            <p>A whole circle is 2{@link Math#PI PI} radians (see {@link MathUtils#RADIAN_PERIOD radian period}).</p>
      * @see #rotateByDegrees(double)
      * @see #rotateByGradians(double)
      * @return A new vector rotated by the given radians.*/
@@ -57,14 +57,14 @@ public interface IVector {
     /**Gets the angle of the vector in degrees relative to given axis.
      * <p>Rotation is mathematical, positive is towards the left.</p>*/
     default double getDegreesRelativeTo(Axis axis) {
-        return getRadiansRelativeTo(axis.positiveDirection()) / TWO_PI * 360;
+        return getRadiansRelativeTo(axis.positiveDirection()) / RADIAN_PERIOD * 360;
     }
 
     /**Gets the angle of the vector in degrees relative to the given direction.
      * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value from -180° to +180°.*/
     default double getDegreesRelativeTo(IVector direction) {
-        return getRadiansRelativeTo(direction) / TWO_PI * 360;
+        return getRadiansRelativeTo(direction) / RADIAN_PERIOD * DEGREE_PERIOD;
     }
 
     /**Gets angle of vector in absolute radians relative to the given axis.
@@ -73,7 +73,7 @@ public interface IVector {
     default double getAbsRadiansRelativeTo(Axis axis) {
         double signedRads = getRadiansRelativeTo(axis);
         return (signedRads < 0)
-                ? (TWO_PI + signedRads)
+                ? (RADIAN_PERIOD + signedRads)
                 : signedRads;
     }
 
@@ -83,7 +83,7 @@ public interface IVector {
     default double getAbsRadiansRelativeTo(IVector direction) {
         double signedRads = getRadiansRelativeTo(direction);
         return (signedRads < 0)
-                ? (TWO_PI + signedRads)
+                ? (RADIAN_PERIOD + signedRads)
                 : signedRads;
     }
 
@@ -91,14 +91,14 @@ public interface IVector {
      * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value between 0° and 360°.*/
     default double getAbsDegreesRelativeTo(Axis axis) {
-        return getAbsRadiansRelativeTo(axis.positiveDirection()) / TWO_PI * 360;
+        return getAbsRadiansRelativeTo(axis.positiveDirection()) / RADIAN_PERIOD * DEGREE_PERIOD;
     }
 
     /**Gets angle of vector in absolute degrees relative to the given direction.
      * <p>Rotation is mathematical, positive is towards the left.</p>
      * @return Value between 0° and 360°.*/
     default double getAbsDegreesRelativeTo(IVector direction) {
-        return getAbsRadiansRelativeTo(direction) / TWO_PI * 360;
+        return getAbsRadiansRelativeTo(direction) / RADIAN_PERIOD * DEGREE_PERIOD;
     }
 
     /**Flips the vector around, keeping its length, but changing its direction to its opposite.
@@ -136,7 +136,8 @@ public interface IVector {
 
     /**Clones this vector, rotates it by the given degrees and returns it.
      * <p>Rotation is mathematical, positive is towards the left.</p>
-     * @param degrees Degrees to rotate the vector with. A whole circle is 360 degrees.
+     * @param degrees Degrees to rotate the vector with.
+     *                <p>A whole circle is 360 degrees (see {@link MathUtils#DEGREE_PERIOD degree period}).</p>
      * @see #rotateByRadians(double)
      * @see #rotateByGradians(double)
      * @return A new vector rotated by the given degrees.*/
@@ -146,12 +147,13 @@ public interface IVector {
 
     /**Clones this vector, rotates it by the given gradians and returns it.
      * <p>Rotation is mathematical, positive is towards the left.</p>
-     * @param grads Gradians to rotate the vector with. A whole circle is 400 gradians.
+     * @param grads Gradians to rotate the vector with.
+     *              <p>A whole circle is 400 gradians (see {@link MathUtils#GRADIAN_PERIOD gradian period}).</p>
      * @see #rotateByRadians(double)
      * @see #rotateByDegrees(double)
      * @return A new vector rotated by the given gradians.*/
     default IVector rotateByGradians(double grads) {
-        return rotateByRadians(grads / 400 * TWO_PI);
+        return rotateByRadians(grads / GRADIAN_PERIOD * RADIAN_PERIOD);
     }
 
     /**Returns a clone of the vector incremented its {@code x} and {@code y} coordinates with the given values.*/
