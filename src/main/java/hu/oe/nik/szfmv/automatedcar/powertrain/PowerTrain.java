@@ -6,12 +6,15 @@ import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.*;
 import static java.lang.Math.*;
 
 /**<p>The powertrain encompasses every component that converts the engine’s power into movement.</p>
-<p>This includes the engine, transmission, the driveshaft, differentials, axles; basically anything from the engine through to the rotating wheels.</p>*/
+ * <p>This includes the engine, transmission, the driveshaft, differentials, axles;
+ * basically anything from the engine through to the rotating wheels.</p>
+ * @author Team 3*/
 public class PowerTrain extends SystemComponent {
 
     static final double MAX_STEERING_ROTATION = 180.0;
@@ -20,11 +23,12 @@ public class PowerTrain extends SystemComponent {
     private static final double MAX_BREAK_PEDAL_VALUE = 100.0;
     public static final double BREAK_POWER = 5.0;
 
-    public ITransmission2 transmission = new SimpleTransmission();
+    public ITransmission transmission = new SimpleTransmission();
 
     private IVector currentMovement = nullVector();
     private IVector currentWheelDirection = nullVector();
 
+    /**Received required information. Gets re-assigned in each loop.*/
     private ToPowerTrainPacket input;
 
     public PowerTrain(VirtualFunctionBus virtualFunctionBus) {
@@ -34,11 +38,11 @@ public class PowerTrain extends SystemComponent {
 
     private void provideInitialOutput() {
         CarMovePacketData initialPositionOutput = new CarMovePacketData(vectorFromXY(0, 0), Axis.Y.positiveDirection());
-        EngineStatusPacketData initialEngineOutput = this.produceEngineInfoOutput();
+        IEngineStatusPacket initialEngineOutput = this.produceEngineInfoOutput();
         this.provideOutput(initialPositionOutput, initialEngineOutput);
     }
 
-    private void provideOutput(CarMovePacketData positionData, EngineStatusPacketData engineData) {
+    private void provideOutput(CarMovePacketData positionData, IEngineStatusPacket engineData) {
         this.virtualFunctionBus.carMovePacket = positionData;
         this.virtualFunctionBus.engineStatusPacket = engineData;
     }
@@ -50,17 +54,27 @@ public class PowerTrain extends SystemComponent {
 
     @Override
     public void loop() {
-        this.input = virtualFunctionBus.toPowerTrainPacket;
-        double gasPedalPressRatio = virtualFunctionBus.toPowerTrainPacket.getGasPedalValue() / MAX_GAS_PEDAL_VALUE;
-        CarTransmissionMode targetMode = getRequestedCarTransmissionMode();
-        int targetLevel = targetMode == CarTransmissionMode.D_DRIVE ? 1 : 0; //TODO input.getTempomatValue(); ??
-
-        transmission.update(gasPedalPressRatio, targetMode, targetLevel);
-
+        updateInputs();
+        updateTransmission();
         provideOutput(produceMovementOutput(), produceEngineInfoOutput());
     }
 
-    private EngineStatusPacketData produceEngineInfoOutput() {
+    private void updateTransmission() {
+        double gasPedalPressRatio = input.getGasPedalValue() / MAX_GAS_PEDAL_VALUE;
+        CarTransmissionMode targetMode = getRequestedCarTransmissionMode();
+
+        if (targetMode != null && targetMode != transmission.getCurrentTransmissionMode()) {
+            transmission.forceShift(targetMode, targetMode.getMinimumLevel());
+        }
+
+        transmission.update(gasPedalPressRatio);
+    }
+
+    private void updateInputs() {
+        this.input = virtualFunctionBus.toPowerTrainPacket;
+    }
+
+    private IEngineStatusPacket produceEngineInfoOutput() {
         return transmission.provideInfo();
     }
 
@@ -80,9 +94,6 @@ public class PowerTrain extends SystemComponent {
     }
 
     private void applyTrust() {
-//        IVector trust = currentWheelDirection.multiplyBy(this.transmission.getCurrentRPM() / 500.0);
-//        this.currentMovement = this.currentMovement.add(trust).withDirection(currentWheelDirection);
-
         double forceFromEngine = transmission.rpmToForce(this.transmission.getCurrentRPM());
         IVector trust = currentWheelDirection.multiplyBy(forceFromEngine);
         this.currentMovement = this.currentMovement.add(trust);

@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
-public class Transmission implements ITransmission {
+@Deprecated(forRemoval = true)
+public class Transmission_Previous implements ITransmission_Previous {
 
     /**
      * IMPORTANT!!!
