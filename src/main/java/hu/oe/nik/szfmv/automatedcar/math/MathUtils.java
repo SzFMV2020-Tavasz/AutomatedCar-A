@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.math;
 
 import static java.lang.Math.PI;
+import static java.lang.Math.abs;
 
 /**Contains utility functions for mathematical calculations.
  *
@@ -25,6 +26,10 @@ public enum MathUtils {;
         }
 
         return radians;
+    }
+
+    public static boolean isEqual(double a, double b, double delta) {
+        return abs(a - b) <= delta;
     }
 
 }
