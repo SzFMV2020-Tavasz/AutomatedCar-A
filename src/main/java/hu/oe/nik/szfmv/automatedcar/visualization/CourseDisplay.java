@@ -77,20 +77,22 @@ public class CourseDisplay extends JPanel {
             drawDisplayObject(g2d, object);
 
             // draw debug polygons that are not selected individually.
-            Path2D poly =  object.getDebugPolygon();
-            // check if the polygon actually exists
-            if (poly != null) {
-                if (displayWorld.isDebugOn() && !displayWorld.getDebugObjects().contains(object.getId())) {
-                    runOfTheMillDebugPolygons.add(poly);
-                } else if (displayWorld.getDebugObjects().contains(object.getId())) {
-                    selectedDebugPolygons.add(poly);
+            ArrayList<Path2D> polys = object.getDebugPolygons();
+            for (Path2D poly: polys) {
+                // check if the polygon actually exists
+                if (poly != null) {
+                    if (displayWorld.isDebugOn() && !displayWorld.getDebugObjects().contains(object.getId())) {
+                        runOfTheMillDebugPolygons.add(poly);
+                    } else if (displayWorld.getDebugObjects().contains(object.getId())) {
+                        selectedDebugPolygons.add(poly);
+                    }
                 }
             }
         }
 
-        drawPolygon(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
+        drawPolygons(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
 
-        drawDisplayObject(g2d, displayWorld.getEgoCar());
+        drawEgoCar(g2d, displayWorld.getEgoCar(), displayWorld.isDebugOn());
 
         // needs to be drawn last so it shows above everything
         drawSensorsIfSet(g2d, displayWorld);
@@ -106,10 +108,10 @@ public class CourseDisplay extends JPanel {
     }
 
     /**
-     * Draws the rotated Debug polygon of the displayObject
+     * Draws the rotated debug polygon of the displayObject
      */
-    private void drawPolygon(Graphics2D g2d,
-                             ArrayList<Path2D> runOfTheMillDebugPolygons,  ArrayList<Path2D> selectedDebugPolygons) {
+    private void drawPolygons(Graphics2D g2d,
+                              ArrayList<Path2D> runOfTheMillDebugPolygons, ArrayList<Path2D> selectedDebugPolygons) {
         for (Path2D poly : runOfTheMillDebugPolygons) {
             g2d.setStroke(VisualizationConfig.DEBUG_LINETYPE);
             g2d.setColor(VisualizationConfig.RUN_OF_THE_MILL_DEBUG_COLOR);
@@ -120,6 +122,19 @@ public class CourseDisplay extends JPanel {
             g2d.setStroke(VisualizationConfig.DEBUG_LINETYPE);
             g2d.setColor(VisualizationConfig.SELECTED_DEBUG_COLOR);
             g2d.draw(poly);
+        }
+    }
+
+    private void drawEgoCar(Graphics2D g2d, DisplayObject egoCar, boolean isDebugOn) {
+        drawDisplayObject(g2d, egoCar);
+        if (isDebugOn) {
+            if (egoCar.getDebugPolygons().size() > 0) {
+                for (Path2D poly : egoCar.getDebugPolygons()) {
+                    g2d.setStroke(VisualizationConfig.DEBUG_LINETYPE);
+                    g2d.setColor(VisualizationConfig.RUN_OF_THE_MILL_DEBUG_COLOR);
+                    g2d.draw(poly);
+                }
+            }
         }
     }
 

@@ -32,9 +32,10 @@ public class Main {
         world = new World(5000, 3000);
 
         // create an automated car
-        car = new AutomatedCar(3522, 2316, "car_2_white.png");
+        //car = new AutomatedCar(3522, 2316, "car_2_white.png");
         // car = new AutomatedCar(474, 669, "car_2_white.png");
-        // car = new AutomatedCar(540, 1850, "car_2_white.png");
+        car = new AutomatedCar(540, 1850, "car_2_white.png");
+        //car = new AutomatedCar(3422, 700, "car_2_white.png");
         car.setRotation(0);
 
         radar = new Radar(car.getVirtualFunctionBus(), car, world);

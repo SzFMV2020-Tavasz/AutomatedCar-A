@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class Radar extends SystemComponent {
         radarDisplayStatePacket.setRadarDisplayState(true);
 
         // turn on debug mode - left here for debugging purposes
-        virtualFunctionBus.debugModePacket.setDebuggingState(false);
+        virtualFunctionBus.debugModePacket.setDebuggingState(true);
 
     }
 
@@ -104,10 +105,14 @@ public class Radar extends SystemComponent {
             if (doesObjectMovementVectorPointTowardsTheEgocar(mo)) {
                 Line2D movementVectorLine = new Line2D.Double(mo.getX(), mo.getY(),
                     mo.getX() + mo.getRelativeMovementVectorX(), mo.getY() + mo.getRelativeMovementVectorY());
-                Line2D extendedLine = extendLineToReachBeyondPolygon(mo.getPolygon(), movementVectorLine);
-                if (doesLineIntersectPolygon(extendedLine, ObjectTransform.transformPolygon(automatedCar))) {
+
+                Path2D egocar = ObjectTransform.transformPath2DPolygon(automatedCar).get(0);
+                Line2D extendedLine = extendLineToReachBeyondPolygon(egocar, movementVectorLine);
+
+                if (doesLineIntersectPolygon(extendedLine, egocar)) {
                     returnList.add(mo.getWorldObject());
                 }
+
             }
         }
         return returnList;
@@ -120,20 +125,51 @@ public class Radar extends SystemComponent {
      * @param polygon the polygon to check against
      * @return true if the line intersects the rectangle; false otherwise
      */
-    private boolean doesLineIntersectPolygon(Line2D line, Polygon polygon) {
+    private boolean doesLineIntersectPolygon(Line2D line, Path2D polygon) {
+        boolean result = false;
         if (polygon != null && !line.getP1().equals(line.getP2())) {
             // loop though the polygon
-            for (int i = 0; i < polygon.npoints; i++) {
-                if (i < polygon.npoints - 1) {
-                    Line2D polygonSegment = new Line2D.Double(polygon.xpoints[i], polygon.ypoints[i],
-                        polygon.xpoints[i + 1], polygon.ypoints[i + 1]);
-                    if (polygonSegment.intersectsLine(line)) {
-                        return true;
-                    }
+            result = loopThroughIntersectionCheck(line, polygon);
+        }
+        return result;
+    }
+
+    /**
+     * Checks whether the given line intersects the polygon at all
+     * Separate method because of the 20 line rule.
+     *
+     * @param line    the line to check
+     * @param polygon the polygon to check against
+     * @return true if the line intersects the rectangle; false otherwise
+     */
+    private boolean loopThroughIntersectionCheck(Line2D line, Path2D polygon) {
+        float[] prevPoint = new float[2];
+        boolean firstPoint = true;
+        PathIterator iter = polygon.getPathIterator(null);
+        while (!iter.isDone()) {
+            if (!firstPoint) {
+                float[] currentpoint = new float[2];
+                if (checkIntersection(iter, currentpoint, prevPoint, line)) {
+                    return true;
                 }
+                prevPoint = currentpoint;
+            } else {
+                firstPoint = false;
             }
+            iter.next();
         }
         return false;
+    }
+
+    private boolean checkIntersection(PathIterator iter, float[] currentpoint, float[] prevPoint, Line2D line) {
+        iter.currentSegment(currentpoint);
+        Line2D polygonSegment = new Line2D.Float(prevPoint[0], prevPoint[1],
+            currentpoint[0], currentpoint[1]);
+        if (polygonSegment.intersectsLine(line)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -160,15 +196,19 @@ public class Radar extends SystemComponent {
      * @param line    the line to extend
      * @return an extended line
      */
-    private Line2D extendLineToReachBeyondPolygon(Polygon polygon, Line2D line) {
+    private Line2D extendLineToReachBeyondPolygon(Path2D polygon, Line2D line) {
         if (polygon != null) {
             // loop through the polygon's points and get the farthest one from the line's first point
-            Point furthestPoint = new Point(polygon.xpoints[0], polygon.ypoints[0]);
-            for (int i = 0; i < polygon.npoints; i++) {
-                Point currentPoint = new Point(polygon.xpoints[i], polygon.ypoints[i]);
+            Point2D furthestPoint = polygon.getCurrentPoint();
+            PathIterator iter = polygon.getPathIterator(null);
+            while (!iter.isDone()) {
+                float[] currentPointFloat = new float[2];
+                iter.currentSegment(currentPointFloat);
+                Point2D currentPoint = new Point2D.Float(currentPointFloat[0], currentPointFloat[1]);
                 if (currentPoint.distance(line.getP1()) > furthestPoint.distance(line.getP1())) {
                     furthestPoint = currentPoint;
                 }
+                iter.next();
             }
             return extendLineBeyondPoint(furthestPoint, line);
         } else {
@@ -176,20 +216,20 @@ public class Radar extends SystemComponent {
         }
     }
 
-    private Line2D extendLineBeyondPoint(Point furthestPoint, Line2D line) {
+    private Line2D extendLineBeyondPoint(Point2D furthestPoint, Line2D line) {
         // extend the line - first end
         double lineDeltaX = line.getX2() - line.getX1();
         double lineDeltaY = line.getY2() - line.getY1();
         double newP2X = line.getX1() + (line.getX1() - furthestPoint.getX()) * 2;
         double newP2Y = line.getY2();
         if (lineDeltaX != 0) {
-            newP2Y = line.getY1() + (line.getX1() - furthestPoint.getX()) * 2  * lineDeltaY / lineDeltaX;
+            newP2Y = line.getY1() + (line.getX1() - furthestPoint.getX()) * 2 * lineDeltaY / lineDeltaX;
         }
         // extend the line - first end
         double newP1X = line.getX1() - (line.getX1() - furthestPoint.getX()) * 2;
         double newP1Y = line.getY1();
         if (lineDeltaX != 0) {
-            newP1Y = line.getY1() - (line.getX1() - furthestPoint.getX()) * 2  * lineDeltaY / lineDeltaX;
+            newP1Y = line.getY1() - (line.getX1() - furthestPoint.getX()) * 2 * lineDeltaY / lineDeltaX;
         }
         return new Line2D.Double(newP1X, newP1Y, newP2X, newP2Y);
     }
@@ -269,15 +309,15 @@ public class Radar extends SystemComponent {
     public MovingWorldObject getNearestCollideableElement() {
         MovingWorldObject nearestObject = null;
         double distance = Double.MAX_VALUE;
-        for (MovingWorldObject mo : elementsSeenByRadar) {
-            if (mo.getPolygon() != null) {
-                Shape moPolyInplace = ObjectTransform.transformPolygon(mo);
-                Shape egocarPolyInPlace = ObjectTransform.transformPolygon(automatedCar);
-                double moDistance = calculateMinimumDistance(moPolyInplace, mo.getPolygon().npoints,
-                    egocarPolyInPlace, automatedCar.getPolygon().npoints);
-                if (moDistance < Double.MAX_VALUE && moDistance < distance) {
-                    distance = moDistance;
-                    nearestObject = mo;
+        if (automatedCar.getPolygons().size() > 0) {
+            Path2D egocarPolyInPlace = ObjectTransform.transformPath2DPolygon(automatedCar).get(0);
+            for (MovingWorldObject mo : elementsSeenByRadar) {
+                for (Path2D moPolyInplace : ObjectTransform.transformPath2DPolygon(mo)) {
+                    double moDistance = calculateMinimumDistance(moPolyInplace, egocarPolyInPlace);
+                    if (moDistance < Double.MAX_VALUE && moDistance < distance) {
+                        distance = moDistance;
+                        nearestObject = mo;
+                    }
                 }
             }
         }
@@ -285,30 +325,27 @@ public class Radar extends SystemComponent {
         return nearestObject != null ? nearestObject : null;
     }
 
-    private double calculateMinimumDistance(Shape poly1, int poly1N, Shape poly2, int poly2N) {
+    private double calculateMinimumDistance(Path2D poly1, Path2D poly2) {
         double distance = Double.MAX_VALUE;
 
         // check all poly1 points against all poly points and select the smallest distance
         PathIterator it1 = poly1.getPathIterator(null);
-        int it1Index = 0;
-        while (it1Index < poly1N && !it1.isDone()) {
+        while (!it1.isDone()) {
             float[] p1 = new float[2];
             it1.currentSegment(p1);
-            double tempDistance = getShapeMinimumDistanceFromPoint(poly2, poly2N, p1);
+            double tempDistance = getShapeMinimumDistanceFromPoint(poly2, p1);
             if (tempDistance < distance) {
                 distance = tempDistance;
             }
             it1.next();
-            it1Index++;
         }
         return distance;
     }
 
-    private double getShapeMinimumDistanceFromPoint(Shape poly, int polyN, float[] p1) {
+    private double getShapeMinimumDistanceFromPoint(Shape poly, float[] p1) {
         double distance = Double.MAX_VALUE;
         PathIterator it2 = poly.getPathIterator(null);
-        int it2Index = 0;
-        while (it2Index < polyN && !it2.isDone()) {
+        while (!it2.isDone()) {
             float[] p2 = new float[2];
             it2.currentSegment(p2);
             double tempDistance = Point2D.distance(p1[0], p1[1], p2[0], p2[1]);
@@ -316,7 +353,6 @@ public class Radar extends SystemComponent {
                 distance = tempDistance;
             }
             it2.next();
-            it2Index++;
         }
         return distance;
     }
