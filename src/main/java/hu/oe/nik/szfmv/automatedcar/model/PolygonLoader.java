@@ -17,7 +17,7 @@ import static java.lang.Double.parseDouble;
 /**Provides the functionality to load polygons from files.
  * <p>Input data is expected to contain lines, each containing one {@code x} and one {@code y} coordinate
  * separated by a comma and optional whitespaces.
- * Empty lines and those starting with symbol {@code #} are considered comments lines.</p>
+ * Empty lines and those starting with symbol {@code #} are considered comment lines.</p>
  * @author Team 3 (Dávid Magyar | aether-fox | davidson996@gmail.com)*/
 public enum PolygonLoader {;
 
@@ -58,12 +58,11 @@ public enum PolygonLoader {;
     public static Path2D.Double loadPolygonAsPath2D(InputStream resourceData) throws IOException {
         Path2D.Double path = new Path2D.Double();
 
-        //first coordinate must be added with "move to", other with "line to"
-        CoordinateConsumer addToPathNotFirst = path::lineTo;
         CoordinateConsumer[] addToPath = { null };
         addToPath[0] = (x,y) -> {
+            //first coordinate must be added with "move to", others with "line to"
             path.moveTo(x, y);
-            addToPath[0] = addToPathNotFirst;
+            addToPath[0] = path::lineTo;
         };
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resourceData))) {
