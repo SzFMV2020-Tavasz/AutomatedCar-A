@@ -1,7 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar;
 
 import hu.oe.nik.szfmv.automatedcar.model.World;
-import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.sensors.Radar;
 import hu.oe.nik.szfmv.automatedcar.visualization.DisplayWorld;
 import hu.oe.nik.szfmv.automatedcar.visualization.Gui;
@@ -34,9 +33,9 @@ public class Main {
 
         // create an automated car
         // car starts in parking space
-        // car = new AutomatedCar(540, 1850, "car_2_white.png");
+        car = new AutomatedCar(540, 1850, "car_2_white.png");
         // car starts at the upper right trees
-        car = new AutomatedCar(3422, 700, "car_2_white.png");
+        // car = new AutomatedCar(3422, 700, "car_2_white.png");
         // car start at T-junction
         // car = new AutomatedCar(3900, 1400, "car_2_white.png");
         // for lane keeping test
