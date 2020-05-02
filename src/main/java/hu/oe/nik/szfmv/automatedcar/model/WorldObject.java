@@ -1,12 +1,14 @@
 package hu.oe.nik.szfmv.automatedcar.model;
 
+import hu.oe.nik.szfmv.automatedcar.model.deserializer.ReadPolygons;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class WorldObject {
 
@@ -25,7 +27,7 @@ public class WorldObject {
     protected float[][] rotationMatrix;
     protected String imageFileName;
     protected BufferedImage image;
-    protected Polygon polygon;
+    protected ArrayList<Path2D> polygons;
     protected boolean isStatic;
     protected boolean highlightedWhenCameraIsOn;
     protected boolean highlightedWhenRadarIsOn;
@@ -39,15 +41,19 @@ public class WorldObject {
         this.highlightedWhenCameraIsOn = false;
         this.highlightedWhenRadarIsOn = false;
         this.highlightedWhenUltrasoundIsOn = false;
+        this.polygons = new ArrayList<>();
+        initPolygons();
     }
 
     public WorldObject(String id) {
         setId(id);
         this.rotationMatrix = new float[2][2];
+        this.polygons = new ArrayList<>();
+        initPolygons();
     }
 
     public WorldObject() {
-
+        this.polygons = new ArrayList<>();
     }
 
     public int getX() {
@@ -147,9 +153,25 @@ public class WorldObject {
         return this.image;
     }
 
-    // will be added later by team 2 but needed for
-    public Polygon getPolygon() {
-        return polygon;
+    /**
+     * Gets the list of debug polygons for the object
+     * If the list consists of more than one element, the object is a road element.
+     * Although the elements are called polygons, tehcnically they are Path2D objects
+     * as jawa.awt.geom.Polygons cannot be open shapes while Path2D elements can be open or closed.
+     *
+     * @return The list of polygons as {@link Path2D} objects
+     */
+    public ArrayList<Path2D> getPolygons() {
+        return polygons;
+    }
+
+    /**
+     * Sets the list of polygon for the object.
+     *
+     * @param polygons The List of Path2d objects that represent the debug polygons of the object.
+     */
+    void setPolygons(ArrayList<Path2D> polygons) {
+        this.polygons = polygons;
     }
 
     public void initImage() {
@@ -173,6 +195,7 @@ public class WorldObject {
 
     /**
      * Gets whether the object is highlighted when radar sensor triangle is shown
+     *
      * @return true if it is highlighted; false otherwise
      */
     public boolean isHighlightedWhenRadarIsOn() {
@@ -181,6 +204,7 @@ public class WorldObject {
 
     /**
      * Sets whether the object is highlighted when radar sensor triangle is shown
+     *
      * @param highlightedWhenRadarIsOn true if the object should be hightlighted; false otherwise
      */
     public void setHighlightedWhenRadarIsOn(boolean highlightedWhenRadarIsOn) {
@@ -189,6 +213,7 @@ public class WorldObject {
 
     /**
      * Gets whether the object is highlighted when camera sensor triangle is shown
+     *
      * @return true if it is highlighted; false otherwise
      */
     public boolean isHighlightedWhenCameraIsOn() {
@@ -197,6 +222,7 @@ public class WorldObject {
 
     /**
      * Sets whether the object is highlighted when camera sensor triangle is shown
+     *
      * @param highlightedWhenCameraIsOn true if the object should be hightlighted; false otherwise
      */
     public void setHighlightedWhenCameraIsOn(boolean highlightedWhenCameraIsOn) {
@@ -205,6 +231,7 @@ public class WorldObject {
 
     /**
      * Gets whether the object is highlighted when ultrasound sensor triangle is shown
+     *
      * @return true if it is highlighted; false otherwise
      */
     public boolean isHighlightedWhenUltrasoundIsOn() {
@@ -213,9 +240,22 @@ public class WorldObject {
 
     /**
      * Sets whether the object is highlighted when ultrasound sensor triangle is shown
+     *
      * @param highlightedWhenUltrasoundIsOn true if the object should be hightlighted; false otherwise
      */
     public void setHighlightedWhenUltrasoundIsOn(boolean highlightedWhenUltrasoundIsOn) {
         this.highlightedWhenUltrasoundIsOn = highlightedWhenUltrasoundIsOn;
+    }
+
+    public void initPolygons() {
+        if (this.getType() == null && imageFileName != null) {
+            this.type = this.imageFileName.split(".png")[0];
+        }
+        if (this.getType() != null) {
+            ArrayList<Path2D> polygons = ReadPolygons.getPolygonsForObject(this.getType());
+            if (polygons != null) {
+                this.setPolygons(polygons);
+            }
+        }
     }
 }
