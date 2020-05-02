@@ -88,8 +88,7 @@ public class Radar extends SystemComponent {
         radarDisplayStatePacket.setRadarDisplayState(true);
 
         // turn on debug mode - left here for debugging purposes
-        virtualFunctionBus.debugModePacket.setDebuggingState(true);
-
+        virtualFunctionBus.debugModePacket.setDebuggingState(false);
     }
 
     /**
