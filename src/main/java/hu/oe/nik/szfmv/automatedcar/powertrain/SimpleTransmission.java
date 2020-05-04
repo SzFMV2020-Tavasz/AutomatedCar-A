@@ -1,34 +1,34 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
+import static hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode.D_DRIVE;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.out;
 
 /***
  * @author Team 3 (Magyar Dávid | aether-fox | davidson996@gmail.com)
  */
-public class SimpleTransmission implements ITransmission2 {
+public class SimpleTransmission implements ITransmission {
 
     private static final long MAX_RPM = 5000;
-
     private static final double RATIO_2_TO_1 = 1.5;
     private static final double RATIO_3_TO_2 = 1.5;
     private static final double RATIO_4_TO_3 = 1.5;
     private static final double RATIO_5_TO_4 = 1.5;
-
     private static final double RATIO_3_TO_1 = RATIO_3_TO_2 * RATIO_2_TO_1;
     private static final double RATIO_4_TO_1 = RATIO_4_TO_3 * RATIO_3_TO_2 * RATIO_2_TO_1;
     private static final double RATIO_5_TO_1 = RATIO_5_TO_4 * RATIO_4_TO_3 * RATIO_3_TO_2 * RATIO_2_TO_1;
 
     /**So the motor automatically slows down when the gas is not pressed.*/
     private static final double MOTOR_BREAK_RATIO = 0.7;
-    public static final int BASE_RPM_PER_SEC = 1500;
+    private static final int BASE_RPM_PER_SEC = 1500;
 
-    private CarTransmissionMode currentTransmissionMode = CarTransmissionMode.N_NEUTRAL;
+    private final ITransmissionLevelSuggester levelHandler = new TransmissionLevelSuggester();
+
+    private CarTransmissionMode currentTransmissionMode = CarTransmissionMode.P_PARKING;
     private int currentTransmissionLevel = 0;
-
     private long currentRPM = 0;
-
     private long lastUpdateTimeStamp;
 
     public SimpleTransmission() {
@@ -49,25 +49,66 @@ public class SimpleTransmission implements ITransmission2 {
         return currentRPM;
     }
 
-    /**
-     * @param gasPedalPressRatio Expected value is between {@code 0.0} an {@code 1.0}.
+    /***
      * @param requestedMode To change transmission mode to.
      * @param requestedTransmissionLevel To change transmission level to.
      */
     @Override
-    public void update(double gasPedalPressRatio, CarTransmissionMode requestedMode, int requestedTransmissionLevel) {
-        long elapsedMillis = getMillisSinceLastUpdateAndReset();
-
-        if (requestedMode != null) {
-            handleShifting(requestedMode, requestedTransmissionLevel);
+    public void forceShift(CarTransmissionMode requestedMode, int requestedTransmissionLevel) {
+        if (!requestedMode.supportsLevel(requestedTransmissionLevel)) {
+            throw new IllegalArgumentException("Transmission mode "
+                    + requestedMode + " does not support transmission level: "
+                    + requestedTransmissionLevel);
         }
 
+        handleTransmissionRequest(requestedMode, requestedTransmissionLevel);
+    }
+
+    /**
+     * @param gasPedalPressRatio Expected value is between {@code 0.0} an {@code 1.0}.
+     */
+    @Override
+    public void update(double gasPedalPressRatio) {
+        long elapsedMillis = getMillisSinceLastUpdateAndReset();
+
+        updateRPM(gasPedalPressRatio, elapsedMillis);
+
+        if (this.currentTransmissionMode.supportsLevel(1)) {
+            handleAutoLeveling();
+        }
+    }
+
+    private void handleTransmissionRequest(CarTransmissionMode requestedMode, int requestedTransmissionLevel) {
+        if (requestedMode != null) {
+            if (!requestedMode.supportsLevel(requestedTransmissionLevel)) {
+                throw new IllegalArgumentException("Transmission level "
+                        + requestedMode + " is requested with invalid level: "
+                        + requestedTransmissionLevel);
+            }
+
+            handleShifting(requestedMode, requestedTransmissionLevel);
+        }
+    }
+
+    private void updateRPM(double gasPedalPressRatio, long elapsedMillis) {
         long currentRPMPerSec = getRPMPerSecond(currentTransmissionMode, currentTransmissionLevel); //power to increase RPM
         double elapsedSeconds = (elapsedMillis / 1000.0);
         double gasPedalEffect = gasPedalPressRatio == 0 ? -MOTOR_BREAK_RATIO : gasPedalPressRatio;
 
         long newTargetRPM = this.currentRPM + (long)(elapsedSeconds * currentRPMPerSec * gasPedalEffect);
         this.currentRPM = max(0, min(newTargetRPM, MAX_RPM));
+    }
+
+    private void handleAutoLeveling() {
+        levelHandler.update(currentRPM, currentTransmissionLevel);
+        int suggestedLevel = levelHandler.getSuggestedLevel();
+        if (suggestedLevel < 1) {
+            throw new IllegalStateException("Suggested transmission level is -1!");
+        }
+
+        if (suggestedLevel != this.currentTransmissionLevel) {
+            handleShifting(this.currentTransmissionMode, levelHandler.getSuggestedLevel());
+        }
     }
 
     private long getMillisSinceLastUpdateAndReset() {
@@ -91,13 +132,13 @@ public class SimpleTransmission implements ITransmission2 {
                     case 1:
                         return BASE_RPM_PER_SEC;
                     case 2:
-                        return (long)(1000 / RATIO_2_TO_1);
+                        return (long)(BASE_RPM_PER_SEC / RATIO_2_TO_1);
                     case 3:
-                        return (long)(1000 / RATIO_3_TO_1);
+                        return (long)(BASE_RPM_PER_SEC / RATIO_3_TO_1);
                     case 4:
-                        return (long)(1000 / RATIO_4_TO_1);
+                        return (long)(BASE_RPM_PER_SEC / RATIO_4_TO_1);
                     case 5:
-                        return (long)(1000 / RATIO_5_TO_1);
+                        return (long)(BASE_RPM_PER_SEC / RATIO_5_TO_1);
                     default:
                         if (mode.supportsLevel(level)) {
                             throw new IllegalStateException("Missing implementation of level "
@@ -110,19 +151,31 @@ public class SimpleTransmission implements ITransmission2 {
                         }
                 }
             case R_REVERSE:
-                return getRPMPerSecond(CarTransmissionMode.D_DRIVE, 1);
+                return getRPMPerSecond(D_DRIVE, 1);
             default:
                 throw new IllegalStateException("Missing implementation of transmission mode " + mode + "!");
         }
     }
 
     private void handleShifting(CarTransmissionMode requestedMode, int requestedTransmissionLevel) {
+        if (!requestedMode.supportsLevel(requestedTransmissionLevel)) {
+            throw new IllegalArgumentException("Transmission mode "
+                    + requestedMode + " does not support level: "
+                    + requestedTransmissionLevel);
+        }
+
         if (requestedMode == this.currentTransmissionMode) {
             shiftToLevel(requestedTransmissionLevel);
         } else {
             if (!requestedMode.supportsLevel(requestedTransmissionLevel)) {
-                throw new UnsupportedOperationException("Requested transmission mode does not support transmission level " + requestedTransmissionLevel + "!");
+                String message = "Requested transmission mode ("
+                        + requestedMode + ") does not support transmission level "
+                        + requestedTransmissionLevel + "!";
+                throw new UnsupportedOperationException(message);
             }
+
+            out.println("Shifting [" + currentTransmissionMode.letter() + currentTransmissionLevel + "] ---> ["
+                    + requestedMode.letter() + requestedTransmissionLevel + "] at RPM " + currentRPM);
 
             this.currentTransmissionMode = requestedMode;
             this.currentTransmissionLevel = requestedTransmissionLevel;
@@ -132,22 +185,42 @@ public class SimpleTransmission implements ITransmission2 {
     private void shiftToLevel(int requestedTransmissionLevel) {
         int levelDiff = requestedTransmissionLevel - currentTransmissionLevel;
 
+        if (levelDiff == 0) {
+            return;
+        }
+
+        out.println("Shifting in ["
+                + currentTransmissionMode + "] "
+                + currentTransmissionLevel + " ---> "
+                + requestedTransmissionLevel + "] at RPM "
+                + currentRPM);
+
         if (levelDiff > 0) {
-            if (requestedTransmissionLevel > 5) {
-                throw new UnsupportedOperationException("Max transmission level is 5.");
-            }
+            shiftUp(requestedTransmissionLevel, levelDiff);
+        } else {
+            shiftDown(requestedTransmissionLevel, levelDiff);
+        }
 
-            for (;levelDiff > 0; --levelDiff) {
-                currentRPM /= 1.5;
-            }
-        } else if (levelDiff < 0) {
-            if (requestedTransmissionLevel < 0) {
-                throw new UnsupportedOperationException("Min transmission level is 1.");
-            }
+        this.currentTransmissionLevel = requestedTransmissionLevel;
+    }
 
-            for (;levelDiff < 0; ++levelDiff) {
-                currentRPM *= 1.5;
-            }
+    private void shiftDown(int requestedTransmissionLevel, int levelDiff) {
+        if (requestedTransmissionLevel < 0) {
+            throw new UnsupportedOperationException("Min transmission level is 1.");
+        }
+
+        for (;levelDiff < 0; ++levelDiff) {
+            currentRPM *= 1.5;
+        }
+    }
+
+    private void shiftUp(int requestedTransmissionLevel, int levelDiff) {
+        if (requestedTransmissionLevel > 5) {
+            throw new UnsupportedOperationException("Max transmission level is 5.");
+        }
+
+        for (;levelDiff > 0; --levelDiff) {
+            currentRPM /= 1.5;
         }
     }
 
@@ -163,7 +236,7 @@ public class SimpleTransmission implements ITransmission2 {
             case N_NEUTRAL:
                 return 0;
             case R_REVERSE:
-                return -1 * rpmToForce(rpm, CarTransmissionMode.D_DRIVE, 1);
+                return -1 * rpmToForce(rpm, D_DRIVE, 1);
             case D_DRIVE:
                 return rpmToForceInD(rpm, level);
             default:
@@ -184,8 +257,17 @@ public class SimpleTransmission implements ITransmission2 {
             case 5:
                 return rpm / 500.0 * RATIO_5_TO_1;
             default:
-                return 0.0;
+                if (D_DRIVE.supportsLevel(level)) {
+                    throw new IllegalStateException("Missing implementation for D level: " + level);
+                } else {
+                    throw new IllegalArgumentException("Transmission mode D does not support level: " + level);
+                }
         }
+    }
+
+    @Override
+    public int getCurrentTransmissionLevel() {
+        return this.currentTransmissionLevel;
     }
 
 }
