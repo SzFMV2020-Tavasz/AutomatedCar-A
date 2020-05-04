@@ -92,7 +92,7 @@ public class DisplayWorld {
      *
      * @return List of DisplayObjects rotated and moved according to the egocar's position
      */
-     ArrayList<DisplayObject> getDisplayObjects() {
+    ArrayList<DisplayObject> getDisplayObjects() {
         ArrayList<DisplayObject> returnList = new ArrayList<>();
 
         this.getFixWorldObjectsFromWorld();
@@ -113,17 +113,14 @@ public class DisplayWorld {
         // sort by Z
         returnList.sort(Comparator.comparing(DisplayObject::getZ));
 
-        // add egocar
-        DisplayObject egoCar = new DisplayObject(automatedCar, automatedCar);
-        returnList.add(egoCar);
-
         return returnList;
     }
 
     /**
      * Get the translated and rotated egocar.
-     *
+     * <p>
      * Method is done separately to fix display order.
+     *
      * @return the DisplayObject containing the egocar.
      */
     public DisplayObject getEgoCar() {
@@ -133,6 +130,7 @@ public class DisplayWorld {
 
     /**
      * Gets whether the camera's sensor triangle is shown or not
+     *
      * @return true if the camera is shown
      */
     public boolean isCameraShown() {
@@ -151,6 +149,7 @@ public class DisplayWorld {
 
     /**
      * Gets whether the ultrasound's sensor triangle is shown or not
+     *
      * @return true if the ultraound is shown
      */
     public boolean isUltrasoundShown() {
@@ -162,6 +161,7 @@ public class DisplayWorld {
 
     /**
      * Gets whether the Debug mode is on
+     *
      * @return true if the debug mode is on
      */
     public boolean isDebugOn() {
@@ -173,6 +173,7 @@ public class DisplayWorld {
 
     /**
      * Gets the actual state of the DisplaySensorObject for the camera sensor
+     *
      * @return a {@link DisplaySensorObject} containing the passed data
      */
     DisplaySensorObject getDisplayCamera() {
@@ -191,6 +192,7 @@ public class DisplayWorld {
 
     /**
      * Gets the actual state of the DisplaySensorObject for the radar sensor
+     *
      * @return a {@link DisplaySensorObject} containing the passed data
      */
     DisplaySensorObject getDisplayRadar() {
@@ -234,6 +236,7 @@ public class DisplayWorld {
 
     /**
      * Gets the list of object IDs of the objects that should be shown lined with a polygon
+     *
      * @return
      */
     public List<String> getDebugObjects() {

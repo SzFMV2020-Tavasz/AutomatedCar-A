@@ -4,8 +4,6 @@ import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 
-import java.awt.*;
-
 public class MovingWorldObject extends WorldObject {
     VirtualFunctionBus virtualFunctionBus;
     AutomatedCar automatedCar;
@@ -31,7 +29,7 @@ public class MovingWorldObject extends WorldObject {
         this.rotationMatrix = worldObject.getRotationMatrix();
         this.imageFileName = worldObject.getImageFileName();
         this.id = worldObject.getId();
-        this.polygon = worldObject.getPolygon();
+        this.polygons = worldObject.getPolygons();
         this.virtualFunctionBus = virtualFunctionBus;
         this.movementVectorX = 0;
         this.movementVectorY = 0;
