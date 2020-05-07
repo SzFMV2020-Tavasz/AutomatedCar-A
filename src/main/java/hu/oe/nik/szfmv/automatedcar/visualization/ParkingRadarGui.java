@@ -27,9 +27,10 @@ public class ParkingRadarGui extends JPanel {
     private static int RED_RECT_WIDTH = 12;
     private static int GREEN_RECT_WIDTH = 6;
     private static int RECT_HEIGHT = 20;
-    private static int RECT_TOP = 20; //(HEIGHT - RECT_HEIGHT)/2;
+    private static int RECT_TOP = 20;
     private static int RECT_SEPARATOR = 3;
     private static int RECT_STARTER = 15;
+    private static Color TURNED_OFF_COLOR = Color.darkGray;
 
     private static float[] GREEN_CATEGORIES = new float[]{0.8f, 0.7f, 0.6f, 0.5f};
     private static float RED_CATEGORY = 0.4f;
@@ -49,6 +50,7 @@ public class ParkingRadarGui extends JPanel {
     float distanceRight;
     Font distanceFont;
     Font normalFont;
+    boolean on;
 
     public ParkingRadarGui(int x, int y, int width, int backgroundColor) {
         this.x = x;
@@ -59,6 +61,7 @@ public class ParkingRadarGui extends JPanel {
         distanceLeft = 0;
         distanceRight = 0;
         createFonts();
+        on = false;
     }
 
     public void setDistanceLeft(float distance) {
@@ -71,12 +74,20 @@ public class ParkingRadarGui extends JPanel {
         repaint();
     }
 
+    public void setState(boolean state) {
+        this.on = state;
+    }
+
+    public boolean getState() {
+        return this.on;
+    }
+
     private void createFonts() {
         normalFont = new Font(Font.MONOSPACED, Font.BOLD, FONT_SIZE_METER);
 
         Map<TextAttribute, Object> fontAttributes = new HashMap<>();
         fontAttributes.put(TextAttribute.SIZE, FONT_SIZE_DISTANCE);
-        fontAttributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_DEMIBOLD);
+        fontAttributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
         Font tempFont;
         try {
             InputStream fontStream = ClassLoader.getSystemResourceAsStream("seven_segment.ttf");
@@ -90,28 +101,25 @@ public class ParkingRadarGui extends JPanel {
     private void drawRects(Graphics g) {
         // check green
         for (int i = 0; i < GREEN_CATEGORIES.length; i++) {
-            if (this.distanceLeft < GREEN_CATEGORIES[i]) {
-                drawGreenRect(g, true, i + 1);
-            }
-            if (this.distanceRight < GREEN_CATEGORIES[i]) {
-                drawGreenRect(g, false, i + 1);
-            }
+            drawGreenRect(g, true, i + 1, (this.on && this.distanceRight <= GREEN_CATEGORIES[i]));
+            drawGreenRect(g, false, i + 1, (this.on && this.distanceRight <= GREEN_CATEGORIES[i]));
         }
         // check red
-        if (distanceLeft < RED_CATEGORY) {
-            drawRedRect(g, true);
-        }
-        if (distanceRight < RED_CATEGORY) {
-            drawRedRect(g, false);
-        }
+        drawRedRect(g, true, (this.on && this.distanceRight <= RED_CATEGORY));
+        drawRedRect(g, false, (this.on && this.distanceRight <= RED_CATEGORY));
+
         labelLeftRight(g);
     }
 
-    private void drawGreenRect(Graphics g, boolean left, int num) {
+    private void drawGreenRect(Graphics g, boolean left, int num, boolean on) {
         if (num > ZERO && num <= GREEN_CATEGORIES.length) {
             int leftstart = RECT_STARTER + (num - 1) * (RECT_SEPARATOR + GREEN_RECT_WIDTH);
             int rightstart = width - RECT_STARTER - GREEN_RECT_WIDTH * num - (num - 1) * RECT_SEPARATOR;
-            g.setColor(Color.green);
+            if (on) {
+                g.setColor(Color.green);
+            } else {
+                g.setColor(TURNED_OFF_COLOR);
+            }
             if (left) {
                 g.fillRect(leftstart, RECT_TOP, GREEN_RECT_WIDTH, RECT_HEIGHT);
             } else {
@@ -120,12 +128,16 @@ public class ParkingRadarGui extends JPanel {
         }
     }
 
-    private void drawRedRect(Graphics g, boolean left) {
+    private void drawRedRect(Graphics g, boolean left, boolean on) {
         int greenRectsCount = GREEN_CATEGORIES.length;
         int leftstart = RECT_STARTER + greenRectsCount * (RECT_SEPARATOR + GREEN_RECT_WIDTH);
         int rightstart = width - RECT_STARTER - RED_RECT_WIDTH -
             (greenRectsCount) * (RECT_SEPARATOR + GREEN_RECT_WIDTH);
-        g.setColor(Color.red);
+        if (on) {
+            g.setColor(Color.red);
+        } else {
+            g.setColor(TURNED_OFF_COLOR);
+        }
         if (left) {
             g.fillRect(leftstart, RECT_TOP, RED_RECT_WIDTH, RECT_HEIGHT);
         } else {
@@ -135,9 +147,21 @@ public class ParkingRadarGui extends JPanel {
 
     private void showDistance(Graphics g) {
         String value = String.format("%.1f", min(distanceLeft, distanceRight));
-        g.setColor(Color.black);
+        g.setColor(TURNED_OFF_COLOR);
         g.setFont(distanceFont);
-        g.drawString(value, (width - g.getFontMetrics().stringWidth(value)) / 2, HEIGHT);
+        if (on) {
+            if (min(distanceLeft, distanceRight) <= RED_CATEGORY) {
+                g.setColor(Color.red);
+            } else if (min(distanceLeft, distanceRight) <= GREEN_CATEGORIES[0]) {
+                g.setColor(Color.green);
+            } else {
+                g.setColor(Color.black);
+            }
+            g.drawString(value, (width - g.getFontMetrics().stringWidth(value)) / 2, HEIGHT);
+        } else {
+            g.drawString("8.8", (width - g.getFontMetrics().stringWidth("8.8")) / 2, HEIGHT);
+        }
+
     }
 
     private void labelLeftRight(Graphics g) {

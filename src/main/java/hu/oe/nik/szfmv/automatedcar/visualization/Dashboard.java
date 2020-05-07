@@ -266,6 +266,7 @@ public class Dashboard extends JPanel {
         xCoordValueText.setText(Integer.toString(xCoord));
         parkingRadarGui.setDistanceLeft(virtualFunctionBus.leftParkingDistance.getDistance());
         parkingRadarGui.setDistanceRight(virtualFunctionBus.rightParkingDistance.getDistance());
+        parkingRadarGui.setState(virtualFunctionBus.parkingRadarGuiStatePacket.getParkingRadarGuiState());
     }
 
     private boolean rightIndex(Index.IndexStatus status) {

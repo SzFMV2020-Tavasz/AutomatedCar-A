@@ -11,6 +11,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICa
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingDistancePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingRadarDisplayStatePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingRadarGuiStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingRadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarVisualizationPacket;
@@ -43,6 +44,7 @@ public class VirtualFunctionBus {
     public IParkingRadarVisualizationPacket parkingRadarVisualizationPacket;
     public IParkingDistancePacket leftParkingDistance;
     public IParkingDistancePacket rightParkingDistance;
+    public IParkingRadarGuiStatePacket parkingRadarGuiStatePacket;
     public DebugModePacket debugModePacket = new DebugModePacket();
     public ICameraDisplayStatePacket cameraDisplayStatePacket;
     public IRadarDisplayStatePacket radarDisplayStatePacket;
