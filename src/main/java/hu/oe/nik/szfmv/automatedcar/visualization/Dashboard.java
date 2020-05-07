@@ -1,7 +1,10 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
+import hu.oe.nik.szfmv.automatedcar.Main;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,13 +14,30 @@ import java.awt.*;
  */
 public class Dashboard extends JPanel {
 
-    private final int width = 250;
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
+
+    private final int width = 235;  // this is the actual shown inner size
     private final int height = 700;
     private final int backgroundColor = 0x888888;
+
+    private final int padding = 10;
+    private final int separator = 10;
+    private final int statusMarkerSmall = 45;
+    private final int statusMarkerLarge = 65;
+    private final int statusMarkerHeight = 40;
+    private final int statusMarkerSmallFromRight = width - padding - statusMarkerSmall;
+    private final int statusMarkerSmallSecond = statusMarkerSmall + separator + padding;
+    private final int statusMarkerSmallThird = statusMarkerSmallFromRight - statusMarkerSmall - separator;
+    private final int statusMarkerLargeFromRight = width - padding - statusMarkerLarge;
+    private final int statusMarkersTop = 245;
+
+
     private Gui parent;
     private VirtualFunctionBus virtualFunctionBus;
     private TurnIndex leftTurn;
     private TurnIndex rightTurn;
+
+    private ParkingRadarGui parkingRadarGui;
 
     private JLabel currentSpeedText = new JLabel("0 KM/h");
     private JLabel currentRpmText = new JLabel("0");
@@ -100,14 +120,29 @@ public class Dashboard extends JPanel {
     }
 
     private void markerPlacing() {
-        referenceSpeedMarker = new StatusMarker(10, 205, 50, 40, "0.0");
-        timeGapMarker = new StatusMarker(60, 205, 50, 40, "0.8");
-        accMarker = new StatusMarker(10, 250, 50, 40, "ACC");
-        ppmarker = new StatusMarker(60, 250, 50, 40, "PP");
-        lkamarker = new StatusMarker(10, 300, 50, 40, "LKA");
-        lkwarnmarker = new StatusMarker(10, 350, 100, 40, "LKA WARN");
-        aebwarnmarker = new StatusMarker(120, 310, 100, 40, "AEB WARN");
-        rrwarnmarker = new StatusMarker(120, 350, 100, 40, "RR WARN");
+
+        int rowTop = statusMarkersTop;
+        // row 1
+        referenceSpeedMarker = new StatusMarker(
+            padding, rowTop, statusMarkerSmall, statusMarkerHeight, "0.0");
+        timeGapMarker = new StatusMarker(
+            statusMarkerSmallSecond, rowTop, statusMarkerSmall, statusMarkerHeight, "0.8");
+        accMarker = new StatusMarker(
+            statusMarkerSmallThird, rowTop, statusMarkerSmall, statusMarkerHeight, "ACC");
+        ppmarker = new StatusMarker(
+            statusMarkerSmallFromRight, rowTop, statusMarkerSmall, statusMarkerHeight, "PP");
+        rowTop += statusMarkerHeight + separator;
+        // row 3
+        lkamarker = new StatusMarker(
+            padding, rowTop, statusMarkerLarge, statusMarkerHeight, "LKA");
+        aebwarnmarker = new StatusMarker(
+            statusMarkerLargeFromRight, rowTop, statusMarkerLarge, statusMarkerHeight, "AEB WARN");
+        rowTop += statusMarkerHeight + separator;
+        // row 4
+        lkwarnmarker = new StatusMarker(
+            padding, rowTop, statusMarkerLarge, statusMarkerHeight, "LKA WARN");
+        rrwarnmarker = new StatusMarker(
+            statusMarkerLargeFromRight, rowTop, statusMarkerLarge, statusMarkerHeight, "RR WARN");
 
         add(accMarker);
         add(ppmarker);
@@ -122,7 +157,7 @@ public class Dashboard extends JPanel {
     private void textPlacing() {
         gearShiftText.setBounds(100, 150, 40, 15);
         currentGearText.setBounds(135, 150, 10, 15);
-        accMenuText.setBounds(10, 190, 80, 15);
+        accMenuText.setBounds(10, 225, 80, 15);
         gasPedalText.setBounds(10, 390, 100, 15);
         breakPedalText.setBounds(10, 420, 100, 15);
         speedLimitText.setBounds(10, 450, 120, 15);
@@ -146,7 +181,8 @@ public class Dashboard extends JPanel {
         timeGapExplainerText.setBounds(10, 590, 220, 15);
         referenceSpeedExplainer.setBounds(10, 605, 220, 15);
 
-        lastRoadSign.setBounds(120, 205, 110, 110);
+        lastRoadSign.setBounds(padding + statusMarkerLarge + separator, 255,
+            width - 2 * (padding + statusMarkerLarge + separator), 110);
 
         add(lastRoadSign);
         add(gearShiftText);
@@ -176,6 +212,11 @@ public class Dashboard extends JPanel {
         add(referenceSpeedExplainer);
     }
 
+    public void parkingRadarPlacing() {
+        parkingRadarGui = new ParkingRadarGui(padding, 175, width - 2 * padding, backgroundColor);
+        add(parkingRadarGui);
+    }
+
     public void turnIndexPlaceing() {
         leftTurn = new TurnIndex(10, 140, true);
         rightTurn = new TurnIndex(190, 140, false);
@@ -198,8 +239,10 @@ public class Dashboard extends JPanel {
         turnIndexPlaceing();
         progressBarPlacing();
         textPlacing();
+        parkingRadarPlacing();
         oMeterPlacing();
         markerPlacing();
+
     }
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
@@ -221,7 +264,8 @@ public class Dashboard extends JPanel {
         rightTurn.setOn(rightIndex(virtualFunctionBus.guiInputPacket.getIndexStatus()));
         yCoordValueText.setText(Integer.toString(yCoord));
         xCoordValueText.setText(Integer.toString(xCoord));
-
+        parkingRadarGui.setDistanceLeft(virtualFunctionBus.leftParkingDistance.getDistance());
+        parkingRadarGui.setDistanceRight(virtualFunctionBus.rightParkingDistance.getDistance());
     }
 
     private boolean rightIndex(Index.IndexStatus status) {
