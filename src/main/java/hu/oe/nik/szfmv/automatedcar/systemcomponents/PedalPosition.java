@@ -26,22 +26,26 @@ public class PedalPosition {
     }
 
     private void steeringRight() {
-        Thread valueChangeThread = new Thread(() -> {
-            int counter = 0;
-            while (steeringWheelRight && steeringWheelValue < 180.0) {
+        if (steeringWheelValue < 0) {
+            steeringWheelReleased();
+        } else {
+            Thread valueChangeThread = new Thread(() -> {
+                int counter = 0;
+                while (steeringWheelRight && steeringWheelValue < 180.0) {
 
-                if (steeringWheelValueValidRange(steeringWheelValue + increaseNumber(counter))) {
-                    steeringWheelValue += increaseNumber(counter);
-                } else {
-                    steeringWheelValue = 180;
+                    if (steeringWheelValueValidRange(steeringWheelValue + increaseNumber(counter))) {
+                        steeringWheelValue += increaseNumber(counter);
+                    } else {
+                        steeringWheelValue = 180;
+                    }
+                    virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                    virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
+                    counter++;
+                    sleep();
                 }
-                virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
-                virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
-                counter++;
-                sleep();
-            }
-        });
-        valueChangeThread.start();
+            });
+            valueChangeThread.start();
+        }
     }
 
     public void startSteeringLeft() {
@@ -53,22 +57,26 @@ public class PedalPosition {
     }
 
     private void steeringLeft() {
-        Thread valueChangeThread = new Thread(() -> {
-            int counter = 0;
-            while (steeringWheelLeft && steeringWheelValue > -180.0) {
+        if (steeringWheelValue > 0) {
+            steeringWheelReleased();
+        } else {
+            Thread valueChangeThread = new Thread(() -> {
+                int counter = 0;
+                while (steeringWheelLeft && steeringWheelValue > -180.0) {
 
-                if (steeringWheelValueValidRange(steeringWheelValue + increaseNumber(counter))) {
-                    steeringWheelValue -= increaseNumber(counter);
-                } else {
-                    steeringWheelValue = -180;
+                    if (steeringWheelValueValidRange(steeringWheelValue + increaseNumber(counter))) {
+                        steeringWheelValue -= increaseNumber(counter);
+                    } else {
+                        steeringWheelValue = -180;
+                    }
+                    virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
+                    virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
+                    counter++;
+                    sleep();
                 }
-                virtualFunctionBus.toPowerTrainPacket.setSteeringWheelValue(steeringWheelValue);
-                virtualFunctionBus.guiInputPacket.setSteeringWheelValue(steeringWheelValue);
-                counter++;
-                sleep();
-            }
-        });
-        valueChangeThread.start();
+            });
+            valueChangeThread.start();
+        }
     }
 
     public void steeringWheelReleased() {
@@ -227,11 +235,11 @@ public class PedalPosition {
 
         int outputValue;
         if (counter < 5) {
-            outputValue = 5;
-        } else if (counter < 10) {
             outputValue = 10;
+        } else if (counter < 10) {
+            outputValue = 20;
         } else {
-            outputValue = 15;
+            outputValue = 30;
         }
 
         if (value < 0) {

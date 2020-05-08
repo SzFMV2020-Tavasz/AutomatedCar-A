@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -185,15 +186,15 @@ public class Sensor extends SystemComponent {
     public MovingWorldObject getNearestCollideableElement() {
         MovingWorldObject nearestObject = null;
         double distance = Double.MAX_VALUE;
-        for (MovingWorldObject mo : elementsSeenByRadar) {
-            if (mo.getPolygon() != null) {
-                Shape moPolyInplace = ObjectTransform.transformPolygon(mo);
-                Shape egocarPolyInPlace = ObjectTransform.transformPolygon(automatedCar);
-                double moDistance = calculateMinimumDistance(moPolyInplace, mo.getPolygon().npoints,
-                        egocarPolyInPlace, automatedCar.getPolygon().npoints);
-                if (moDistance < Double.MAX_VALUE && moDistance < distance) {
-                    distance = moDistance;
-                    nearestObject = mo;
+        if (automatedCar.getPolygons().size() > 0) {
+            Path2D egocarPolyInPlace = ObjectTransform.transformPath2DPolygon(automatedCar).get(0);
+            for (MovingWorldObject mo : elementsSeenByRadar) {
+                for (Path2D moPolyInplace : ObjectTransform.transformPath2DPolygon(mo)) {
+                    double moDistance = calculateMinimumDistance(moPolyInplace, egocarPolyInPlace);
+                    if (moDistance < Double.MAX_VALUE && moDistance < distance) {
+                        distance = moDistance;
+                        nearestObject = mo;
+                    }
                 }
             }
         }
@@ -201,30 +202,28 @@ public class Sensor extends SystemComponent {
         return nearestObject != null ? nearestObject : null;
     }
 
-    private double calculateMinimumDistance(Shape poly1, int poly1N, Shape poly2, int poly2N) {
+    private double calculateMinimumDistance(Path2D poly1, Path2D poly2) {
         double distance = Double.MAX_VALUE;
 
         // check all poly1 points against all poly points and select the smallest distance
         PathIterator it1 = poly1.getPathIterator(null);
-        int it1Index = 0;
-        while (it1Index < poly1N && !it1.isDone()) {
+        while (!it1.isDone()) {
             float[] p1 = new float[2];
             it1.currentSegment(p1);
-            double tempDistance = getShapeMinimumDistanceFromPoint(poly2, poly2N, p1);
+            double tempDistance = getShapeMinimumDistanceFromPoint(poly2, p1);
             if (tempDistance < distance) {
                 distance = tempDistance;
             }
             it1.next();
-            it1Index++;
         }
         return distance;
     }
 
-    private double getShapeMinimumDistanceFromPoint(Shape poly, int polyN, float[] p1) {
+
+    private double getShapeMinimumDistanceFromPoint(Shape poly, float[] p1) {
         double distance = Double.MAX_VALUE;
         PathIterator it2 = poly.getPathIterator(null);
-        int it2Index = 0;
-        while (it2Index < polyN && !it2.isDone()) {
+        while (!it2.isDone()) {
             float[] p2 = new float[2];
             it2.currentSegment(p2);
             double tempDistance = Point2D.distance(p1[0], p1[1], p2[0], p2[1]);
@@ -232,7 +231,6 @@ public class Sensor extends SystemComponent {
                 distance = tempDistance;
             }
             it2.next();
-            it2Index++;
         }
         return distance;
     }
