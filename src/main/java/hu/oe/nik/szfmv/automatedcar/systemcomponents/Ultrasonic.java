@@ -44,6 +44,7 @@ public class Ultrasonic {
     private final World world;
     private List<Sensor> sensors = new ArrayList<>();
     private List<WorldObject> collidableObjectsInRange = new ArrayList<>();
+    private WorldObject nearestCollidableObject = null;
 
     public Ultrasonic(VirtualFunctionBus virtualFunctionBus, AutomatedCar automatedCar, World world) {
         this.virtualFunctionBus = virtualFunctionBus;
@@ -69,17 +70,34 @@ public class Ultrasonic {
 
     }
 
+    private double distanceBetweenTwoPoints(int Xone, int Yone, int Xtwo, int Ytwo) {
+        return Math.sqrt((Xtwo - Xone) * (Xtwo - Xone) + (Ytwo - Yone) * (Ytwo - Yone));
+    }
+
     private void getAllCollidablesInRange() {
         collidableObjectsInRange = new ArrayList<>();
         for (Sensor sensor : sensors) {
             for (WorldObject object : world.getObjectsInsideTriangle(sensor.getTriangleSource(),
                     sensor.getTriangleCorner1(), sensor.getTriangleCorner2())) {
-                if (object.getZ() > 0) {
+                if (object.getZ() > 0 && !collidableObjectsInRange.contains(object)) {
                     collidableObjectsInRange.add(object);
+                    if (nearestCollidableObject == null) {
+                        nearestCollidableObject = object;
+                    } else {
+                        double distanceA = distanceBetweenTwoPoints(nearestCollidableObject.getX(),
+                                nearestCollidableObject.getY(),
+                                sensor.getTriangleSource().x, sensor.getTriangleSource().y);
+                        double distanceB = distanceBetweenTwoPoints(object.getX(),
+                                object.getY(),
+                                sensor.getTriangleSource().x, sensor.getTriangleSource().y);
+                        if (distanceA > distanceB) {
+                            nearestCollidableObject = object;
+                        }
+                    }
                 }
             }
-
         }
+
     }
 
 
