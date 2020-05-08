@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.awt.geom.Path2D;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,8 +30,12 @@ public class DisplayObjectTest {
         }
 
         @Override
-        public Polygon getPolygon() {
-            return new Polygon(new int[]{10}, new int[]{20}, 1);
+        public ArrayList<Path2D> getPolygons() {
+            ArrayList<Path2D> returnlist = new ArrayList<>();
+            Path2D returnPath = new Path2D.Double();
+            returnPath.moveTo(10, 20);
+            returnlist.add(returnPath);
+            return returnlist;
         }
     }
 
@@ -135,9 +141,9 @@ public class DisplayObjectTest {
       */
     @Test
     public void checkPolygonRotationResults() {
-        assertEquals(358, Math.round(displayObject.getDebugPolygon().getCurrentPoint().getX()
+        assertEquals(358, Math.round(displayObject.getDebugPolygons().get(0).getCurrentPoint().getX()
             * forPrecision) / forPrecision);
-        assertEquals(48, Math.round(displayObject.getDebugPolygon().getCurrentPoint().getY()
+        assertEquals(48, Math.round(displayObject.getDebugPolygons().get(0).getCurrentPoint().getY()
             * forPrecision) / forPrecision);
     }
 

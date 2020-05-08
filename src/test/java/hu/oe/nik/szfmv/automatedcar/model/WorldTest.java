@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,49 +17,59 @@ public class WorldTest {
 
     @BeforeEach
     void init() {
-        Polygon polygon = new Polygon();
-        polygon.addPoint(0, 50);
-        polygon.addPoint(10, 50);
-        polygon.addPoint(0, 40);
+        Path2D polygon = new Path2D.Double();
+        polygon.moveTo(0, 50);
+        polygon.lineTo(10, 50);
+        polygon.lineTo(0, 40);
+        polygon.closePath();
 
+        initPolygons1(polygon);
+        initPolygons2(polygon);
+
+        worldInstance = new World(10, 10, testList);
+    }
+
+    private void initPolygons1(Path2D polygon) {
         WorldObject instance = new WorldObject("4");
         instance.setIsStatic(true);
         instance.setType("car_1_blue");
         instance.setX(5);
         instance.setY(4);
-        instance.polygon = polygon;
-        instance.setImageFileName(instance.getType()+ ".png");
+        instance.polygons = new ArrayList<>(Arrays.asList(polygon));
+        instance.setImageFileName(instance.getType() + ".png");
         instance.setRotationMatrix(new float[][]{{1, 2}, {1, 2}});
 
         WorldObject instance1 = new WorldObject("3");
         instance1.setIsStatic(true);
         instance1.setX(100);
         instance1.setY(100);
-        instance1.polygon = polygon;
-        instance1.setImageFileName(instance.getType()+ ".png");
+        instance1.polygons = new ArrayList<>(Arrays.asList(polygon));
+        instance1.setImageFileName(instance.getType() + ".png");
         instance1.setType("road_2lane_straight");
 
+        testList.add(instance);
+        testList.add(instance1);
+    }
+
+    private void initPolygons2(Path2D polygon) {
         WorldObject instance2 = new WorldObject("2");
         instance2.setIsStatic(true);
         instance2.setX(500);
         instance2.setY(100);
-        instance2.polygon = polygon;
-        instance2.setImageFileName(instance2.getType()+ ".png");
+        instance2.polygons = new ArrayList<>(Arrays.asList(polygon));
+        instance2.setImageFileName(instance2.getType() + ".png");
         instance2.setType("tree");
 
         WorldObject instance3 = new WorldObject("1");
         instance3.setX(0);
         instance3.setY(400);
-        instance3.polygon = polygon;
-        instance3.setImageFileName(instance3.getType()+ ".png");
+        instance3.polygons = new ArrayList<>(Arrays.asList(polygon));
+        instance3.setImageFileName(instance3.getType() + ".png");
         instance3.setIsStatic(false);
         instance3.setType("man");
 
-        testList.add(instance);
-        testList.add(instance1);
         testList.add(instance2);
         testList.add(instance3);
-        worldInstance = new World(10, 10, testList);
     }
 
     @Test
@@ -97,12 +109,12 @@ public class WorldTest {
     }
 
     @Test
-    void testObjectInsideTriangle(){
+    void testObjectInsideTriangle() {
         String expectedId = "3";
-        Point a = new Point(40,40);
-        Point b = new Point(40,150);
-        Point c = new Point(150,40);
-        List<WorldObject> objectInsideTriangle = worldInstance.getObjectsInsideTriangle(a,b,c);
+        Point a = new Point(40, 40);
+        Point b = new Point(40, 150);
+        Point c = new Point(150, 40);
+        List<WorldObject> objectInsideTriangle = worldInstance.getObjectsInsideTriangle(a, b, c);
         int size = objectInsideTriangle.size();
         assertEquals(1, size);
         assertEquals(expectedId, objectInsideTriangle.get(0).getId());
