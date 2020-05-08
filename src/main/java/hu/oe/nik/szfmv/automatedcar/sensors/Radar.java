@@ -14,11 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
+import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,8 +100,11 @@ public class Radar extends SystemComponent {
             if (doesObjectMovementVectorPointTowardsTheEgocar(mo)) {
                 Line2D movementVectorLine = new Line2D.Double(mo.getX(), mo.getY(),
                         mo.getX() + mo.getRelativeMovementVectorX(), mo.getY() + mo.getRelativeMovementVectorY());
-                Line2D extendedLine = extendLineToReachBeyondPolygon(mo.getPolygon(), movementVectorLine);
-                if (doesLineIntersectPolygon(extendedLine, ObjectTransform.transformPolygon(automatedCar))) {
+
+                Path2D egocar = ObjectTransform.transformPath2DPolygon(automatedCar).get(0);
+                Line2D extendedLine = extendLineToReachBeyondPolygon(egocar, movementVectorLine);
+
+                if (doesLineIntersectPolygon(extendedLine, egocar)) {
                     returnList.add(mo.getWorldObject());
                 }
 
@@ -125,13 +124,28 @@ public class Radar extends SystemComponent {
         boolean result = false;
         if (polygon != null && !line.getP1().equals(line.getP2())) {
             // loop though the polygon
-            for (int i = 0; i < polygon.npoints; i++) {
-                if (i < polygon.npoints - 1) {
-                    Line2D polygonSegment = new Line2D.Double(polygon.xpoints[i], polygon.ypoints[i],
-                            polygon.xpoints[i + 1], polygon.ypoints[i + 1]);
-                    if (polygonSegment.intersectsLine(line)) {
-                        return true;
-                    }
+            result = loopThroughIntersectionCheck(line, polygon);
+        }
+        return result;
+    }
+
+    /**
+     * Checks whether the given line intersects the polygon at all
+     * Separate method because of the 20 line rule.
+     *
+     * @param line    the line to check
+     * @param polygon the polygon to check against
+     * @return true if the line intersects the rectangle; false otherwise
+     */
+    private boolean loopThroughIntersectionCheck(Line2D line, Path2D polygon) {
+        float[] prevPoint = new float[2];
+        boolean firstPoint = true;
+        PathIterator iter = polygon.getPathIterator(null);
+        while (!iter.isDone()) {
+            if (!firstPoint) {
+                float[] currentpoint = new float[2];
+                if (checkIntersection(iter, currentpoint, prevPoint, line)) {
+                    return true;
                 }
                 prevPoint = currentpoint;
             } else {
@@ -145,7 +159,7 @@ public class Radar extends SystemComponent {
     private boolean checkIntersection(PathIterator iter, float[] currentpoint, float[] prevPoint, Line2D line) {
         iter.currentSegment(currentpoint);
         Line2D polygonSegment = new Line2D.Float(prevPoint[0], prevPoint[1],
-            currentpoint[0], currentpoint[1]);
+                currentpoint[0], currentpoint[1]);
         if (polygonSegment.intersectsLine(line)) {
             return true;
         } else {
@@ -290,15 +304,15 @@ public class Radar extends SystemComponent {
     public MovingWorldObject getNearestCollideableElement() {
         MovingWorldObject nearestObject = null;
         double distance = Double.MAX_VALUE;
-        for (MovingWorldObject mo : elementsSeenByRadar) {
-            if (mo.getPolygon() != null) {
-                Shape moPolyInplace = ObjectTransform.transformPolygon(mo);
-                Shape egocarPolyInPlace = ObjectTransform.transformPolygon(automatedCar);
-                double moDistance = calculateMinimumDistance(moPolyInplace, mo.getPolygon().npoints,
-                        egocarPolyInPlace, automatedCar.getPolygon().npoints);
-                if (moDistance < Double.MAX_VALUE && moDistance < distance) {
-                    distance = moDistance;
-                    nearestObject = mo;
+        if (automatedCar.getPolygons().size() > 0) {
+            Path2D egocarPolyInPlace = ObjectTransform.transformPath2DPolygon(automatedCar).get(0);
+            for (MovingWorldObject mo : elementsSeenByRadar) {
+                for (Path2D moPolyInplace : ObjectTransform.transformPath2DPolygon(mo)) {
+                    double moDistance = calculateMinimumDistance(moPolyInplace, egocarPolyInPlace);
+                    if (moDistance < Double.MAX_VALUE && moDistance < distance) {
+                        distance = moDistance;
+                        nearestObject = mo;
+                    }
                 }
             }
         }
@@ -356,7 +370,6 @@ public class Radar extends SystemComponent {
     }
 
     /**
-     * Sets the list of elements that are shown with different color inside the radar triangle
      * Gets the geometrically nearest element and passes it to the selectedDebuglistpacket
      */
     private void showNearestElementInTriangle() {
@@ -402,7 +415,6 @@ public class Radar extends SystemComponent {
 
         radarPolygon = new Polygon(new int[]{(int) source.getX(), (int) corner1.getX(), (int) corner2.getX()},
                 new int[]{(int) source.getY(), (int) corner1.getY(), (int) corner2.getY()}, TRIANGLE_POLYGON_POINTS);
-
     }
 
     /**
