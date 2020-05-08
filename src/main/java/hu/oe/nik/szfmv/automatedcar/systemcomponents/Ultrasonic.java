@@ -91,7 +91,9 @@ public class Ultrasonic {
                                 object.getY(),
                                 sensor.getTriangleSource().x, sensor.getTriangleSource().y);
                         if (distanceA > distanceB) {
+                            nearestCollidableObject.setHighlightedWhenUltrasoundIsOn(false);
                             nearestCollidableObject = object;
+                            nearestCollidableObject.setHighlightedWhenUltrasoundIsOn(true);
                         }
                     }
                 }
