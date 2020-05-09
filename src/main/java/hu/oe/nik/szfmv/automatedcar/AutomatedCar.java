@@ -5,7 +5,6 @@ import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import org.apache.logging.log4j.LogManager;
@@ -41,8 +40,6 @@ public class AutomatedCar extends WorldObject {
 
     public AutomatedCar(int x, int y, String imageFileName) {
         super(x, y, imageFileName);
-
-        new Driver(virtualFunctionBus);
 
         this.polygon = debugPoly;
     }
