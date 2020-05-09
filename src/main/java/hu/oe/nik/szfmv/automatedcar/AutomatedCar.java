@@ -11,8 +11,6 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMo
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.*;
-
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.average;
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
 
@@ -34,9 +32,10 @@ public class AutomatedCar extends WorldObject {
         super(x, y, imageFileName);
 
         new Driver(virtualFunctionBus);
+    }
 
-        //ReadPolygons.readPolys();
-        //this.polygons = new ArrayList<Path2D>(Arrays.asList(debugPoly));
+    public AutomatedCar(CarVariant variant) {
+        this(0, 0, variant.getImageResourceName());
     }
 
     public void drive() {
@@ -61,6 +60,12 @@ public class AutomatedCar extends WorldObject {
     public void setPosition(IVector position) {
         this.setX((int)position.getXDiff());
         this.setY((int)position.getYDiff());
+    }
+
+    /**Sets the center position of the car.*/
+    public void setPosition(int x, int y) {
+        this.setX(x);
+        this.setY(y);
     }
 
     private void updatePositionAndOrientation() {
