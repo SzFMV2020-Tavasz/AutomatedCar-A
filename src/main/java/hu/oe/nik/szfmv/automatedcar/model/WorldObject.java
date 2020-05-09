@@ -32,6 +32,7 @@ public class WorldObject {
     protected boolean highlightedWhenCameraIsOn;
     protected boolean highlightedWhenRadarIsOn;
     protected boolean highlightedWhenUltrasoundIsOn;
+    protected boolean highlightedWhenParkinRadarIsOn;
 
     public WorldObject(int x, int y, String imageFileName) {
         this.x = x;
@@ -41,6 +42,7 @@ public class WorldObject {
         this.highlightedWhenCameraIsOn = false;
         this.highlightedWhenRadarIsOn = false;
         this.highlightedWhenUltrasoundIsOn = false;
+
         this.polygons = new ArrayList<>();
         initPolygons();
     }
@@ -245,6 +247,24 @@ public class WorldObject {
      */
     public void setHighlightedWhenUltrasoundIsOn(boolean highlightedWhenUltrasoundIsOn) {
         this.highlightedWhenUltrasoundIsOn = highlightedWhenUltrasoundIsOn;
+    }
+
+    /**
+     * Gets whether the object is highlighted when ultrasound sensor triangle is shown
+     *
+     * @return true if it is highlighted; false otherwise
+     */
+    public boolean isHighlightedWhenParkinRadarIsOn() {
+        return highlightedWhenParkinRadarIsOn;
+    }
+
+    /**
+     * Sets whether the object is highlighted when ultrasound sensor triangle is shown
+     *
+     * @param highlightedWhenParkinRadarIsOn true if the object should be hightlighted; false otherwise
+     */
+    public void setHighlightedWhenParkinRadarIsOn(boolean highlightedWhenParkinRadarIsOn) {
+        this.highlightedWhenParkinRadarIsOn = highlightedWhenParkinRadarIsOn;
     }
 
     public void initPolygons() {

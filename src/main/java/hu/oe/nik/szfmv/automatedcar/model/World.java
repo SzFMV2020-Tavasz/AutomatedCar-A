@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class World {
+    protected List<WorldObject> worldObjects;
     private int width;
     private int height;
-    private List<WorldObject> worldObjects;
 
     public World(int width, int height) {
         this.width = width;
@@ -131,9 +131,11 @@ public class World {
      * Initializes the ReadPolygon class: makes it load the debug json
      * and add the debug polygons to the objects
      */
-    private void initPolygons() {
+    protected void initPolygons() {
         for (WorldObject obj : worldObjects) {
-            obj.initPolygons();
+            if (obj != null) {
+                obj.initPolygons();
+            }
         }
     }
 }

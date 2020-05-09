@@ -6,7 +6,6 @@ import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.visualization.VisualizationConfig;
@@ -44,7 +43,6 @@ public class Radar extends SystemComponent {
     private final RadarVisualizationPacket radarVisualizationPacket;
     private final RadarDisplayStatePacket radarDisplayStatePacket;
     // will be removed later when HMI will be setting this switch
-    private final DebugModePacket debugModePacket;
 
     // objects references for reference(eh...)
     private AutomatedCar automatedCar;
@@ -60,8 +58,6 @@ public class Radar extends SystemComponent {
         virtualFunctionBus.radarVisualizationPacket = radarVisualizationPacket;
         radarDisplayStatePacket = new RadarDisplayStatePacket();
         virtualFunctionBus.radarDisplayStatePacket = radarDisplayStatePacket;
-        debugModePacket = new DebugModePacket();
-        virtualFunctionBus.debugModePacket = debugModePacket;
         this.automatedCar = automatedCar;
         this.world = world;
         this.elementsSeenByRadar = new ArrayList<>();
@@ -85,10 +81,7 @@ public class Radar extends SystemComponent {
 
         // send radar display data
         radarVisualizationPacket.setSensorTriangle(source, corner1, corner2, RADAR_SENSOR_BG_COLOUR);
-        radarDisplayStatePacket.setRadarDisplayState(true);
-
-        // turn on debug mode - left here for debugging purposes
-        virtualFunctionBus.debugModePacket.setDebuggingState(false);
+        radarDisplayStatePacket.setRadarDisplayState(false);
     }
 
     /**
@@ -258,7 +251,7 @@ public class Radar extends SystemComponent {
                 mo.setY(object.getY());
             } else {
                 // if no, add
-                if (isCollideable(object)) {
+                if (CommonSensorMethods.isCollideable(object)) {
                     MovingWorldObject moveObject = new MovingWorldObject(object, virtualFunctionBus);
                     elementsSeenByRadar.add(moveObject);
                 }
@@ -341,7 +334,7 @@ public class Radar extends SystemComponent {
         return distance;
     }
 
-    private double getShapeMinimumDistanceFromPoint(Shape poly, float[] p1) {
+    private double getShapeMinimumDistanceFromPoint(Path2D poly, float[] p1) {
         double distance = Double.MAX_VALUE;
         PathIterator it2 = poly.getPathIterator(null);
         while (!it2.isDone()) {
@@ -399,7 +392,7 @@ public class Radar extends SystemComponent {
 
         List<WorldObject> collideableElementsInTriangle = new ArrayList<>();
         for (WorldObject object : elementsInTriangle) {
-            if (isCollideable(object)) {
+            if (CommonSensorMethods.isCollideable(object)) {
                 collideableElementsInTriangle.add(object);
             }
         }
@@ -470,16 +463,6 @@ public class Radar extends SystemComponent {
         return corner2;
     }
 
-    /**
-     * Checks whether an element is collideable by checking its Z value.
-     * <p>
-     * Everything with a Z value higher than 0 is collidable
-     *
-     * @param object The {@link WorldObject} to check
-     * @return True if the object is not on the not collideable element's list.
-     */
-    private boolean isCollideable(WorldObject object) {
-        return object.getZ() >= 1;
-    }
+
 
 }
