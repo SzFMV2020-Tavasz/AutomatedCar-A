@@ -2,6 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.math;
 
 import static hu.oe.nik.szfmv.automatedcar.math.Axis.baseDirection;
 import static hu.oe.nik.szfmv.automatedcar.math.MathUtils.inPeriodOfPI;
+import static java.lang.Double.*;
 import static java.lang.Math.*;
 
 /**Represents a mathematical 2-dimensional vector with X and Y difference, which also define its length and angle.
@@ -24,6 +25,18 @@ public interface IVector {
      * @return Value from -PI rad to +PI rad. Rotation is mathematical, positive is towards the left.*/
     double getRadiansRelativeTo(IVector direction);
 
+    default boolean hasLength() {
+        double x = getXDiff();
+        double y = getYDiff();
+        return !isNaN(x) && !isNaN(y);
+    }
+
+    default boolean isDirectional() {
+        double x = getXDiff();
+        double y = getYDiff();
+        return (x != 0 || y != 0) && !isNaN(x) && !isNaN(y);
+    }
+
     /**Clones this vector, rotates it by the given radians and returns it.
      * Rotation is mathematical, positive is towards the left.
      * @param rad Radians to rotate the vector with. A whole circle is 2{@link Math#PI PI} radians.
@@ -32,7 +45,11 @@ public interface IVector {
      * @return A new vector rotated by the given radians.*/
     default IVector rotateByRadians(double rad) {
         double _yRad = getRadiansRelativeTo(Axis.Y);
-        return Axis.Y.positiveDirection().rotateByRadians(_yRad + rad).multiplyBy(getLength());
+        if (isFinite(_yRad)) {
+            return Axis.Y.positiveDirection().rotateByRadians(_yRad + rad).multiplyBy(getLength());
+        } else {
+            return this;
+        }
     }
 
     /**Gets the angle of the vector in radians relative to the {@link Axis#BASE default axis}.
@@ -110,6 +127,11 @@ public interface IVector {
      * @return A new vector with the same direction, but 1 as length.*/
     default IVector unit() {
         double length = getLength();
+        if (length == 0) {
+            throw new UnsupportedOperationException("Unit vector cannot be made out of vector with zero length!");
+        } else if (isNaN(length)) {
+            throw new UnsupportedOperationException("Vector is invalid, unit vector cannot be made out of it!");
+        }
         return vectorFromXY(getXDiff() / length, getYDiff() / length);
     }
 
@@ -163,6 +185,19 @@ public interface IVector {
         return this.add(another.getXDiff(), another.getYDiff());
     }
 
+    /**Returns a clone of the vector incremented its {@code x} and {@code y} coordinates with the vector of the given direction and length.*/
+    default IVector add(IVector direction, double length) {
+        double dirLength = direction.getLength();
+        if (dirLength == 0) {
+            if (length != 0) {
+                throw new UnsupportedOperationException("Vector (0;0) cannot be added with length other than 0.");
+            } else {
+                return this;
+            }
+        }
+        return this.add(direction.getXDiff() / dirLength * length, direction.getYDiff() / dirLength * length);
+    }
+
     /**Returns a clone of the vector decremented its {@code x} and {@code y} coordinates with the given values.*/
     default IVector subtract(double x, double y) {
         return vectorFromXY(getXDiff() - x, getYDiff() - y);
@@ -171,6 +206,19 @@ public interface IVector {
     /**Returns a clone of the vector decremented its {@code x} and {@code y} coordinates with those of the given vector.*/
     default IVector subtract(IVector another) {
         return this.subtract(another.getXDiff(), another.getYDiff());
+    }
+
+    /**Returns a clone of the vector decremented its {@code x} and {@code y} coordinates with the vector of the given direction and length.*/
+    default IVector subtract(IVector direction, double length) {
+        double dirLength = direction.getLength();
+        if (dirLength == 0) {
+            if (length != 0) {
+                throw new UnsupportedOperationException("Vector (0;0) cannot be subtracted with length other than 0.");
+            } else {
+                return this;
+            }
+        }
+        return this.subtract(direction.getXDiff() / dirLength * length, direction.getYDiff() / dirLength * length);
     }
 
     /**Returns a clone of the vector but with the given {@code x} value.*/
@@ -193,6 +241,13 @@ public interface IVector {
      * <p>Direction/angle of the vector remains unchanged (with epsilon error of floating point numbers)
      * unless passing negative value -- which reverts the direction of the newly created vector.</p>*/
     default IVector withLength(double scalarLength) {
+        if (!isDirectional()) {
+            if (scalarLength == 0) {
+                return nullVector();
+            } else {
+                throw new UnsupportedOperationException("The vector does not define a direction to apply new length to.");
+            }
+        }
         return this.multiplyBy(scalarLength / getLength());
     }
 
@@ -219,8 +274,12 @@ public interface IVector {
 
             @Override
             public double getRadiansRelativeTo(IVector direction) {
-                double xRads = direction.getRadiansRelativeTo(Axis.X);
-                return inPeriodOfPI(getRadiansRelativeToAxisX() - xRads);
+                if (isDirectional()) {
+                    double xRads = direction.getRadiansRelativeTo(Axis.X);
+                    return inPeriodOfPI(getRadiansRelativeToAxisX() - xRads);
+                } else {
+                    return NaN;
+                }
             }
 
             @Override
@@ -247,8 +306,8 @@ public interface IVector {
     /**Returns the average vector of the given two, having the average {@code x} and {@code y} coordinates of them.
      * <p>Length is the average of the two lengths,</p>*/
     static IVector average(IVector a, IVector b) {
-        double xMean = (a.getXDiff() + b.getXDiff()) / 2;
-        double yMean = (a.getYDiff() + b.getYDiff()) / 2;
+        double xMean = (a.getXDiff() + b.getXDiff()) / 2.0;
+        double yMean = (a.getYDiff() + b.getYDiff()) / 2.0;
         return vectorFromXY(xMean, yMean);
     }
 
@@ -256,6 +315,10 @@ public interface IVector {
      * <p>Length of the vector is one unit (with epsilon error of floating point numbers).</p>*/
     static IVector vectorWithAngle(double radians) {
         return baseDirection().rotateByRadians(radians);
+    }
+
+    static IVector nullVector() {
+        return vectorFromXY(0, 0);
     }
 
 }
