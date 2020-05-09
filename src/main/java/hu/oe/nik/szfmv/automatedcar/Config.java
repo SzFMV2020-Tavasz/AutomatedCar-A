@@ -8,12 +8,6 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.Rad
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundDisplayStatePacket;
 
 public final class Config {
-    private static boolean IS_DEBUG_ON = false;
-    private static boolean SHOW_PARKING_RADAR = true;
-    private static boolean SHOW_RADAR = false;
-    private static boolean SHOW_CAMERA = false;
-    private static boolean SHOW_ULTRASOUND = false;
-
     static VirtualFunctionBus virtualFunctionBus;
 
     static DebugModePacket debugModePacket;
@@ -22,21 +16,40 @@ public final class Config {
     static CameraDisplayStatePacket cameraDisplayStatePacket;
     static UltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
 
+    private static boolean IS_DEBUG_ON = false;
+    private static boolean SHOW_PARKING_RADAR = true;
+    private static boolean SHOW_RADAR = false;
+    private static boolean SHOW_CAMERA = false;
+    private static boolean SHOW_ULTRASOUND = false;
+
+    private static int[] PARKING_SPACE_STARTING_POS = new int[]{540, 1850};
+    private static int[] UPPER_RIGHT_STARTING_POS = new int[]{3420, 700};
+    private static int[] T_JUNCTION_STARTING_POS = new int[]{3900, 1400};
+    private static int[] LANE_KEEPING_TEST_STARTING_POS = new int[]{3490, 1561};
+    private static int[] POLYGON_CHECKER_WORLD_STARTING_POS = new int[]{350, 350};
+
+
     /**
      * remove comment if you want a different starting position than the parking space
      */
     public static AutomatedCar carStarterPosForEgoCar() {
         AutomatedCar car;
         // car starts in parking space
-        car = new AutomatedCar(540, 1850, "car_2_white.png");
+        car = new AutomatedCar(
+            PARKING_SPACE_STARTING_POS[0], PARKING_SPACE_STARTING_POS[1], "car_2_white.png");
         // car starts at the upper right trees
-        // car = new AutomatedCar(3422, 700, "car_2_white.png");
+        /* car = new AutomatedCar(
+            UPPER_RIGHT_STARTING_POS[0], UPPER_RIGHT_STARTING_POS[1], "car_2_white.png");*/
         // car start at T-junction
-        // car = new AutomatedCar(3900, 1400, "car_2_white.png");
+        /* car = new AutomatedCar(
+            T_JUNCTION_STARTING_POS[0], T_JUNCTION_STARTING_POS[1], "car_2_white.png");*/
         // for lane keeping test
-        // car = new AutomatedCar(3490, 1561, "car_2_white.png");
+        /*car = new AutomatedCar(
+            LANE_KEEPING_TEST_STARTING_POS[0], LANE_KEEPING_TEST_STARTING_POS[1], "car_2_white.png");*/
         // debug polygon checker world starting position
-        // car = new AutomatedCar(350, 350, "car_2_white.png");
+        /* car = new AutomatedCar(
+            POLYGON_CHECKER_WORLD_STARTING_POS[0], POLYGON_CHECKER_WORLD_STARTING_POS[1],
+            "car_2_white.png");*/
         return car;
     }
 
