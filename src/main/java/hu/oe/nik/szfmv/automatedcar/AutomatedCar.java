@@ -68,15 +68,18 @@ public class AutomatedCar extends WorldObject {
         this.setY(y);
     }
 
+    /**@author Team 3*/
     private void updatePositionAndOrientation() {
         ICarMovePacket moveInfo = this.virtualFunctionBus.carMovePacket;
         this.moveCar(moveInfo.getMoveVector());
     }
 
-    /**Applies movement to the car.
+    /**Applies movement to the car, although not the given vector directly.
+     * Moves the car approximately in the direction of the given move also considering the rotation of the car.
      * @param movement The movement to apply.
      * <p>- its direction is interpreted as facing direction of the front wheels.</p>
-     * <p>- its length is interpreted as the speed of movement.</p>*/
+     * <p>- its length is interpreted as the speed of movement.</p>
+     * @author Team 3*/
     private void moveCar(IVector movement) {
         IVector currentPosition = this.getPosition();
         IVector toCarFrontVector = this.facingDirection.withLength(getHeight() / 2.0);

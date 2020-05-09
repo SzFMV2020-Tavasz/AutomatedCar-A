@@ -2,6 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.powertrain;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
+/**@author Team 3*/
 public enum CarTransmissionMode {
 
     /**Tolató állás.*/

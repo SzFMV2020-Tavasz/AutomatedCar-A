@@ -9,6 +9,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.*;
+import static hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket.MAX_STEERING_ROTATION;
 import static java.lang.Math.*;
 
 /**<p>The powertrain encompasses every component that converts the engine’s power into movement.</p>
@@ -17,7 +18,6 @@ import static java.lang.Math.*;
  * @author Team 3*/
 public class PowerTrain extends SystemComponent {
 
-    static final double MAX_STEERING_ROTATION = 180.0;
     static final double MAX_WHEEL_ROTATION = 60.0;
     private static final double MAX_GAS_PEDAL_VALUE = 100.0;
     private static final double MAX_BREAK_PEDAL_VALUE = 100.0;
