@@ -6,7 +6,6 @@ import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.visualization.VisualizationConfig;
@@ -44,7 +43,6 @@ public class Radar extends SystemComponent {
     private final RadarVisualizationPacket radarVisualizationPacket;
     private final RadarDisplayStatePacket radarDisplayStatePacket;
     // will be removed later when HMI will be setting this switch
-    private final DebugModePacket debugModePacket;
 
     // objects references for reference(eh...)
     private AutomatedCar automatedCar;
@@ -60,8 +58,6 @@ public class Radar extends SystemComponent {
         virtualFunctionBus.radarVisualizationPacket = radarVisualizationPacket;
         radarDisplayStatePacket = new RadarDisplayStatePacket();
         virtualFunctionBus.radarDisplayStatePacket = radarDisplayStatePacket;
-        debugModePacket = new DebugModePacket();
-        virtualFunctionBus.debugModePacket = debugModePacket;
         this.automatedCar = automatedCar;
         this.world = world;
         this.elementsSeenByRadar = new ArrayList<>();
@@ -86,9 +82,6 @@ public class Radar extends SystemComponent {
         // send radar display data
         radarVisualizationPacket.setSensorTriangle(source, corner1, corner2, RADAR_SENSOR_BG_COLOUR);
         radarDisplayStatePacket.setRadarDisplayState(false);
-
-        // turn on debug mode - left here for debugging purposes
-        virtualFunctionBus.debugModePacket.setDebuggingState(false);
     }
 
     /**

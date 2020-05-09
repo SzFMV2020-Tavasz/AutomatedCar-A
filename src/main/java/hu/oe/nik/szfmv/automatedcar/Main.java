@@ -33,17 +33,8 @@ public class Main {
         // create the world
         world = new World(5000, 3000);
 
-        // create an automated car
-        // car starts in parking space
-        car = new AutomatedCar(540, 1850, "car_2_white.png");
-        // car starts at the upper right trees
-        // car = new AutomatedCar(3422, 700, "car_2_white.png");
-        // car start at T-junction
-        // car = new AutomatedCar(3900, 1400, "car_2_white.png");
-        // for lane keeping test
-        // car = new AutomatedCar(3490, 1561, "car_2_white.png");
-        // debug polygon checker world starting position
-        // car = new AutomatedCar(350, 350, "car_2_white.png");
+        // set up the automated car
+        car = Config.carStarterPosForEgoCar();
         car.setRotation(0);
 
         radar = new Radar(car.getVirtualFunctionBus(), car, world);
@@ -54,6 +45,8 @@ public class Main {
 
         window = new Gui();
         window.setVirtualFunctionBus(car.getVirtualFunctionBus());
+
+        Config.setUpStartter(window.getVirtualFunctionBus());
     }
 
     private void loop() {

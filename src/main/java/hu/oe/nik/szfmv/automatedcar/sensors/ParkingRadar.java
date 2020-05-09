@@ -7,7 +7,6 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingDistancePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarGuiStatePacket;
@@ -57,7 +56,6 @@ public class ParkingRadar extends SystemComponent {
     private final ParkingDistancePacket rightParkingDistancePacket;
     private final ParkingRadarGuiStatePacket parkingRadarGuiStatePacket;
     private final SelectedDebugListPacket selectedDebugListPacket;
-    private final DebugModePacket debugModePacket;
 
     // objects references for reference
     private AutomatedCar automatedCar;
@@ -87,8 +85,6 @@ public class ParkingRadar extends SystemComponent {
         virtualFunctionBus.selectedDebugListPacket = selectedDebugListPacket;
         this.automatedCar = automatedCar;
         this.world = world;
-        debugModePacket = new DebugModePacket();
-        virtualFunctionBus.debugModePacket = debugModePacket;
         elementsSeenByRadar = new ArrayList<>();
     }
 
@@ -107,9 +103,6 @@ public class ParkingRadar extends SystemComponent {
         parkingRadarVisualizationPacket.setSensorColor(PARKING_RADAR_SENSOR_BG_COLOUR);
         leftParkingDistancePacket.setDistance(Math.round(distanceLeft * FOR_DIGIT) / FOR_DIGIT);
         rightParkingDistancePacket.setDistance(Math.round(distanceRight * FOR_DIGIT) / FOR_DIGIT);
-
-        // turn on debug mode - left here for debugging purposes
-        virtualFunctionBus.debugModePacket.setDebuggingState(true);
 
         parkingRadarGuiStatePacket.setParkingRadarGuiState(
             isCarInReverse() && min(distanceRight, distanceLeft) <= 2.0f);
