@@ -4,15 +4,17 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.SamplePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ICameraVisualizationPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingDistancePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingRadarDisplayStatePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingRadarGuiStatePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingRadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarVisualizationPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ISelectedDebugListPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IUltrasoundDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IUltrasoundsVisualizationPacket;
 
@@ -39,10 +41,15 @@ public class VirtualFunctionBus {
     public IRadarVisualizationPacket radarVisualizationPacket;
     public ICameraVisualizationPacket cameraVisualizationPacket;
     public IUltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
+    public IParkingRadarVisualizationPacket parkingRadarVisualizationPacket;
+    public IParkingDistancePacket leftParkingDistance;
+    public IParkingDistancePacket rightParkingDistance;
+    public IParkingRadarGuiStatePacket parkingRadarGuiStatePacket;
     public DebugModePacket debugModePacket = new DebugModePacket();
     public ICameraDisplayStatePacket cameraDisplayStatePacket;
     public IRadarDisplayStatePacket radarDisplayStatePacket;
     public IUltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
+    public IParkingRadarDisplayStatePacket parkingRadarDisplayStatePacket;
     public List<WorldObject> worldObjects = new ArrayList<>();
     private List<SystemComponent> components = new ArrayList<>();
 
