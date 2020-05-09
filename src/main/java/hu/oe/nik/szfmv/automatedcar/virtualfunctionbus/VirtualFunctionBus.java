@@ -15,6 +15,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IPa
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingRadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IRadarVisualizationPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ISelectedDebugListPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IUltrasoundDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IUltrasoundsVisualizationPacket;
 
@@ -50,6 +51,7 @@ public class VirtualFunctionBus {
     public IRadarDisplayStatePacket radarDisplayStatePacket;
     public IUltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
     public IParkingRadarDisplayStatePacket parkingRadarDisplayStatePacket;
+    public ISelectedDebugListPacket selectedDebugListPacket;
     public List<WorldObject> worldObjects = new ArrayList<>();
     private List<SystemComponent> components = new ArrayList<>();
 

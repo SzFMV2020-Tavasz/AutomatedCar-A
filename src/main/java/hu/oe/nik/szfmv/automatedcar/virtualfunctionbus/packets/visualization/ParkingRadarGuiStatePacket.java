@@ -22,7 +22,7 @@ public class ParkingRadarGuiStatePacket implements IParkingRadarGuiStatePacket {
      *
      * @param state true if gui is on.
      */
-    public void setDebuggingState(boolean state) {
+    public void setParkingRadarGuiState(boolean state) {
         this.state = state;
     }
 }

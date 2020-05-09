@@ -1,6 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization;
 
-import hu.oe.nik.szfmv.automatedcar.visualization.UltrasoundPositions;
+import hu.oe.nik.szfmv.automatedcar.visualization.ParkingRadarPositions;
 import hu.oe.nik.szfmv.automatedcar.visualization.VisualizationConfig;
 
 import java.awt.*;
@@ -25,11 +25,11 @@ public class ParkingRadarVisualizationPacket implements IParkingRadarVisualizati
      * @param corner1 the first corner point of the camera sensor triangle
      * @param corner2 the second corner point of the camera sensor triangle
      */
-    public void setSensorTriangle(UltrasoundPositions ultrasoundPosition,
+    public void setSensorTriangle(ParkingRadarPositions parkingRadarPositions,
                                   Point2D source, Point2D corner1, Point2D corner2) {
-        sources[ultrasoundPosition.getNumVal()] = source;
-        corner1s[ultrasoundPosition.getNumVal()] = corner1;
-        corner2s[ultrasoundPosition.getNumVal()] = corner2;
+        sources[parkingRadarPositions.getNumVal()] = source;
+        corner1s[parkingRadarPositions.getNumVal()] = corner1;
+        corner2s[parkingRadarPositions.getNumVal()] = corner2;
         color = new Color(0, 0, 0);
     }
 

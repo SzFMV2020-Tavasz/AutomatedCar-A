@@ -101,11 +101,11 @@ public class ParkingRadarGui extends JPanel {
     private void drawRects(Graphics g) {
         // check green
         for (int i = 0; i < GREEN_CATEGORIES.length; i++) {
-            drawGreenRect(g, true, i + 1, (this.on && this.distanceRight <= GREEN_CATEGORIES[i]));
+            drawGreenRect(g, true, i + 1, (this.on && this.distanceLeft <= GREEN_CATEGORIES[i]));
             drawGreenRect(g, false, i + 1, (this.on && this.distanceRight <= GREEN_CATEGORIES[i]));
         }
         // check red
-        drawRedRect(g, true, (this.on && this.distanceRight <= RED_CATEGORY));
+        drawRedRect(g, true, (this.on && this.distanceLeft <= RED_CATEGORY));
         drawRedRect(g, false, (this.on && this.distanceRight <= RED_CATEGORY));
 
         labelLeftRight(g);
