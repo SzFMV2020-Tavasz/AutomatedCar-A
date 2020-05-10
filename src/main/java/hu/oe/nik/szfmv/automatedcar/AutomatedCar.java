@@ -32,6 +32,7 @@ public class AutomatedCar extends WorldObject {
         super(x, y, imageFileName);
 
         new Driver(virtualFunctionBus);
+        this.virtualFunctionBus.validateAllDependenciesSatisfied();
     }
 
     public AutomatedCar(CarVariant variant) {
