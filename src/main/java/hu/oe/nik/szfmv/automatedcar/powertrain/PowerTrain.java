@@ -2,8 +2,10 @@ package hu.oe.nik.szfmv.automatedcar.powertrain;
 
 import hu.oe.nik.szfmv.automatedcar.math.Axis;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.DependsOn;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
@@ -16,6 +18,7 @@ import static java.lang.Math.*;
  * <p>This includes the engine, transmission, the driveshaft, differentials, axles;
  * basically anything from the engine through to the rotating wheels.</p>
  * @author Team 3*/
+@DependsOn(components = Driver.class)
 public class PowerTrain extends SystemComponent {
 
     static final double MAX_WHEEL_ROTATION = 60.0;
