@@ -107,4 +107,41 @@ public class Ultrasonic {
         getAllCollidablesInRange();
         return collidableObjectsInRange;
     }
+
+    public void searchParkingSpanceBasedonIndex(){
+        String indexStatus =  virtualFunctionBus.guiInputPacket.getIndexStatus().toString();
+
+        if (indexStatus == "LEFT")
+        {
+            //parkolohely kereésé
+            for (Sensor sensor : sensors) {
+                if (sensor.getSensorPosition() == UltrasoundPositions.REAR_LEFT_SIDE || sensor.getSensorPosition() == UltrasoundPositions.FRONT_LEFT_SIDE)
+                {
+                    for (WorldObject object : world.getObjectsInsideTriangle(sensor.getTriangleSource(),
+                            sensor.getTriangleCorner1(), sensor.getTriangleCorner2())) {
+
+                        if(object.getType() == "parking_space_parallel"){
+
+                            //hely hosszát néző metodus NFC osztaly kell
+                        }
+                    }
+                }
+            }
+        }
+        else if (indexStatus == "RIGHT")
+            //parkolohely kereésé
+            for (Sensor sensor : sensors) {
+                if (sensor.getSensorPosition() == UltrasoundPositions.REAR_RIGHT_SIDE || sensor.getSensorPosition() == UltrasoundPositions.FRONT_RIGHT_SIDE)
+                {
+                    for (WorldObject object : world.getObjectsInsideTriangle(sensor.getTriangleSource(),
+                            sensor.getTriangleCorner1(), sensor.getTriangleCorner2())) {
+
+                        if(object.getType() == "parking_space_parallel"){
+
+                            //hely hosszát néző metodus NFC kell
+                        }
+                    }
+                }
+            }
+    }
 }

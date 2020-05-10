@@ -390,4 +390,8 @@ public class Sensor extends SystemComponent {
         Point2D cache = getCorner2();
         return new Point((int) cache.getX(), (int) cache.getY());
     }
+
+    public UltrasoundPositions getSensorPosition() {
+        return sensorPosition;
+    }
 }
