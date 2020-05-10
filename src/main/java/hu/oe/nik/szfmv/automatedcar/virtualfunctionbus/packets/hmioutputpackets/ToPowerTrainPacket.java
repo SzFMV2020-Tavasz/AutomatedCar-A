@@ -4,6 +4,9 @@ import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
 
+    /**The maximum absolute value returned by the {@link #getSteeringWheelValue()} method.*/
+    public static final double MAX_STEERING_ROTATION = 180.0;
+
     private double gasPedalValue;
     private double breakPedalValue;
     private double steeringWheelValue;

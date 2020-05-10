@@ -7,11 +7,7 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingDistancePacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarDisplayStatePacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarGuiStatePacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarVisualizationPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.SelectedDebugListPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.*;
 import hu.oe.nik.szfmv.automatedcar.visualization.ParkingRadarPositions;
 import hu.oe.nik.szfmv.automatedcar.visualization.VisualizationConfig;
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +20,7 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import static java.lang.Math.min;
 
 public class ParkingRadar extends SystemComponent {
@@ -33,7 +30,7 @@ public class ParkingRadar extends SystemComponent {
 
     // parking radar sensor triangles data
     private static final double PARKING_RADAR_SENSOR_ANGLE = Math.toRadians(36);  // 60 /2 - half angle
-    private static final int PARKING_RADAR_SENSOR_RANGE = VisualizationConfig.METER_IN_PIXELS;
+    private static final int PARKING_RADAR_SENSOR_RANGE = 3 * VisualizationConfig.METER_IN_PIXELS;
     private static final Color PARKING_RADAR_SENSOR_BG_COLOUR = new Color(
         255, 200, 100, VisualizationConfig.SENSOR_COLOR_ALPHA);
     private static final int TRIANGLE_POLYGON_POINTS = 3;
@@ -105,7 +102,7 @@ public class ParkingRadar extends SystemComponent {
         rightParkingDistancePacket.setDistance(Math.round(distanceRight * FOR_DIGIT) / FOR_DIGIT);
 
         parkingRadarGuiStatePacket.setParkingRadarGuiState(
-            isCarInReverse() && min(distanceRight, distanceLeft) <= 2.0f);
+            isCarInReverse() && min(distanceRight, distanceLeft) <= (float)PARKING_RADAR_SENSOR_RANGE);
         parkingRadarDisplayStatePacket.setRadarDisplayState(true);
 
     }
@@ -402,7 +399,7 @@ public class ParkingRadar extends SystemComponent {
     }
 
     private boolean isCarInReverse() {
-        return automatedCar.getPowerTrain().transmission.getGearMode() == CarTransmissionMode.R_REVERSE;
+        return automatedCar.getPowerTrain().transmission.getCurrentTransmissionMode() == CarTransmissionMode.R_REVERSE;
     }
 }
 
