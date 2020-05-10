@@ -6,6 +6,7 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.DependentVirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +21,7 @@ public class AutomatedCar extends WorldObject {
     private static final Logger LOGGER = LogManager.getLogger(AutomatedCar.class);
 
     /**Host for information interchange between components of the car via packets.*/
-    private final VirtualFunctionBus virtualFunctionBus = new VirtualFunctionBus();
+    private final DependentVirtualFunctionBus virtualFunctionBus = new DependentVirtualFunctionBus();
 
     /**@see PowerTrain*/
     private final PowerTrain powerTrain = new PowerTrain(virtualFunctionBus);
