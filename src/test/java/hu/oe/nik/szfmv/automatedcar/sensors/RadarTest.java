@@ -37,13 +37,13 @@ public class RadarTest {
         ArrayList<Path2D> testPolys;
         Path2D testPoly;
 
-        MockWorld(int width, int height) {
+        private MockWorld(int width, int height) {
             super(width, height, new ArrayList<>());
             passlist = new ArrayList<>();
             testPoly = new Path2D.Float();
             testPoly.moveTo(0, 0);
             testPoly.lineTo(1, 0);
-            testPoly.lineTo(0,1);
+            testPoly.lineTo(0, 1);
             testPoly.closePath();
             testPolys = new ArrayList<>();
             testPolys.add(testPoly);

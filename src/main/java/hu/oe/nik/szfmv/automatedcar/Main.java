@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar;
 
 import hu.oe.nik.szfmv.automatedcar.model.World;
+import hu.oe.nik.szfmv.automatedcar.sensors.ParkingRadar;
 import hu.oe.nik.szfmv.automatedcar.sensors.Radar;
 import hu.oe.nik.szfmv.automatedcar.visualization.DisplayWorld;
 import hu.oe.nik.szfmv.automatedcar.visualization.Gui;
@@ -17,6 +18,7 @@ public class Main {
     private World world;
     private DisplayWorld displayWorld;
     private Radar radar;
+    private ParkingRadar parkingRadar;
 
     public static void main(String[] args) {
         new Main().run();
@@ -31,26 +33,20 @@ public class Main {
         // create the world
         world = new World(5000, 3000);
 
-        // create an automated car
-        // car starts in parking space
-        car = new AutomatedCar(540, 1850, "car_2_white.png");
-        // car starts at the upper right trees
-        // car = new AutomatedCar(3422, 700, "car_2_white.png");
-        // car start at T-junction
-        // car = new AutomatedCar(3900, 1400, "car_2_white.png");
-        // for lane keeping test
-        // car = new AutomatedCar(3490, 1561, "car_2_white.png");
-        // debug polygon checker world starting position
-        // car = new AutomatedCar(350, 350, "car_2_white.png");
+        // set up the automated car
+        car = Config.carStarterPosForEgoCar();
         car.setRotation(0);
 
         radar = new Radar(car.getVirtualFunctionBus(), car, world);
+        parkingRadar = new ParkingRadar(car.getVirtualFunctionBus(), car, world);
 
         // create the displayworld
         displayWorld = new DisplayWorld(world, car);
 
         window = new Gui();
         window.setVirtualFunctionBus(car.getVirtualFunctionBus());
+
+        Config.setUpStartter(window.getVirtualFunctionBus());
     }
 
     private void loop() {

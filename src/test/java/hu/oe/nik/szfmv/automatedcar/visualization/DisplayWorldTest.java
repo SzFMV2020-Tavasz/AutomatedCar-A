@@ -8,6 +8,10 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.CameraDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.CameraVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.DebugModePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.IParkingRadarDisplayStatePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarDisplayStatePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarGuiStatePacketTest;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.RadarVisualizationPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundDisplayStatePacket;
@@ -50,6 +54,15 @@ public class DisplayWorldTest {
             Point2D corner2 = new Point2D.Double(14, 15);
             Color color = new Color(50, 51, 57);
 
+            setSensorVisualizationPackets(virtualFunctionBus, source, corner1, corner2, color);
+
+            debugPacketSets(virtualFunctionBus);
+            sensorStateSets(virtualFunctionBus);
+            return virtualFunctionBus;
+        }
+
+        private void setSensorVisualizationPackets(VirtualFunctionBus virtualFunctionBus, Point2D source,
+                                                   Point2D corner1, Point2D corner2, Color color){
             RadarVisualizationPacket radarVisualizationPacket = new RadarVisualizationPacket();
             radarVisualizationPacket.setSensorTriangle(source, corner1, corner2, color);
             virtualFunctionBus.radarVisualizationPacket = radarVisualizationPacket;
@@ -63,10 +76,11 @@ public class DisplayWorldTest {
                 UltrasoundPositions.REAR_LEFT_SIDE, source, corner1, corner2);
             virtualFunctionBus.ultrasoundsVisualizationPacket = ultrasoundsVisualizationPacket;
 
-            debugPacketSets(virtualFunctionBus);
-            sensorStateSets(virtualFunctionBus);
-
-            return virtualFunctionBus;
+            ParkingRadarVisualizationPacket parkingRadarVisualizationPacket = new ParkingRadarVisualizationPacket();
+            parkingRadarVisualizationPacket.setSensorTriangle(
+                ParkingRadarPositions.LEFT, source, corner1, corner2);
+            parkingRadarVisualizationPacket.setSensorColor(color);
+            virtualFunctionBus.parkingRadarVisualizationPacket = parkingRadarVisualizationPacket;
         }
 
         private void debugPacketSets(VirtualFunctionBus virtualFunctionBus) {
@@ -87,6 +101,10 @@ public class DisplayWorldTest {
             UltrasoundDisplayStatePacket ultrasoundDisplayStatePacket = new UltrasoundDisplayStatePacket();
             ultrasoundDisplayStatePacket.setUltrasoundDisplayState(true);
             virtualFunctionBus.ultrasoundDisplayStatePacket = ultrasoundDisplayStatePacket;
+
+            ParkingRadarDisplayStatePacket parkingRadarDisplayStatePacket = new ParkingRadarDisplayStatePacket();
+            parkingRadarDisplayStatePacket.setRadarDisplayState(true);
+            virtualFunctionBus.parkingRadarDisplayStatePacket = parkingRadarDisplayStatePacket;
         }
     }
 
@@ -200,6 +218,9 @@ public class DisplayWorldTest {
         }
 
         @Test
+        public void parkingRadarSensorDisplayOn() {assertEquals(true, displayWorld.isParkingRadarShown());}
+
+        @Test
         public void showEgoCar() {
             DisplayImageData egocarDisplayImageData = displayWorld.getEgoCar().getDisplayImageData();
             assertEquals(385, egocarDisplayImageData.getX());
@@ -223,6 +244,12 @@ public class DisplayWorldTest {
         public void ultrasoundPacket() {
             DisplaySensorObject[] dso = displayWorld.getDisplayUltrasounds();
             assertEquals(10, dso[3].source.getX());
+        }
+
+        @Test
+        public void parkingRadarPacket() {
+            DisplaySensorObject[] dso = displayWorld.getDisplayParkingRadars();
+            assertEquals(10, dso[1].source.getX());
         }
 
         @Test
@@ -269,6 +296,12 @@ public class DisplayWorldTest {
         @Test
         public void nullUltrasoundPacket() {
             DisplaySensorObject[] dso = displayWorld.getDisplayUltrasounds();
+            assertNull(dso);
+        }
+
+        @Test
+        public void nullParkingRadarPacket() {
+            DisplaySensorObject[] dso = displayWorld.getDisplayParkingRadars();
             assertNull(dso);
         }
     }

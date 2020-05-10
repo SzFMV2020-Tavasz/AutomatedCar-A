@@ -150,6 +150,11 @@ public class CourseDisplay extends JPanel {
         if (displayWorld.isUltrasoundShown()) {
             drawUltraSoundSensor(g2d, displayWorld);
         }
+
+        if (displayWorld.isParkingRadarShown()) {
+            drawParkingRadarSensor(g2d, displayWorld);
+        }
+
     }
 
     private void drawCameraSensor(Graphics2D g2d, DisplayWorld displayWorld) {
@@ -165,6 +170,15 @@ public class CourseDisplay extends JPanel {
 
     private void drawUltraSoundSensor(Graphics2D g2d, DisplayWorld displayWorld) {
         DisplaySensorObject[] dids = displayWorld.getDisplayUltrasounds();
+        if (dids != null) {
+            for (DisplaySensorObject did : dids) {
+                drawSensorTriangle(g2d, did, false);
+            }
+        }
+    }
+
+    private void drawParkingRadarSensor(Graphics2D g2d, DisplayWorld displayWorld) {
+        DisplaySensorObject[] dids = displayWorld.getDisplayParkingRadars();
         if (dids != null) {
             for (DisplaySensorObject did : dids) {
                 drawSensorTriangle(g2d, did, false);
