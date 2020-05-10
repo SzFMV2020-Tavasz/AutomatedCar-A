@@ -39,8 +39,8 @@ public class AutomatedCar extends WorldObject {
     }
 
     public void drive() {
-        virtualFunctionBus.loop();
         updatePositionAndOrientation();
+        virtualFunctionBus.loop();
     }
 
     public VirtualFunctionBus getVirtualFunctionBus() {
