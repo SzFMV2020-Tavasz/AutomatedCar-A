@@ -7,11 +7,7 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingDistancePacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarDisplayStatePacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarGuiStatePacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.ParkingRadarVisualizationPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.SelectedDebugListPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.*;
 import hu.oe.nik.szfmv.automatedcar.visualization.ParkingRadarPositions;
 import hu.oe.nik.szfmv.automatedcar.visualization.VisualizationConfig;
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +20,7 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import static java.lang.Math.min;
 
 public class ParkingRadar extends SystemComponent {
@@ -402,7 +399,7 @@ public class ParkingRadar extends SystemComponent {
     }
 
     private boolean isCarInReverse() {
-        return automatedCar.getPowerTrain().transmission.getGearMode() == CarTransmissionMode.R_REVERSE;
+        return automatedCar.getPowerTrain().transmission.getCurrentTransmissionMode() == CarTransmissionMode.R_REVERSE;
     }
 }
 
