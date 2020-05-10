@@ -16,6 +16,10 @@ public class ACC {
         this.virtualFunctionBus = virtualFunctionBus;
     }
 
+    public void turnParkingPilotSwitchOff() {
+        parkingPilotSwitch = false;
+        virtualFunctionBus.guiInputPacket.setParkingPilotStatus(parkingPilotSwitch);
+    }
 
     public void turnAccSwitch() {
         accSwitch = !accSwitch;
