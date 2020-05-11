@@ -1,5 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
+import hu.oe.nik.szfmv.automatedcar.cruisecontrol.CruiseControl;
 import hu.oe.nik.szfmv.automatedcar.math.Axis;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
@@ -18,7 +19,7 @@ import static java.lang.Math.*;
  * <p>This includes the engine, transmission, the driveshaft, differentials, axles;
  * basically anything from the engine through to the rotating wheels.</p>
  * @author Team 3*/
-@DependsOn(components = Driver.class)
+@DependsOn(components = { Driver.class, CruiseControl.class })
 public class PowerTrain extends SystemComponent {
 
     private static final double MAX_WHEEL_ROTATION = 60.0;

@@ -6,6 +6,7 @@ import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
 import hu.oe.nik.szfmv.automatedcar.move.CarMover;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
+import hu.oe.nik.szfmv.automatedcar.cruisecontrol.CruiseControl;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.DependentVirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,9 @@ public class AutomatedCar extends WorldObject {
     private final DependentVirtualFunctionBus virtualFunctionBus = new DependentVirtualFunctionBus();
 
     private final PowerTrain powerTrain = new PowerTrain(virtualFunctionBus);
+
+    /**Known as "tempomat" in hungarian.*/
+    private final CruiseControl cruiseControl = new CruiseControl(virtualFunctionBus);
 
     /**Not necessarily a unit vector, can have any length.*/
     private IVector facingDirection = Axis.Y.negativeDirection();
