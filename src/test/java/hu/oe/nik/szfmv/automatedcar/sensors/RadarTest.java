@@ -14,11 +14,9 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hu.oe.nik.szfmv.automatedcar.math.Axis.baseDirection;
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class RadarTest {
@@ -39,13 +37,13 @@ public class RadarTest {
         ArrayList<Path2D> testPolys;
         Path2D testPoly;
 
-        MockWorld(int width, int height) {
+        private MockWorld(int width, int height) {
             super(width, height, new ArrayList<>());
             passlist = new ArrayList<>();
             testPoly = new Path2D.Float();
             testPoly.moveTo(0, 0);
             testPoly.lineTo(1, 0);
-            testPoly.lineTo(0,1);
+            testPoly.lineTo(0, 1);
             testPoly.closePath();
             testPolys = new ArrayList<>();
             testPolys.add(testPoly);
@@ -161,6 +159,11 @@ public class RadarTest {
         public IVector getMoveVector() {
             return vectorFromXY(10, -5);
         }
+
+        @Override
+        public IVector getWheelFacingDirection() {
+            return baseDirection();
+        }
     }
 
     @BeforeEach
@@ -171,7 +174,7 @@ public class RadarTest {
         automatedCar.initPolygons();
         world = new MockWorld(1000, 1000);
         radar = new Radar(virtualFunctionBus, automatedCar, world);
-        virtualFunctionBus.carPositionPacket = new DummyCarPositionPacketData();
+        virtualFunctionBus.carMovePacket = new DummyCarPositionPacketData();
     }
 
     /**

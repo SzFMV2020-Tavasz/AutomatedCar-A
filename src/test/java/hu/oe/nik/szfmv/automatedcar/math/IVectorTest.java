@@ -1,20 +1,26 @@
 package hu.oe.nik.szfmv.automatedcar.math;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
-import static java.lang.Math.PI;
-import static java.lang.Math.sqrt;
+import static hu.oe.nik.szfmv.automatedcar.math.MathUtils.DEGREE_PERIOD;
+import static hu.oe.nik.szfmv.automatedcar.math.MathUtils.isEqual;
+import static java.lang.Math.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Vector Tests")
+@SuppressWarnings("SameParameterValue")
 class IVectorTest {
 
     private static final double DELTA = 0.0000001;
 
     @Test
-    void axes_vectors_points_to_right_directions() {
+    @DisplayName("axes vector directions are right")
+    void axes_vectors_point_to_right_directions() {
         assertEquals(+1, Axis.X.positiveDirection().getXDiff());
         assertEquals(-1, Axis.X.negativeDirection().getXDiff());
         assertEquals(+1, Axis.Y.positiveDirection().getYDiff());
@@ -26,6 +32,7 @@ class IVectorTest {
     }
 
     @Test
+    @DisplayName("axes vectors have zero angle to self")
     void axes_vectors_have_zero_angle_relative_to_self() {
         for (Axis a : Axis.values()) {
             IVector posDir = a.positiveDirection();
@@ -35,6 +42,7 @@ class IVectorTest {
     }
 
     @Test
+    @DisplayName("axes vectors are perpendicular to each other")
     void axes_vectors_opposite() {
         for (Axis a : Axis.values()) {
             IVector posDir = a.positiveDirection();
@@ -45,6 +53,7 @@ class IVectorTest {
     }
 
     @Test
+    @DisplayName("vector from x and y gets created successfully")
     void create_with_x_and_y() {
         IVector vector = vectorFromXY(1,2);
         assertEquals(1, vector.getXDiff(), DELTA);
@@ -54,7 +63,8 @@ class IVectorTest {
     }
 
     @Test
-    void getLength() {
+    @DisplayName("vector calculates expected length")
+    void test_vector_length() {
         IVector vector2 = vectorFromXY(1,1);
         assertEquals(sqrt(2), vector2.getLength(), DELTA);
 
@@ -63,7 +73,8 @@ class IVectorTest {
     }
 
     @Test
-    void getDegree() {
+    @DisplayName("vector calculates expected angle")
+    void test_vector_angles() {
         final double EIGHTH = PI / 4;
         IVector q1 = vectorFromXY(+1,+1);
         assertEquals(-45, q1.getDegreesRelativeTo(Axis.Y), DELTA);
@@ -90,53 +101,85 @@ class IVectorTest {
         assertEquals(+1 * EIGHTH, q4.getAbsRadiansRelativeTo(Axis.Y), DELTA);
     }
 
-    @ParameterizedTest
-    @ValueSource(doubles = { 1.0, -1.0, 2.5, -2.5, 100, -100 })
-    void rotation_from_axis_X_keeps_length(double rotationDegrees) {
-        IVector vector = Axis.X.positiveDirection();
-        for (int i = 0; i < 200; ++i) {
-            IVector rotatedVector = vector.rotateByDegrees(rotationDegrees);
-            assertNotEquals(vector.getXDiff(), rotatedVector.getXDiff());
-            assertNotEquals(vector.getYDiff(), rotatedVector.getYDiff());
-            assertEquals(1, rotatedVector.getLength(), DELTA);
-            vector = rotatedVector;
+    @Nested
+    @DisplayName("vector keeps length upon rotation")
+    class TestsKeepLength {
+
+        @ParameterizedTest(name = "rotation: {arguments}°")
+        @DisplayName("axis X rotated by degrees keeps length")
+        @ValueSource(doubles = { 0, 1.0, -1.0, 2.5, -2.5, 100, -100, 123.456789 })
+        void rotation_from_axis_X_keeps_length(double rotationDegrees) {
+            IVector vector = Axis.X.positiveDirection();
+            for (int i = 0; i < 200; ++i) {
+                IVector rotatedVector = vector.rotateByDegrees(rotationDegrees);
+                boolean isTrulyRotated = !isEqual(0, rotationDegrees % DEGREE_PERIOD, DELTA);
+                if (isTrulyRotated) {
+                    assertCoordinatesNotEqual(vector, rotatedVector, DELTA);
+                } else {
+                    assertCoordinatesEqual(vector, rotatedVector, DELTA);
+                }
+                assertEquals(1, rotatedVector.getLength(), DELTA);
+                vector = rotatedVector;
+            }
         }
+
+        @ParameterizedTest(name = "rotation: {arguments}°")
+        @ValueSource(doubles = { 0, 1.0, -1.0, 2.5, -2.5, 100, -100, 123.456789 })
+        @DisplayName("axis Y rotated by degrees keeps length")
+        void rotation_from_axis_Y_keeps_length(double rotationDegrees) {
+            IVector vector = Axis.Y.positiveDirection();
+            for (int i = 0; i < 200; ++i) {
+                IVector rotatedVector  = vector.rotateByDegrees(rotationDegrees);
+                assertFalse(vector.getXDiff() == rotatedVector.getXDiff() && vector.getYDiff() == rotatedVector.getYDiff());
+                assertEquals(1, vector.getLength(), DELTA);
+                vector = rotatedVector;
+            }
+        }
+
     }
 
-    @ParameterizedTest
-    @ValueSource(doubles = { 1.0, -1.0, 2.5, -2.5, 100, -100 })
-    void rotation_from_axis_Y_keeps_length(double rotationDegrees) {
-        IVector vector = Axis.Y.positiveDirection();
-        for (int i = 0; i < 200; ++i) {
-            IVector rotatedVector  = vector.rotateByDegrees(rotationDegrees);
-            assertFalse(vector.getXDiff() == rotatedVector.getXDiff() && vector.getYDiff() == rotatedVector.getYDiff());
-            assertEquals(1, vector.getLength(), DELTA);
-            vector = rotatedVector;
+    @Nested
+    @DisplayName("vector rotation produces expected angle")
+    class TestsKeepAngle {
+
+        @ParameterizedTest(name = "rotation: {arguments}°")
+        @DisplayName("axis Y rotated by degrees has expected angle")
+        @ValueSource(doubles = { 0, 1.0, -1.0, 2.5, -2.5, 100, -100, 123.456789 })
+        void rotation_from_axis_Y_increments_angle(double rotationDegrees) {
+            IVector currentVector = Axis.Y.positiveDirection();
+            for (int i = 0; i < 20; ++i) {
+                IVector rotatedVector = currentVector.rotateByDegrees(rotationDegrees);
+                double diffDeg = rotatedVector.getDegreesRelativeTo(currentVector);
+                assertEquals(rotationDegrees, diffDeg, DELTA);
+                currentVector = rotatedVector;
+            }
         }
+
+        @ParameterizedTest(name = "rotation: {arguments}°")
+        @DisplayName("axis X rotated by degrees has expected angle")
+        @ValueSource(doubles = { 0, 1.0, -1.0, 2.5, -2.5, 100, -100, 123.456789 })
+        void rotation_from_axis_X_increments_angle(double rotationDegrees) {
+            IVector currentVector = Axis.X.positiveDirection();
+            for (int i = 0; i < 20; ++i) {
+                IVector rotatedVector = currentVector.rotateByDegrees(rotationDegrees);
+                double diffDeg = rotatedVector.getDegreesRelativeTo(currentVector);
+                assertEquals(rotationDegrees, diffDeg, DELTA);
+                currentVector = rotatedVector;
+            }
+        }
+
     }
 
-    @ParameterizedTest
-    @ValueSource(doubles = { 1.0, -1.0, 2.5, -2.5, 100, -100 })
-    void rotation_from_axis_Y_increments_angle(double rotationDegrees) {
-        IVector currentVector = Axis.Y.positiveDirection();
-        for (int i = 0; i < 20; ++i) {
-            IVector rotatedVector = currentVector.rotateByDegrees(rotationDegrees);
-            double diffDeg = rotatedVector.getDegreesRelativeTo(currentVector);
-            assertEquals(rotationDegrees, diffDeg, DELTA);
-            currentVector = rotatedVector;
-        }
+    private static void assertCoordinatesNotEqual(IVector a, IVector b, double delta) {
+        double dx = abs(a.getXDiff() - b.getXDiff());
+        double dy = abs(a.getYDiff() - b.getYDiff());
+        assertTrue(dx > delta || dy > delta);
     }
 
-    @ParameterizedTest
-    @ValueSource(doubles = { 1.0, -1.0, 2.5, -2.5, 100, -100 })
-    void rotation_from_axis_X_increments_angle(double rotationDegrees) {
-        IVector currentVector = Axis.X.positiveDirection();
-        for (int i = 0; i < 20; ++i) {
-            IVector rotatedVector = currentVector.rotateByDegrees(rotationDegrees);
-            double diffDeg = rotatedVector.getDegreesRelativeTo(currentVector);
-            assertEquals(rotationDegrees, diffDeg, DELTA);
-            currentVector = rotatedVector;
-        }
+    private static void assertCoordinatesEqual(IVector a, IVector b, double delta) {
+        double dx = abs(a.getXDiff() - b.getXDiff());
+        double dy = abs(a.getYDiff() - b.getYDiff());
+        assertTrue(dx < delta && dy < delta);
     }
 
 }

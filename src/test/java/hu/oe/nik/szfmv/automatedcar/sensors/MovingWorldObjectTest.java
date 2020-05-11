@@ -7,6 +7,8 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMo
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static hu.oe.nik.szfmv.automatedcar.math.Axis.baseDirection;
+import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -17,55 +19,31 @@ public class MovingWorldObjectTest {
     /**
      * implementing interfaces for testing
      */
-    private class MockCarMovePacketData implements ICarMovePacket {
+    private class DummyCarMovePacketData implements ICarMovePacket {
         int calledNumber = 0;
-        MockCarMovePacketData( ){ }
+        DummyCarMovePacketData( ){ }
 
         @Override
         public IVector getMoveVector() {
             calledNumber++;
             if (calledNumber <= 2) {
-                return new MockVector(25, 35);
+                return vectorFromXY(25, 35);
             } else {
-                return new MockVector(35, 45);
+                return vectorFromXY(35, 45);
             }
         }
-    }
-    private class MockVector implements IVector{
-        int xDiff;
-        int yDiff;
-        MockVector(int xDiff, int yDiff){
-            this.xDiff = xDiff;
-            this.yDiff = yDiff;
-        }
 
         @Override
-        public double getXDiff() {
-            return xDiff;
+        public IVector getWheelFacingDirection() {
+            return baseDirection();
         }
-
-        @Override
-        public double getYDiff() {
-            return yDiff;
-        }
-
-        @Override
-        public double getLength() {
-            return 0;
-        }
-
-        @Override
-        public double getRadiansRelativeTo(IVector direction) {
-            return 0;
-        }
-
     }
 
     @BeforeEach
     public void init() {
         WorldObject worldObject = new WorldObject(10, 20, "tree.png");
         virtualFunctionBus = new VirtualFunctionBus();
-        virtualFunctionBus.carPositionPacket = new MockCarMovePacketData();
+        virtualFunctionBus.carMovePacket = new DummyCarMovePacketData();
 
         movingWorldObject = new MovingWorldObject(worldObject, virtualFunctionBus);
     }
