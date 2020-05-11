@@ -30,7 +30,7 @@ public class ParkingRadar extends SystemComponent {
 
     // parking radar sensor triangles data
     private static final double PARKING_RADAR_SENSOR_ANGLE = Math.toRadians(36);  // 60 /2 - half angle
-    private static final int PARKING_RADAR_SENSOR_RANGE = VisualizationConfig.METER_IN_PIXELS;
+    private static final int PARKING_RADAR_SENSOR_RANGE = 3 * VisualizationConfig.METER_IN_PIXELS;
     private static final Color PARKING_RADAR_SENSOR_BG_COLOUR = new Color(
         255, 200, 100, VisualizationConfig.SENSOR_COLOR_ALPHA);
     private static final int TRIANGLE_POLYGON_POINTS = 3;
@@ -102,7 +102,7 @@ public class ParkingRadar extends SystemComponent {
         rightParkingDistancePacket.setDistance(Math.round(distanceRight * FOR_DIGIT) / FOR_DIGIT);
 
         parkingRadarGuiStatePacket.setParkingRadarGuiState(
-            isCarInReverse() && min(distanceRight, distanceLeft) <= 2.0f);
+            isCarInReverse() && min(distanceRight, distanceLeft) <= (float)PARKING_RADAR_SENSOR_RANGE);
         parkingRadarDisplayStatePacket.setRadarDisplayState(true);
 
     }
