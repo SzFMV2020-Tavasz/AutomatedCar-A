@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.average;
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.vectorFromXY;
+import static java.lang.Math.round;
 
 /**Represents a car object with all its inner components contained.*/
 public class AutomatedCar extends WorldObject {
@@ -60,8 +61,8 @@ public class AutomatedCar extends WorldObject {
 
     /**Sets the center position of the car.*/
     public void setPosition(IVector position) {
-        this.setX((int)position.getXDiff());
-        this.setY((int)position.getYDiff());
+        this.setX((int)round(position.getXDiff()));
+        this.setY((int)round(position.getYDiff()));
     }
 
     /**Sets the center position of the car.*/
@@ -85,22 +86,25 @@ public class AutomatedCar extends WorldObject {
     private void moveCar(IVector movement) {
         //TODO REMOVE DEBUG
         if (movement.hasLength() && movement.getLength() > 0) {
-            System.out.printf("Relative to facing: %.4f°", movement.getDegrees());
+            System.out.printf("Relative to facing: %.4f°    (facing: (%.2f,%.2f) = %.4f° from -Y)",
+                    movement.getDegrees(), facingDirection.getXDiff(),
+                    facingDirection.getYDiff(),
+                    facingDirection.getDegreesRelativeTo(Axis.Y.negativeDirection()));
             System.out.println();
         }
 
         IVector oldFacing = this.facingDirection;
         IVector oldPosition = this.getPosition();
         IVector toCarFrontVector = oldFacing.withLength(getHeight() / 2.0);
-        IVector carFrontPosition = oldPosition.add(toCarFrontVector);
-        IVector carBackPosition = oldPosition.subtract(toCarFrontVector);
+        IVector oldCarFrontPosition = oldPosition.add(toCarFrontVector);
+        IVector oldCarBackPosition = oldPosition.subtract(toCarFrontVector);
         IVector moveInWheelFacingDirection = movement.rotateByRadians(oldFacing.getRadians());
         boolean reverseMode = powerTrain.transmission.getCurrentTransmissionMode() == CarTransmissionMode.R_REVERSE;
 
-        IVector newCarFrontPosition = carFrontPosition.add(moveInWheelFacingDirection);
+        IVector newCarFrontPosition = oldCarFrontPosition.add(moveInWheelFacingDirection);
         IVector newCarBackPosition = reverseMode
-                ? carBackPosition.subtract(movement.withDirection(oldFacing))
-                : carBackPosition.add(movement.withDirection(oldFacing));
+                ? oldCarBackPosition.subtract(movement.withDirection(oldFacing))
+                : oldCarBackPosition.add(movement.withDirection(oldFacing));
         IVector newPosition = average(newCarFrontPosition, newCarBackPosition);
         IVector newFacing = newCarFrontPosition.subtract(newCarBackPosition);
 
@@ -110,13 +114,31 @@ public class AutomatedCar extends WorldObject {
 
         //TODO REMOVE DEBUG
         if (movement.hasLength() && movement.getLength() > 0) {
-            System.out.printf("Directed move relative to facing: %.9f°", moveInWheelFacingDirection.getDegreesRelativeTo(facingDirection));
+            System.out.printf("Move vector: %s",
+                    newPosition.subtract(oldPosition).printXY("(%.3f,%.3f)"));
             System.out.println();
         }
 
         //TODO REMOVE DEBUG
         if (movement.hasLength() && movement.getLength() > 0) {
-            System.out.printf("Actual move relative to facing: %.9f°", newPosition.subtract(oldPosition).getDegreesRelativeTo(oldFacing));
+            System.out.printf("    Front Move vector: %s",
+                    newCarFrontPosition.subtract(oldCarFrontPosition).printXY("(%.3f,%.3f)"));
+            System.out.println();
+        }
+
+        //TODO REMOVE DEBUG
+        if (movement.hasLength() && movement.getLength() > 0) {
+            System.out.printf("    Back Move vector: %s",
+                    newCarBackPosition.subtract(oldCarBackPosition).printXY("(%.3f,%.3f)"));
+            System.out.println();
+        }
+
+        //TODO REMOVE DEBUG
+        if (movement.hasLength() && movement.getLength() > 0) {
+            System.out.printf("Move made: %.9f°,  oldPos:%s, newPos:%s",
+                    newPosition.subtract(oldPosition).getDegreesRelativeTo(oldFacing),
+                    oldPosition.printXY("(%.0f:%.0f)"),
+                    newPosition.printXY("(%.0f:%.0f)"));
             System.out.println();
         }
     }
