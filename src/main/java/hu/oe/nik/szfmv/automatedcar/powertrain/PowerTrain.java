@@ -21,12 +21,12 @@ import static java.lang.Math.*;
 @DependsOn(components = Driver.class)
 public class PowerTrain extends SystemComponent {
 
-    static final double MAX_WHEEL_ROTATION = 60.0;
+    private static final double MAX_WHEEL_ROTATION = 60.0;
     private static final double MAX_GAS_PEDAL_VALUE = 100.0;
     private static final double MAX_BREAK_PEDAL_VALUE = 100.0;
-    public static final double BREAK_POWER = 5.0;
+    private static final double BREAK_POWER = 5.0;
 
-    public ITransmission transmission = new SimpleTransmission();
+    private final SimpleTransmission transmission = new SimpleTransmission();
 
     private IVector currentMovement = nullVector();
     private IVector currentWheelDirection = nullVector();
@@ -37,6 +37,10 @@ public class PowerTrain extends SystemComponent {
     public PowerTrain(VirtualFunctionBus virtualFunctionBus) {
         super(virtualFunctionBus);
         this.provideInitialOutput();
+    }
+
+    public ITransmission getTransmission() {
+        return transmission;
     }
 
     private void provideInitialOutput() {
