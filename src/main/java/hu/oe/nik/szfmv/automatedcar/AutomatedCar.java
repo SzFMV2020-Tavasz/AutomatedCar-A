@@ -83,24 +83,42 @@ public class AutomatedCar extends WorldObject {
      * <p>- its length is interpreted as the speed of movement.</p>
      * @author Team 3*/
     private void moveCar(IVector movement) {
-        IVector currentPosition = this.getPosition();
-        IVector toCarFrontVector = this.facingDirection.withLength(getHeight() / 2.0);
-        IVector carFrontPosition = currentPosition.add(toCarFrontVector);
-        IVector carBackPosition = currentPosition.subtract(toCarFrontVector);
+        //TODO REMOVE DEBUG
+        if (movement.hasLength() && movement.getLength() > 0) {
+            System.out.printf("Relative to facing: %.4f°", movement.getDegrees());
+            System.out.println();
+        }
 
-        IVector moveInDirection = movement.rotateByRadians(this.facingDirection.getRadians());
+        IVector oldFacing = this.facingDirection;
+        IVector oldPosition = this.getPosition();
+        IVector toCarFrontVector = oldFacing.withLength(getHeight() / 2.0);
+        IVector carFrontPosition = oldPosition.add(toCarFrontVector);
+        IVector carBackPosition = oldPosition.subtract(toCarFrontVector);
+        IVector moveInWheelFacingDirection = movement.rotateByRadians(oldFacing.getRadians());
+        boolean reverseMode = powerTrain.transmission.getCurrentTransmissionMode() == CarTransmissionMode.R_REVERSE;
 
-        IVector newCarFrontPosition = carFrontPosition.add(moveInDirection);
+        IVector newCarFrontPosition = carFrontPosition.add(moveInWheelFacingDirection);
+        IVector newCarBackPosition = reverseMode
+                ? carBackPosition.subtract(movement.withDirection(oldFacing))
+                : carBackPosition.add(movement.withDirection(oldFacing));
+        IVector newPosition = average(newCarFrontPosition, newCarBackPosition);
+        IVector newFacing = newCarFrontPosition.subtract(newCarBackPosition);
 
-        boolean backwards = powerTrain.transmission.getCurrentTransmissionMode() == CarTransmissionMode.R_REVERSE;
-        IVector newCarBackPosition = backwards
-                ? carBackPosition.subtract(movement.withDirection(toCarFrontVector))
-                : carBackPosition.add(movement.withDirection(toCarFrontVector));
+        this.setPosition(newPosition);
+        this.facingDirection = newFacing;
+        this.setRotation(newFacing.getRadiansRelativeTo(Axis.Y.negativeDirection()));
 
-        this.setPosition(average(newCarFrontPosition, newCarBackPosition));
+        //TODO REMOVE DEBUG
+        if (movement.hasLength() && movement.getLength() > 0) {
+            System.out.printf("Directed move relative to facing: %.9f°", moveInWheelFacingDirection.getDegreesRelativeTo(facingDirection));
+            System.out.println();
+        }
 
-        this.facingDirection = newCarFrontPosition.subtract(newCarBackPosition);
-        this.setRotation(facingDirection.getRadiansRelativeTo(Axis.Y.negativeDirection()));
+        //TODO REMOVE DEBUG
+        if (movement.hasLength() && movement.getLength() > 0) {
+            System.out.printf("Actual move relative to facing: %.9f°", newPosition.subtract(oldPosition).getDegreesRelativeTo(oldFacing));
+            System.out.println();
+        }
     }
 
 }
