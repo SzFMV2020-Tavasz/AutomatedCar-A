@@ -31,7 +31,7 @@ public class UltrasoundsVisualizationPacket implements IUltrasoundsVisualization
         sources[ultrasoundPosition.getNumVal()] = source;
         corner1s[ultrasoundPosition.getNumVal()] = corner1;
         corner2s[ultrasoundPosition.getNumVal()] = corner2;
-        color = new Color(0, 0, 0);
+        color = new Color(0, 255, 0, 80);
     }
 
     /**

@@ -40,7 +40,7 @@ public class UltrasoundsVisualizationPacketTests {
      */
     @Test
     public void nullColorBlack() {
-        assertEquals(new Color(0, 0, 0), ultrasoundsVisualizationPacket.getColor());
+        assertEquals(new Color(0, 255, 0, 80), ultrasoundsVisualizationPacket.getColor());
     }
 
     /**

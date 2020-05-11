@@ -13,11 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
+import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +92,7 @@ public class Radar extends SystemComponent {
             // b) if the relative movement vector line intersects the car
             if (doesObjectMovementVectorPointTowardsTheEgocar(mo)) {
                 Line2D movementVectorLine = new Line2D.Double(mo.getX(), mo.getY(),
-                    mo.getX() + mo.getRelativeMovementVectorX(), mo.getY() + mo.getRelativeMovementVectorY());
+                        mo.getX() + mo.getRelativeMovementVectorX(), mo.getY() + mo.getRelativeMovementVectorY());
 
                 Path2D egocar = ObjectTransform.transformPath2DPolygon(automatedCar).get(0);
                 Line2D extendedLine = extendLineToReachBeyondPolygon(egocar, movementVectorLine);
@@ -156,7 +152,7 @@ public class Radar extends SystemComponent {
     private boolean checkIntersection(PathIterator iter, float[] currentpoint, float[] prevPoint, Line2D line) {
         iter.currentSegment(currentpoint);
         Line2D polygonSegment = new Line2D.Float(prevPoint[0], prevPoint[1],
-            currentpoint[0], currentpoint[1]);
+                currentpoint[0], currentpoint[1]);
         if (polygonSegment.intersectsLine(line)) {
             return true;
         } else {
@@ -174,7 +170,7 @@ public class Radar extends SystemComponent {
         // then it is pointing towards the egocar
         Point2D vectorStart = new Point2D.Double(mo.getX(), mo.getY());
         Point2D vectorEnd = new Point2D.Double(mo.getX() + mo.getRelativeMovementVectorX(),
-            mo.getY() + mo.getRelativeMovementVectorY());
+                mo.getY() + mo.getRelativeMovementVectorY());
 
         Point2D egocarPos = new Point2D.Double(automatedCar.getX(), automatedCar.getY());
         return egocarPos.distance(vectorStart) > egocarPos.distance(vectorEnd);
@@ -411,7 +407,7 @@ public class Radar extends SystemComponent {
         Point2D corner2 = getCorner2();
 
         radarPolygon = new Polygon(new int[]{(int) source.getX(), (int) corner1.getX(), (int) corner2.getX()},
-            new int[]{(int) source.getY(), (int) corner1.getY(), (int) corner2.getY()}, TRIANGLE_POLYGON_POINTS);
+                new int[]{(int) source.getY(), (int) corner1.getY(), (int) corner2.getY()}, TRIANGLE_POLYGON_POINTS);
     }
 
     /**
@@ -423,9 +419,9 @@ public class Radar extends SystemComponent {
         // get the x and y components of the segment line between the egocar's rotation origo
         // and the source of the radar triangle
         AffineTransform sourceT = AffineTransform.getRotateInstance(automatedCar.getRotation(),
-            -RADAR_SENSOR_DX, -RADAR_SENSOR_DY);
+                -RADAR_SENSOR_DX, -RADAR_SENSOR_DY);
         Point2D source = new Point2D.Double(automatedCar.getX() + RADAR_SENSOR_DX + sourceT.getTranslateX(),
-            automatedCar.getY() + RADAR_SENSOR_DY + sourceT.getTranslateY());
+                automatedCar.getY() + RADAR_SENSOR_DY + sourceT.getTranslateY());
         return source;
     }
 
@@ -440,9 +436,9 @@ public class Radar extends SystemComponent {
         int corner1DiffX = (RADAR_SENSOR_DX + RADAR_TRIANGLE_HALF_X);
         int corner1DiffY = -(RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
-            -corner1DiffX, -corner1DiffY);
+                -corner1DiffX, -corner1DiffY);
         Point2D corner1 = new Point2D.Double(automatedCar.getX() + corner1DiffX + corner1T.getTranslateX(),
-            automatedCar.getY() + corner1DiffY + corner1T.getTranslateY());
+                automatedCar.getY() + corner1DiffY + corner1T.getTranslateY());
         return corner1;
     }
 
@@ -457,9 +453,9 @@ public class Radar extends SystemComponent {
         int corner2DiffX = (RADAR_SENSOR_DX - RADAR_TRIANGLE_HALF_X);
         int corner2DiffY = -(RADAR_SENSOR_DY + RADAR_SENSOR_RANGE);
         AffineTransform corner1T = AffineTransform.getRotateInstance(automatedCar.getRotation(),
-            -corner2DiffX, -corner2DiffY);
+                -corner2DiffX, -corner2DiffY);
         Point2D corner2 = new Point2D.Double(automatedCar.getX() + corner2DiffX + corner1T.getTranslateX(),
-            automatedCar.getY() + corner2DiffY + corner1T.getTranslateY());
+                automatedCar.getY() + corner2DiffY + corner1T.getTranslateY());
         return corner2;
     }
 

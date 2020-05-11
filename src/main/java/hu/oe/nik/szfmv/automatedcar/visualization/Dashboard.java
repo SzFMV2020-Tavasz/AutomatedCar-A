@@ -255,6 +255,7 @@ public class Dashboard extends JPanel {
         steeringWheelValueText.setText(Double.toString(virtualFunctionBus.guiInputPacket.getSteeringWheelValue()));
         currentGearText.setText(virtualFunctionBus.guiInputPacket.getShifterPos().toString());
         speedoMeter.setPerfPercentage((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
+//        rpmometer.setPerfPercentage((int) virtualFunctionBus.engineStatusPacket.getRPM());
         referenceSpeedMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccSpeedValue()));
         timeGapMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue()));
         accMarker.switchIt(virtualFunctionBus.guiInputPacket.getACCStatus());

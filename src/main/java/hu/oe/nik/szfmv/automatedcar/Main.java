@@ -3,6 +3,7 @@ package hu.oe.nik.szfmv.automatedcar;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.sensors.ParkingRadar;
 import hu.oe.nik.szfmv.automatedcar.sensors.Radar;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Ultrasonic;
 import hu.oe.nik.szfmv.automatedcar.visualization.DisplayWorld;
 import hu.oe.nik.szfmv.automatedcar.visualization.Gui;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +19,7 @@ public class Main {
     private World world;
     private DisplayWorld displayWorld;
     private Radar radar;
+    private Ultrasonic ultrasonic;
     private ParkingRadar parkingRadar;
 
     public static void main(String[] args) {
@@ -38,7 +40,9 @@ public class Main {
         car.setRotation(0);
 
         radar = new Radar(car.getVirtualFunctionBus(), car, world);
+        ultrasonic = new Ultrasonic(car.getVirtualFunctionBus(), car, world);
         parkingRadar = new ParkingRadar(car.getVirtualFunctionBus(), car, world);
+
 
         // create the displayworld
         displayWorld = new DisplayWorld(world, car);
@@ -56,6 +60,7 @@ public class Main {
                 window.getCourseDisplay().drawWorld(displayWorld);
                 window.getDashboard().refresh(car.getX(), car.getY());
 //                window.getCourseDisplay().refreshFrame();
+                ultrasonic.getCollidableObjectsInRange();
                 Thread.sleep(CYCLE_PERIOD);
             } catch (InterruptedException e) {
                 LOGGER.error(e.getMessage());
