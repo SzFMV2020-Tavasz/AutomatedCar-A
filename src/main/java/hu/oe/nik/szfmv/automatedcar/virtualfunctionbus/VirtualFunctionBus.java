@@ -2,6 +2,7 @@ package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus;
 
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.cruisecontrol.ICruiseControlPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.GuiInputPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
@@ -31,6 +32,7 @@ public class VirtualFunctionBus {
     public IUltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
     public IParkingRadarDisplayStatePacket parkingRadarDisplayStatePacket;
     public ISelectedDebugListPacket selectedDebugListPacket;
+    public ICruiseControlPacket cruiseControlPacket;
 
     /**All registered components.*/
     private final List<SystemComponent> components = new ArrayList<>();
@@ -38,7 +40,7 @@ public class VirtualFunctionBus {
     /**
      * Registers the provided {@link SystemComponent component}.
      *
-     * @param component component to be registed.
+     * @param component component to be registered.
      */
     public void registerComponent(SystemComponent component) {
         if (component.getClass().getAnnotation(DependsOn.class) != null) {

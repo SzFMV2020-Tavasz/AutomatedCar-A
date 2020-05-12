@@ -2,14 +2,14 @@ package hu.oe.nik.szfmv.automatedcar.cruisecontrol;
 
 import hu.oe.nik.szfmv.automatedcar.CarIndexState;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.cruisecontrol.CruiseControlPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.cruisecontrol.ICruiseControlPacket;
 
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 
 /**@author Team 3 (Dávid Magyar | aether-fox | davidson996@gmail.com)*/
-public final class CruiseControlPacketData implements CruiseControlPacket {
+public final class CruiseControlPacket implements ICruiseControlPacket {
 
     private final int gasPedalValue;
     private final int breakPedalValue;
@@ -17,7 +17,7 @@ public final class CruiseControlPacketData implements CruiseControlPacket {
     private final CarIndexState carIndexState;
     private final Shitfer.ShiftPos shiftValue;
 
-    private CruiseControlPacketData(int gasPedalValue, int breakPedalValue, int steeringWheelValue, CarIndexState carIndexState, Shitfer.ShiftPos getShiftValue) {
+    private CruiseControlPacket(int gasPedalValue, int breakPedalValue, int steeringWheelValue, CarIndexState carIndexState, Shitfer.ShiftPos getShiftValue) {
         this.gasPedalValue = gasPedalValue;
         this.breakPedalValue = breakPedalValue;
         this.steeringWheelValue = steeringWheelValue;
@@ -92,8 +92,8 @@ public final class CruiseControlPacketData implements CruiseControlPacket {
             return this;
         }
 
-        public CruiseControlPacketData build() {
-            return new CruiseControlPacketData(
+        public CruiseControlPacket build() {
+            return new CruiseControlPacket(
                     requireNonNull(gasPedalValue, "Tempomat gas pedal value must be given."),
                     requireNonNull(breakPedalValue, "Tempomat break pedal value must be given."),
                     requireNonNull(steeringWheelValue, "Tempomat steering wheel value must be given."),
