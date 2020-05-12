@@ -1,18 +1,9 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets;
 
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.CarControlPacket;
 
-public interface BaseInputPacket {
-
-    int getGasPedalValue();
-
-    int getBreakPedalValue();
-
-    int getSteeringWheelValue();
-
-    int getIndexValue(/*negatív -> balra, pozitív -> jobbra, 0 -> kikapcsolva */);
-
-    Shitfer.ShiftPos getShiftValue();
+/**@author Shared code.*/
+public interface BaseInputPacket extends CarControlPacket {
 
     int getTempomatValue();
 
@@ -27,4 +18,5 @@ public interface BaseInputPacket {
     double getTrackingDistanceValue();
 
     boolean getTrackingDistanceSwitch();
+
 }

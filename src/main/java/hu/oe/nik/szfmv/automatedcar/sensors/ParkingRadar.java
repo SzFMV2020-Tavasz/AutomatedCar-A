@@ -399,7 +399,7 @@ public class ParkingRadar extends SystemComponent {
     }
 
     private boolean isCarInReverse() {
-        return automatedCar.getPowerTrain().transmission.getCurrentTransmissionMode() == CarTransmissionMode.R_REVERSE;
+        return automatedCar.getPowerTrain().getTransmission().getCurrentTransmissionMode() == CarTransmissionMode.R_REVERSE;
     }
 }
 

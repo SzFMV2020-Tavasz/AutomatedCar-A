@@ -324,4 +324,8 @@ public interface IVector {
         return vectorFromXY(0, 0);
     }
 
+    default String printXY(String format) {
+        return String.format(format, this.getXDiff(), this.getYDiff());
+    }
+
 }
