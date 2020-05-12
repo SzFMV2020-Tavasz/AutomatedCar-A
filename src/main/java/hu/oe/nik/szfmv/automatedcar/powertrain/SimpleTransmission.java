@@ -11,7 +11,6 @@ import static java.lang.System.out;
  */
 public class SimpleTransmission implements ITransmission {
 
-    /**The absolute maximum RPM. The engine is limited to has it as maximum possible RPM.*/
     private static final long MAX_RPM = 5000;
     private static final double RATIO_2_TO_1 = 1.5;
     private static final double RATIO_3_TO_2 = 1.5;
@@ -25,7 +24,6 @@ public class SimpleTransmission implements ITransmission {
     private static final double MOTOR_BREAK_RATIO = 0.7;
     private static final int BASE_RPM_PER_SEC = 1500;
 
-    /**A component to help automatic transmission level shifting.*/
     private final ITransmissionLevelSuggester levelHandler = new TransmissionLevelSuggester();
 
     private CarTransmissionMode currentTransmissionMode = CarTransmissionMode.P_PARKING;
@@ -246,7 +244,6 @@ public class SimpleTransmission implements ITransmission {
         }
     }
 
-    /**Converts RPM value to raw force (like Newton) in the given transmission level in mode {@link CarTransmissionMode#D_DRIVE D}.*/
     private double rpmToForceInD(long rpm, int level) {
         switch (level) {
             case 1:

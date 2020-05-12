@@ -77,22 +77,20 @@ public class CourseDisplay extends JPanel {
             drawDisplayObject(g2d, object);
 
             // draw debug polygons that are not selected individually.
-            ArrayList<Path2D> polys = object.getDebugPolygons();
-            for (Path2D poly: polys) {
-                // check if the polygon actually exists
-                if (poly != null) {
-                    if (displayWorld.isDebugOn() && !displayWorld.getDebugObjects().contains(object.getId())) {
-                        runOfTheMillDebugPolygons.add(poly);
-                    } else if (displayWorld.getDebugObjects().contains(object.getId())) {
-                        selectedDebugPolygons.add(poly);
-                    }
+            Path2D poly =  object.getDebugPolygon();
+            // check if the polygon actually exists
+            if (poly != null) {
+                if (displayWorld.isDebugOn() && !displayWorld.getDebugObjects().contains(object.getId())) {
+                    runOfTheMillDebugPolygons.add(poly);
+                } else if (displayWorld.getDebugObjects().contains(object.getId())) {
+                    selectedDebugPolygons.add(poly);
                 }
             }
         }
 
-        drawPolygons(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
+        drawPolygon(g2d, runOfTheMillDebugPolygons, selectedDebugPolygons);
 
-        drawEgoCar(g2d, displayWorld.getEgoCar(), displayWorld.isDebugOn());
+        drawDisplayObject(g2d, displayWorld.getEgoCar());
 
         // needs to be drawn last so it shows above everything
         drawSensorsIfSet(g2d, displayWorld);
@@ -108,10 +106,10 @@ public class CourseDisplay extends JPanel {
     }
 
     /**
-     * Draws the rotated debug polygon of the displayObject
+     * Draws the rotated Debug polygon of the displayObject
      */
-    private void drawPolygons(Graphics2D g2d,
-                              ArrayList<Path2D> runOfTheMillDebugPolygons, ArrayList<Path2D> selectedDebugPolygons) {
+    private void drawPolygon(Graphics2D g2d,
+                             ArrayList<Path2D> runOfTheMillDebugPolygons,  ArrayList<Path2D> selectedDebugPolygons) {
         for (Path2D poly : runOfTheMillDebugPolygons) {
             g2d.setStroke(VisualizationConfig.DEBUG_LINETYPE);
             g2d.setColor(VisualizationConfig.RUN_OF_THE_MILL_DEBUG_COLOR);
@@ -122,19 +120,6 @@ public class CourseDisplay extends JPanel {
             g2d.setStroke(VisualizationConfig.DEBUG_LINETYPE);
             g2d.setColor(VisualizationConfig.SELECTED_DEBUG_COLOR);
             g2d.draw(poly);
-        }
-    }
-
-    private void drawEgoCar(Graphics2D g2d, DisplayObject egoCar, boolean isDebugOn) {
-        drawDisplayObject(g2d, egoCar);
-        if (isDebugOn) {
-            if (egoCar.getDebugPolygons().size() > 0) {
-                for (Path2D poly : egoCar.getDebugPolygons()) {
-                    g2d.setStroke(VisualizationConfig.DEBUG_LINETYPE);
-                    g2d.setColor(VisualizationConfig.RUN_OF_THE_MILL_DEBUG_COLOR);
-                    g2d.draw(poly);
-                }
-            }
         }
     }
 
@@ -150,11 +135,6 @@ public class CourseDisplay extends JPanel {
         if (displayWorld.isUltrasoundShown()) {
             drawUltraSoundSensor(g2d, displayWorld);
         }
-
-        if (displayWorld.isParkingRadarShown()) {
-            drawParkingRadarSensor(g2d, displayWorld);
-        }
-
     }
 
     private void drawCameraSensor(Graphics2D g2d, DisplayWorld displayWorld) {
@@ -170,15 +150,6 @@ public class CourseDisplay extends JPanel {
 
     private void drawUltraSoundSensor(Graphics2D g2d, DisplayWorld displayWorld) {
         DisplaySensorObject[] dids = displayWorld.getDisplayUltrasounds();
-        if (dids != null) {
-            for (DisplaySensorObject did : dids) {
-                drawSensorTriangle(g2d, did, false);
-            }
-        }
-    }
-
-    private void drawParkingRadarSensor(Graphics2D g2d, DisplayWorld displayWorld) {
-        DisplaySensorObject[] dids = displayWorld.getDisplayParkingRadars();
         if (dids != null) {
             for (DisplaySensorObject did : dids) {
                 drawSensorTriangle(g2d, did, false);

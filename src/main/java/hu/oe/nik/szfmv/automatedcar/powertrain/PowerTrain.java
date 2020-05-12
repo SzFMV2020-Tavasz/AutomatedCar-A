@@ -1,33 +1,29 @@
 package hu.oe.nik.szfmv.automatedcar.powertrain;
 
-import hu.oe.nik.szfmv.automatedcar.cruisecontrol.CruiseControl;
 import hu.oe.nik.szfmv.automatedcar.math.Axis;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.DependsOn;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.*;
-import static hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket.MAX_STEERING_ROTATION;
 import static java.lang.Math.*;
 
 /**<p>The powertrain encompasses every component that converts the engine’s power into movement.</p>
  * <p>This includes the engine, transmission, the driveshaft, differentials, axles;
  * basically anything from the engine through to the rotating wheels.</p>
  * @author Team 3*/
-@DependsOn(components = { Driver.class, CruiseControl.class })
 public class PowerTrain extends SystemComponent {
 
-    private static final double MAX_WHEEL_ROTATION = 60.0;
+    static final double MAX_STEERING_ROTATION = 180.0;
+    static final double MAX_WHEEL_ROTATION = 60.0;
     private static final double MAX_GAS_PEDAL_VALUE = 100.0;
     private static final double MAX_BREAK_PEDAL_VALUE = 100.0;
-    private static final double BREAK_POWER = 5.0;
+    public static final double BREAK_POWER = 5.0;
 
-    private final SimpleTransmission transmission = new SimpleTransmission();
+    public ITransmission transmission = new SimpleTransmission();
 
     private IVector currentMovement = nullVector();
     private IVector currentWheelDirection = nullVector();
@@ -38,10 +34,6 @@ public class PowerTrain extends SystemComponent {
     public PowerTrain(VirtualFunctionBus virtualFunctionBus) {
         super(virtualFunctionBus);
         this.provideInitialOutput();
-    }
-
-    public ITransmission getTransmission() {
-        return transmission;
     }
 
     private void provideInitialOutput() {

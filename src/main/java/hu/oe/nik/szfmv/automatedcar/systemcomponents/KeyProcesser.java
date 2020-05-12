@@ -58,7 +58,7 @@ public class KeyProcesser {
 
     public void gasPedalPressed() {
         pedalPos.gasPedalDown();
-        accManager.turnParkingPilotSwitchOff();
+
     }
 
     public void gasPedalReleased() {
@@ -67,7 +67,6 @@ public class KeyProcesser {
 
     public void breakPedalPressed() {
         pedalPos.breakPedalDown();
-        accManager.turnParkingPilotSwitchOff();
     }
 
     public void breakPedalReleased() {
@@ -76,12 +75,10 @@ public class KeyProcesser {
 
     public void steeringLeftPressed() {
         pedalPos.startSteeringLeft();
-        accManager.turnParkingPilotSwitchOff();
     }
 
     public void steeringRightPressed() {
         pedalPos.startSteeringRight();
-        accManager.turnParkingPilotSwitchOff();
     }
 
     public void steeringReleased() {

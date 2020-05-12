@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,30 +32,19 @@ public class RadarTest {
         List<WorldObject> passlist;
         MockWorldObject object1;
         MockWorldObject object3;
+        Polygon testPoly = new Polygon(new int[]{0, 1, 0}, new int[]{0, 0, 1}, 3);
 
-        ArrayList<Path2D> testPolys;
-        Path2D testPoly;
-
-        private MockWorld(int width, int height) {
+        MockWorld(int width, int height) {
             super(width, height, new ArrayList<>());
             passlist = new ArrayList<>();
-            testPoly = new Path2D.Float();
-            testPoly.moveTo(0, 0);
-            testPoly.lineTo(1, 0);
-            testPoly.lineTo(0, 1);
-            testPoly.closePath();
-            testPolys = new ArrayList<>();
-            testPolys.add(testPoly);
-
             object1 = new MockWorldObject(-100, -100, "roadsign_speed_40.png");
             object1.setId("roadsign_speed_40_1");
             object1.setZ(1);
-            object1.setPolygonsFromOutside(testPolys);
-
+            object1.setPolygon(testPoly);
             object3 = new MockWorldObject(600, 600, "tree.png");
             object3.setId("tree_3");
             object3.setZ(1);
-            object3.setPolygonsFromOutside(testPolys);
+            object3.setPolygon(testPoly);
         }
 
         public List<WorldObject> getPasslist() {
@@ -77,7 +65,7 @@ public class RadarTest {
                 MockWorldObject object2 = new MockWorldObject(200, 400, "parking_space_parallel.png");
                 object2.setId("parking_space_parallel_2");
                 object2.setZ(0);
-                object2.setPolygonsFromOutside(testPolys);
+                object2.setPolygon(testPoly);
                 passlist.add(object2);
 
                 if (calledNumber == 1 || calledNumber == 3) {
@@ -100,11 +88,9 @@ public class RadarTest {
             calledNumberY = 0;
         }
 
-        /**
-         * Create a reacheable set method for polygons
-         */
-        void setPolygonsFromOutside(ArrayList<Path2D> polygons) {
-            this.polygons = polygons;
+        // add method for setting polygon for testing
+        void setPolygon(Polygon poly) {
+            this.polygon = poly;
         }
 
         /**
@@ -169,9 +155,8 @@ public class RadarTest {
     @BeforeEach
     public void init() {
         virtualFunctionBus = new VirtualFunctionBus();
-        automatedCar = new AutomatedCar(10, 10, "car_2_white.png");
+        automatedCar = new AutomatedCar(10, 10, "car_1_white.png");
         automatedCar.setRotation((float) Math.toRadians(-30));
-        automatedCar.initPolygons();
         world = new MockWorld(1000, 1000);
         radar = new Radar(virtualFunctionBus, automatedCar, world);
         virtualFunctionBus.carMovePacket = new DummyCarPositionPacketData();
@@ -227,8 +212,7 @@ public class RadarTest {
     @Test
     public void nearestCollidableElement() {
         radar.loop();
-        WorldObject wo = radar.getNearestCollideableElement();
-        assertEquals("roadsign_speed_40_1", wo.getId());
+        assertEquals("roadsign_speed_40_1", radar.getNearestCollideableElement().getId());
     }
 
     /**

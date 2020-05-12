@@ -36,7 +36,6 @@ public class DisplayWorld {
     private boolean showCamera;
     private boolean showRadar;
     private boolean showUltrasound;
-    private boolean showParkingRadar;
 
     private boolean debugOn;
     private List<String> debugObjects;
@@ -45,7 +44,6 @@ public class DisplayWorld {
 
     private DisplaySensorObject displayCamera;
     private DisplaySensorObject[] displayUltrasounds;
-    private DisplaySensorObject[] displayParkingRadars;
 
     /**
      * The constructor for the DisplayWorld class
@@ -66,8 +64,6 @@ public class DisplayWorld {
         displayRadar = new DisplaySensorObject(automatedCar);
         displayUltrasounds = new DisplaySensorObject[VisualizationConfig.ULTRASOUND_SENSORS_COUNT];
         Arrays.fill(displayUltrasounds, new DisplaySensorObject(automatedCar));
-        displayParkingRadars = new DisplaySensorObject[VisualizationConfig.PARKING_RADAR_SENSORS_COUNT];
-        Arrays.fill(displayParkingRadars, new DisplaySensorObject(automatedCar));
         showCamera = false;
         showRadar = false;
         showUltrasound = false;
@@ -96,7 +92,7 @@ public class DisplayWorld {
      *
      * @return List of DisplayObjects rotated and moved according to the egocar's position
      */
-    ArrayList<DisplayObject> getDisplayObjects() {
+     ArrayList<DisplayObject> getDisplayObjects() {
         ArrayList<DisplayObject> returnList = new ArrayList<>();
 
         this.getFixWorldObjectsFromWorld();
@@ -117,14 +113,17 @@ public class DisplayWorld {
         // sort by Z
         returnList.sort(Comparator.comparing(DisplayObject::getZ));
 
+        // add egocar
+        DisplayObject egoCar = new DisplayObject(automatedCar, automatedCar);
+        returnList.add(egoCar);
+
         return returnList;
     }
 
     /**
      * Get the translated and rotated egocar.
-     * <p>
-     * Method is done separately to fix display order.
      *
+     * Method is done separately to fix display order.
      * @return the DisplayObject containing the egocar.
      */
     public DisplayObject getEgoCar() {
@@ -134,7 +133,6 @@ public class DisplayWorld {
 
     /**
      * Gets whether the camera's sensor triangle is shown or not
-     *
      * @return true if the camera is shown
      */
     public boolean isCameraShown() {
@@ -153,7 +151,6 @@ public class DisplayWorld {
 
     /**
      * Gets whether the ultrasound's sensor triangle is shown or not
-     *
      * @return true if the ultraound is shown
      */
     public boolean isUltrasoundShown() {
@@ -164,20 +161,7 @@ public class DisplayWorld {
     }
 
     /**
-     * Gets whether the parking radar's sensor triangles are shown or not
-     *
-     * @return true if the parking radar is shown
-     */
-    public boolean isParkingRadarShown() {
-        if (virtualFunctionBus.parkingRadarVisualizationPacket != null) {
-            showParkingRadar = virtualFunctionBus.parkingRadarDisplayStatePacket.getRadarDisplayState();
-        }
-        return showParkingRadar;
-    }
-
-    /**
      * Gets whether the Debug mode is on
-     *
      * @return true if the debug mode is on
      */
     public boolean isDebugOn() {
@@ -189,7 +173,6 @@ public class DisplayWorld {
 
     /**
      * Gets the actual state of the DisplaySensorObject for the camera sensor
-     *
      * @return a {@link DisplaySensorObject} containing the passed data
      */
     DisplaySensorObject getDisplayCamera() {
@@ -208,7 +191,6 @@ public class DisplayWorld {
 
     /**
      * Gets the actual state of the DisplaySensorObject for the radar sensor
-     *
      * @return a {@link DisplaySensorObject} containing the passed data
      */
     DisplaySensorObject getDisplayRadar() {
@@ -250,46 +232,21 @@ public class DisplayWorld {
         }
     }
 
-    DisplaySensorObject[] getDisplayParkingRadars() {
-        if (virtualFunctionBus.parkingRadarVisualizationPacket != null) {
-            Point2D[] sources = virtualFunctionBus.parkingRadarVisualizationPacket.getSources();
-            Point2D[] corner1s = virtualFunctionBus.parkingRadarVisualizationPacket.getCorner1s();
-            Point2D[] corner2s = virtualFunctionBus.parkingRadarVisualizationPacket.getCorner2s();
-            Color color = virtualFunctionBus.parkingRadarVisualizationPacket.getColor();
-
-            for (int i = 0; i < VisualizationConfig.PARKING_RADAR_SENSORS_COUNT; i++) {
-
-                displayParkingRadars[i] = null;
-
-                if (sources[i] != null) {
-                    DisplaySensorObject did = new DisplaySensorObject(automatedCar);
-                    did.setSensorTriangle(sources[i], corner1s[i], corner2s[i]);
-                    did.setSensorColor(color);
-                    displayParkingRadars[i] = did;
-                }
-            }
-            return displayParkingRadars;
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Gets the list of object IDs of the objects that should be shown lined with a polygon
-     *
      * @return
      */
     public List<String> getDebugObjects() {
         debugObjects = new ArrayList<>();
         for (WorldObject object : fixWorldObjects) {
             if (object.isHighlightedWhenRadarIsOn() || object.isHighlightedWhenCameraIsOn() ||
-                object.isHighlightedWhenUltrasoundIsOn() || object.isHighlightedWhenParkinRadarIsOn()) {
+                object.isHighlightedWhenUltrasoundIsOn()) {
                 debugObjects.add(object.getId());
             }
         }
         for (WorldObject object : dynamicWorldObjects) {
             if (object.isHighlightedWhenRadarIsOn() || object.isHighlightedWhenCameraIsOn() ||
-                object.isHighlightedWhenUltrasoundIsOn() || object.isHighlightedWhenParkinRadarIsOn()) {
+                object.isHighlightedWhenUltrasoundIsOn()) {
                 debugObjects.add(object.getId());
             }
         }

@@ -31,15 +31,12 @@ public final class VisualizationConfig {
 
     // set sensor polygon defaults
     public static final Stroke SENSOR_CENTER_LINE = new BasicStroke(2,
-            BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+        BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
     public static final int METER_IN_PIXELS = 50; // A car is 240 px, an average car is a little shorter than 5 m....
 
     // ultrasound sensors
     public static final int ULTRASOUND_SENSORS_COUNT = 8;
     public static final int SENSOR_COLOR_ALPHA = 125;
-
-    // radar sensors
-    public static final int PARKING_RADAR_SENSORS_COUNT = 2;
 
     // debug mode color
     public static final Color RUN_OF_THE_MILL_DEBUG_COLOR = new Color(255, 0, 255);
@@ -86,7 +83,6 @@ public final class VisualizationConfig {
             (float) (RADAR_SENSOR_Y + sensorTY + tT.getTranslateY()));
     }
 */
-
     /**
      * Parse the xml file containing the reference points (rotation origos) of the image files
      */
@@ -94,7 +90,7 @@ public final class VisualizationConfig {
         if (my_dict == null) {
             try {
                 // initialize the dictionary
-                my_dict = new Hashtable<>();
+                my_dict = new Hashtable<String, Point2D>();
 
                 File xmlFile = new File(ClassLoader.getSystemResource(fileName).getFile());
                 DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -151,7 +147,6 @@ public final class VisualizationConfig {
 
     /**
      * Calulates the rotation angle from the rotation matrix
-     *
      * @param matrix the rotationmatrix
      * @return the clockwise angle
      */

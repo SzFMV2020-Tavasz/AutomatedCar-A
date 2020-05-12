@@ -4,20 +4,18 @@ import hu.oe.nik.szfmv.automatedcar.model.deserializer.Deserializer;
 import hu.oe.nik.szfmv.automatedcar.sensors.ObjectTransform;
 
 import java.awt.*;
-import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
 public class World {
-    protected List<WorldObject> worldObjects;
     private int width;
     private int height;
+    private List<WorldObject> worldObjects;
 
     public World(int width, int height) {
         this.width = width;
         this.height = height;
         this.worldObjects = Deserializer.DeserializeJson("test_world.json");
-        initPolygons();
     }
 
     public World(int width, int height, List<WorldObject> instanceList) {
@@ -72,27 +70,20 @@ public class World {
         sensor.addPoint(b.x, b.y);
         sensor.addPoint(c.x, c.y);
 
-        ArrayList<Path2D> polys = item.getPolygons();
-        if (polys.size() != 0) {
-            for (Path2D poly : ObjectTransform.transformPath2DPolygon(item)) {
-                if (poly != null) {
-                    if (sensor.intersects(poly.getBounds2D())) {
-                        return true;
-                    }
-                }
-            }
+        Polygon obj = ObjectTransform.transformPolygon(item);
+        if (obj == null) {
+            return false;
         }
 
-        return false;
+        return sensor.intersects(obj.getBounds2D());
     }
 
     private static double round(double value, int places) {
-        final int POW_BASE = 10;
         if (places < 0) {
             throw new IllegalArgumentException();
         }
 
-        long factor = (long) Math.pow(POW_BASE, places);
+        long factor = (long) Math.pow(10, places);
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
@@ -125,17 +116,5 @@ public class World {
      */
     public void addObjectToWorld(WorldObject o) {
         worldObjects.add(o);
-    }
-
-    /**
-     * Initializes the ReadPolygon class: makes it load the debug json
-     * and add the debug polygons to the objects
-     */
-    protected void initPolygons() {
-        for (WorldObject obj : worldObjects) {
-            if (obj != null) {
-                obj.initPolygons();
-            }
-        }
     }
 }

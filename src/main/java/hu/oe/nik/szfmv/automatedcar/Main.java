@@ -1,9 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar;
 
 import hu.oe.nik.szfmv.automatedcar.model.World;
-import hu.oe.nik.szfmv.automatedcar.sensors.ParkingRadar;
 import hu.oe.nik.szfmv.automatedcar.sensors.Radar;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Ultrasonic;
 import hu.oe.nik.szfmv.automatedcar.visualization.DisplayWorld;
 import hu.oe.nik.szfmv.automatedcar.visualization.Gui;
 import org.apache.logging.log4j.LogManager;
@@ -19,8 +17,6 @@ public class Main {
     private World world;
     private DisplayWorld displayWorld;
     private Radar radar;
-    private Ultrasonic ultrasonic;
-    private ParkingRadar parkingRadar;
 
     public static void main(String[] args) {
         new Main().run();
@@ -35,24 +31,21 @@ public class Main {
         // create the world
         world = new World(5000, 3000);
 
-        // set up the automated car
-        car = Config.carStarterPosForEgoCar();
+        // create an automated car
+        car = new AutomatedCar(3522, 2316, "car_2_white.png");
+        // car = new AutomatedCar(474, 669, "car_2_white.png");
+        // car = new AutomatedCar(540, 1850, "car_2_white.png");
         car.setRotation(0);
 
         radar = new Radar(car.getVirtualFunctionBus(), car, world);
-        ultrasonic = new Ultrasonic(car.getVirtualFunctionBus(), car, world);
-        parkingRadar = new ParkingRadar(car.getVirtualFunctionBus(), car, world);
-
 
         // create the displayworld
         displayWorld = new DisplayWorld(world, car);
 
         window = new Gui();
         window.setVirtualFunctionBus(car.getVirtualFunctionBus());
-
-        Config.setUpStartter(window.getVirtualFunctionBus());
     }
-
+    
     private void loop() {
         while (true) {
             try {
@@ -60,7 +53,6 @@ public class Main {
                 window.getCourseDisplay().drawWorld(displayWorld);
                 window.getDashboard().refresh(car.getX(), car.getY());
 //                window.getCourseDisplay().refreshFrame();
-                ultrasonic.getCollidableObjectsInRange();
                 Thread.sleep(CYCLE_PERIOD);
             } catch (InterruptedException e) {
                 LOGGER.error(e.getMessage());

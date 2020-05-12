@@ -29,7 +29,7 @@ public class MovingWorldObject extends WorldObject {
         this.rotationMatrix = worldObject.getRotationMatrix();
         this.imageFileName = worldObject.getImageFileName();
         this.id = worldObject.getId();
-        this.polygons = worldObject.getPolygons();
+        this.polygon = worldObject.getPolygon();
         this.virtualFunctionBus = virtualFunctionBus;
         this.movementVectorX = 0;
         this.movementVectorY = 0;

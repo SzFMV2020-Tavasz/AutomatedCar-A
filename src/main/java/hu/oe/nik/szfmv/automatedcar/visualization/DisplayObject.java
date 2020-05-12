@@ -3,14 +3,12 @@ package hu.oe.nik.szfmv.automatedcar.visualization;
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.Main;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
-import hu.oe.nik.szfmv.automatedcar.sensors.ObjectTransform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 
 /**
  * Class for handling the objects to be displayed.
@@ -33,7 +31,7 @@ public class DisplayObject extends WorldObject {
     /**
      * Debug polygon of the DisplayObject
      */
-    protected ArrayList<Path2D> debugPolygons;
+    protected Path2D debugPolygon;
 
     protected DisplayImageData displayImageData;
 
@@ -49,7 +47,6 @@ public class DisplayObject extends WorldObject {
         this.y = worldObject.getY();
         if (worldObject.getImageFileName() == null) {
             this.imageFileName = worldObject.getType() + ".png";
-            worldObject.setImageFileName(this.imageFileName);
         } else {
             this.imageFileName = worldObject.getImageFileName();
         }
@@ -67,11 +64,10 @@ public class DisplayObject extends WorldObject {
 
     /**
      * Gets the rotated and translated debugpolygon
-     *
      * @return Path2d object representint the debugpolygon in its intended place
      */
-    public ArrayList<Path2D> getDebugPolygons() {
-        return debugPolygons;
+    public Path2D getDebugPolygon() {
+        return debugPolygon;
     }
 
     /**
@@ -81,29 +77,26 @@ public class DisplayObject extends WorldObject {
      */
     private void loadDebugPolygon() {
 
-        ArrayList<Path2D> origPolys = worldObject.getPolygons();
-        ArrayList<Path2D> debugPolys = new ArrayList<>();
-        for (Path2D origPoly : origPolys) {
-            if (origPoly != null) {
-                // this is a just-in-case transformation to make up for polygon and image reference point difference
-                // so even if it could be added to the next transformation, it is better to be kept separate
-                Point2D refPoint = VisualizationConfig.getReferencePoint(this.imageFileName);
-                // if we don't clone the polygon, the fix object's debug polygon will run away.
-                Path2D tempPoly = ObjectTransform.translatePath2D(origPoly, -refPoint.getX(), -refPoint.getY());
+        Polygon origPoly = worldObject.getPolygon();
+        if (origPoly != null) {
+            // translation of polygon may not be needed later.
+            // this is a just-in-case transformation to make up for polygon and image reference point difference
+            // so even if it could be added to the next transformation, it is better to be kept separate
+            Point2D refPoint = VisualizationConfig.getReferencePoint(this.imageFileName);
+            // if we don't clone the polygon, the fix object's debug polygon will run away.
+            Polygon tempPoly = new Polygon(origPoly.xpoints, origPoly.ypoints, origPoly.npoints);
+            tempPoly.translate((int) -refPoint.getX(), (int) -refPoint.getY());
 
-                Path2D poly = DisplayTransformation.repositionPath2D(worldObject.getX(), worldObject.getY(),
-                    (float) worldObject.getRotation(), tempPoly, automatedCar);
-                if (poly != null) {
-                    debugPolys.add(poly);
-                }
+            Path2D poly = DisplayTransformation.repositionPolygon(worldObject.getX(), worldObject.getY(),
+                (float) worldObject.getRotation(), tempPoly, automatedCar);
+            if (poly != null) {
+                debugPolygon = poly;
             }
         }
-        this.debugPolygons = debugPolys;
     }
 
     /**
      * Gets the DisplayImageData of the rotated and translated DisplayObject in one go
-     *
      * @return the {@link DisplayImageData} object holding the display information
      */
     DisplayImageData getDisplayImageData() {

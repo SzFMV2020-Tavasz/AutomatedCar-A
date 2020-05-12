@@ -11,7 +11,7 @@ public enum UltrasoundPositions {
     REAR_LEFT(4),
     REAR_RIGHT(5),
     REAR_RIGHT_SIDE(6),
-    FRONT_RIGHT_SIDE(7);
+    FRONT_RIGHT_SIDE(6);
 
     private int numval;
 
@@ -21,7 +21,6 @@ public enum UltrasoundPositions {
 
     /**
      * Gets the corresponding number for the enum string
-     *
      * @return the value of the enum
      */
     public int getNumVal() {

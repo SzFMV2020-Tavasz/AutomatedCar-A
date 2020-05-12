@@ -2,9 +2,6 @@ package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.font.TextAttribute;
-import java.util.HashMap;
-import java.util.Map;
 
 public class StatusMarker extends JPanel {
     int x;
@@ -23,10 +20,7 @@ public class StatusMarker extends JPanel {
         this.width = width;
         this.height = height;
         this.text = text;
-        Map<TextAttribute, Object> fontAttributes = new HashMap<>();
-        fontAttributes.put(TextAttribute.TRACKING, -0.05); // to make font characters thighter together
-        Font tempFont = new Font(Font.MONOSPACED, Font.BOLD, 14);
-        font = tempFont.deriveFont(fontAttributes);
+        font = new Font(Font.MONOSPACED, Font.BOLD, width / text.length());
         setBounds(this.x, this.y, this.width, this.height);
     }
 
@@ -53,6 +47,6 @@ public class StatusMarker extends JPanel {
         g.setColor(Color.BLACK);
         g.drawRect(0, 0, width - 1, height - 1);
         g.setFont(font);
-        g.drawString(text, (width - g.getFontMetrics().stringWidth(text)) / 2, (2 * height / 3));
+        g.drawString(text, width / 4, (2 * height / 3));
     }
 }

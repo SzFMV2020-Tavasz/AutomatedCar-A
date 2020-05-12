@@ -6,12 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.awt.geom.Path2D;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DisplayObjectTest {
 
@@ -19,7 +16,7 @@ public class DisplayObjectTest {
     private MockWorldObject worldObject;
     private AutomatedCar automatedCar;
     private int numberOfDecimals = 3;
-    private int forPrecision = (int) Math.pow(10, numberOfDecimals);
+    private int forPrecision = (int)Math.pow(10, numberOfDecimals);
     DisplayImageData displayImageData;
 
     /**
@@ -27,29 +24,24 @@ public class DisplayObjectTest {
      */
     class MockWorldObject extends WorldObject {
         MockWorldObject(int width, int height, String fileName) {
-            super(width, height, fileName);
+            super (width, height, fileName);
         }
 
         @Override
-        public ArrayList<Path2D> getPolygons() {
-            ArrayList<Path2D> returnlist = new ArrayList<>();
-            Path2D returnPath = new Path2D.Double();
-            returnPath.moveTo(10, 20);
-            returnlist.add(returnPath);
-            return returnlist;
+        public Polygon getPolygon() {
+            return new Polygon(new int[]{10}, new int[]{20}, 1);
         }
     }
 
     class MockDisplayObject extends DisplayObject {
         MockDisplayObject(WorldObject worldObject, AutomatedCar automatedCar) {
-            super(worldObject, automatedCar);
+            super (worldObject, automatedCar);
         }
 
         float getWorldObjectRotation() {
             return worldObject.getRotation();
         }
     }
-
     /**
      * Setting up the test.
      */
@@ -57,7 +49,7 @@ public class DisplayObjectTest {
     public void init() {
         VisualizationConfig.loadReferencePoints("reference_points.xml");
         automatedCar = new AutomatedCar(292, 230, "car_2_red.png");
-        automatedCar.setRotation(-(float) Math.PI / 4);  // 45 +
+        automatedCar.setRotation(-(float) Math.PI / 4) ;  // 45 +
         worldObject = new MockWorldObject(399, 540, "road_2lane_90right.png");
         displayObject = new MockDisplayObject(worldObject, automatedCar);
         displayImageData = displayObject.getDisplayImageData();
@@ -77,7 +69,7 @@ public class DisplayObjectTest {
      */
     @Test
     public void relativePosition() {
-        assertEquals(241, displayImageData.getX());
+        assertEquals(241, displayImageData .getX());
         assertEquals(645, displayImageData.getY());
     }
 
@@ -87,8 +79,8 @@ public class DisplayObjectTest {
      */
     @Test
     public void rotation() {
-        assertEquals((float) Math.round(Math.PI / 4 * forPrecision) / forPrecision,
-            (float) Math.round(displayImageData.getRotation() * forPrecision) / forPrecision);
+        assertEquals((float) Math.round(Math.PI / 4  * forPrecision) / forPrecision,
+                (float)Math.round(displayImageData.getRotation() * forPrecision) / forPrecision);
     }
 
     /**
@@ -132,34 +124,21 @@ public class DisplayObjectTest {
     @Test
     public void checkConversionRotationMatrixToMatrixSinNeg() {
         // Setting up different rotation from matrix
-        worldObject.setRotationMatrix(new float[][]{{0.7071f, -0.7071f}, {0.7071f, 0.7071f}});
+        worldObject.setRotationMatrix (new float[][]{{0.7071f, -0.7071f}, {0.7071f, 0.7071f}});
         displayObject = new MockDisplayObject(worldObject, automatedCar);
-        assertEquals(Math.round(Math.PI / 4 * forPrecision) / (float) forPrecision,
+        assertEquals(Math.round(Math.PI / 4  * forPrecision) / (float) forPrecision,
             Math.round((-displayObject.getWorldObjectRotation()) * forPrecision) / (float) forPrecision);
     }
 
     /**
      * Checks the calculated display polygon rotation and orientation
-     */
+      */
     @Test
     public void checkPolygonRotationResults() {
-        assertEquals(358, Math.round(displayObject.getDebugPolygons().get(0).getCurrentPoint().getX()
+        assertEquals(358, Math.round(displayObject.getDebugPolygon().getCurrentPoint().getX()
             * forPrecision) / forPrecision);
-        assertEquals(48, Math.round(displayObject.getDebugPolygons().get(0).getCurrentPoint().getY()
+        assertEquals(48, Math.round(displayObject.getDebugPolygon().getCurrentPoint().getY()
             * forPrecision) / forPrecision);
-    }
-
-    /**
-     * Tests whether the image filename gets created if not given
-     */
-    @Test
-    public void checkImageFileName() {
-        WorldObject worldObject = new WorldObject();
-        worldObject.setType("car_2_white");
-        worldObject.setX(10);
-        worldObject.setY(10);
-        DisplayObject displayObject = new DisplayObject(worldObject, automatedCar);
-        assertTrue("car_2_white.png".equals(displayObject.getImageFileName()));
     }
 
 }

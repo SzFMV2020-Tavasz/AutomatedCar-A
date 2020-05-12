@@ -38,7 +38,7 @@ public final class DisplayTransformation {
 
         // Calculate the rotation needed to change the automatedCar's orientation
         // to the desired orientation
-        double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION - automatedCar.getRotation();
+        double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION - automatedCar.getRotation() ;
 
         // Calculate the translation needed to move the automatedCar's reference point
         // to it's desired place
@@ -81,66 +81,15 @@ public final class DisplayTransformation {
      * the polygon must keep its relative position to the egocar translated and rotated to its display position.
      * </p>
      *
-     * @param x            the x component of the reference point (0,0) of the polygon
-     * @param y            the y component of the reference point (0,0) of the polygon
+     * @param x        the x component of the reference point (0,0) of the polygon
+     * @param y        the y component of the reference point (0,0) of the polygon
      * @param rotation     the rotation of the polygon (sum of inherited and calculated)
-     * @param automatedCar The egocar whose position and rotation defines the return data
+     * @param automatedCar  The egocar whose position and rotation defines the return data
      * @param polygon      the polygon to rotate
      * @return A {@link Path2D} object containing the rotated polygon data
      */
-    public static Path2D repositionPolygon(int x, int y, float rotation,
+    public static Path2D repositionPolygon(int x, int y,  float rotation,
                                            Polygon polygon, AutomatedCar automatedCar) {
-
-        // Calculate the rotation needed to change the automatedCar's orientation
-        // to the desired orientation
-        double rotationAngle = VisualizationConfig.DISPLAY_EGOCAR_ROTATION - automatedCar.getRotation();
-
-        // Calculate the translation needed to move the automatedCar's reference point
-        // to it's desired place
-        Point2D carMovement =
-            new Point2D.Double(VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_X - automatedCar.getX(),
-                VisualizationConfig.DISPLAY_EGOCAR_CENTER_POSITION_Y - automatedCar.getY());
-
-        // Calculate the distance between the automatedCar's and the displayObject's reference points
-        // (a.k.a.the position of the outer rotation point relative to the displayObject's reference point)
-        Point2D refPointDistance = new Point2D.Double(automatedCar.getX() - x,
-            automatedCar.getY() - y);
-
-        // Calculate the displayObject's reference point's rotation around the automatedCar's reference point
-        AffineTransform translateRefPoints = AffineTransform.getRotateInstance(rotationAngle,
-            refPointDistance.getX(), refPointDistance.getY());
-
-        // Calculate the new reference point
-        int refX = x + (int) (Math.round(translateRefPoints.getTranslateX() + carMovement.getX()));
-        int refY = y + (int) (Math.round(translateRefPoints.getTranslateY() + carMovement.getY()));
-
-        // rotate and translate the the polygon with the calculated rotation
-        AffineTransform t = new AffineTransform();
-        t.translate(refX, refY);
-        t.rotate(rotationAngle + rotation);
-        Path2D rotatedPolygon = (Path2D.Double) t.createTransformedShape(polygon);
-
-        return rotatedPolygon;
-    }
-
-
-    /**
-     * Rotates and repositions a polygon.
-     * <p>
-     * Position and rotation are defined by the egocar's real world position;
-     * the polygon must keep its relative position to the egocar translated and rotated to its display position.
-     * The polygon is a {@link Path2D} object.
-     * </p>
-     *
-     * @param x            the x component of the reference point (0,0) of the polygon
-     * @param y            the y component of the reference point (0,0) of the polygon
-     * @param rotation     the rotation of the polygon (sum of inherited and calculated)
-     * @param automatedCar The egocar whose position and rotation defines the return data
-     * @param polygon      the polygon to rotate in form of a {@link Path2D} object
-     * @return A {@link Path2D} object containing the rotated polygon data
-     */
-    public static Path2D repositionPath2D(int x, int y, float rotation,
-                                          Path2D polygon, AutomatedCar automatedCar) {
 
         // Calculate the rotation needed to change the automatedCar's orientation
         // to the desired orientation
