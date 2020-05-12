@@ -10,6 +10,7 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.DependsOn;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ICarControlPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 
 import static hu.oe.nik.szfmv.automatedcar.math.IVector.*;
@@ -49,9 +50,13 @@ public class PowerTrain extends SystemComponent {
         this.provideOutput(initialPositionOutput, initialEngineOutput);
     }
 
+    @SuppressWarnings("removal" /*temporary support for compatibility*/)
     private void provideOutput(CarMovePacketData positionData, IEngineStatusPacket engineData) {
         this.virtualFunctionBus.carMovePacket = positionData;
         this.virtualFunctionBus.engineStatusPacket = engineData;
+
+        this.virtualFunctionBus.powerTrain.carMovePacket = positionData;
+        this.virtualFunctionBus.powerTrain.engineStatusPacket = engineData;
     }
 
     private CarMovePacketData produceMovementOutput() {
@@ -67,12 +72,12 @@ public class PowerTrain extends SystemComponent {
     }
 
     private ICarControlPacket aggregateInputs() {
-        boolean isTempomatOn = virtualFunctionBus.toPowerTrainPacket.getTempomatSwitch();
+        boolean isTempomatOn = virtualFunctionBus.cruiseControl.getState().isEnabled();
         return new ICarControlPacket() {
 
             private ICarControlPacket getUsedInput() {
                 return isTempomatOn
-                        ? virtualFunctionBus.cruiseControlPacket
+                        ? virtualFunctionBus.cruiseControl.getControl()
                         : virtualFunctionBus.toPowerTrainPacket;
             }
 
@@ -152,6 +157,19 @@ public class PowerTrain extends SystemComponent {
         double carWheelRadians = steeringWheelRatio * MAX_CAR_FRONT_WHEELS_ROTATION;
 
         return vectorWithAngle(carWheelRadians);
+    }
+
+    public static final class Packets {
+        private ICarMovePacket carMovePacket;
+        private IEngineStatusPacket engineStatusPacket;
+
+        public ICarMovePacket getMovement() {
+            return carMovePacket;
+        }
+
+        public IEngineStatusPacket getEngineStatus() {
+            return engineStatusPacket;
+        }
     }
 
 }
