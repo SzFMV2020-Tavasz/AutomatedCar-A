@@ -1,7 +1,5 @@
 package hu.oe.nik.szfmv.automatedcar.cruisecontrol;
 
-import hu.oe.nik.szfmv.automatedcar.CarIndexState;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.cruisecontrol.ICruiseControlPacket;
 
 import java.util.function.Consumer;
@@ -11,49 +9,34 @@ import static java.util.Objects.requireNonNull;
 /**@author Team 3 (Dávid Magyar | aether-fox | davidson996@gmail.com)*/
 public final class CruiseControlPacket implements ICruiseControlPacket {
 
-    private final int gasPedalValue;
-    private final int breakPedalValue;
-    private final int steeringWheelValue;
-    private final CarIndexState carIndexState;
-    private final Shitfer.ShiftPos shiftValue;
+    private final double gasPedalRatio;
+    private final double breakPedalRatio;
+    private final double steeringWheelRotationRatio;
 
-    private CruiseControlPacket(int gasPedalValue, int breakPedalValue, int steeringWheelValue, CarIndexState carIndexState, Shitfer.ShiftPos getShiftValue) {
-        this.gasPedalValue = gasPedalValue;
-        this.breakPedalValue = breakPedalValue;
-        this.steeringWheelValue = steeringWheelValue;
-        this.carIndexState = carIndexState;
-        this.shiftValue = getShiftValue;
+    private CruiseControlPacket(double gasPedalRatio, double breakPedalRatio, double steeringWheelRotationRatio) {
+        this.gasPedalRatio = gasPedalRatio;
+        this.breakPedalRatio = breakPedalRatio;
+        this.steeringWheelRotationRatio = steeringWheelRotationRatio;
     }
 
     @Override
-    public int getGasPedalValue() {
-        return gasPedalValue;
+    public double getGasPedalRatio() {
+        return gasPedalRatio;
     }
 
     @Override
-    public int getBreakPedalValue() {
-        return breakPedalValue;
+    public double getBreakPedalRatio() {
+        return breakPedalRatio;
     }
 
     @Override
-    public int getSteeringWheelValue() {
-        return steeringWheelValue;
-    }
-
-    @SuppressWarnings("removal")
-    @Override
-    public int getIndexValue() {
-        return carIndexState.asValue();
+    public double getSteeringWheelRotation() {
+        return steeringWheelRotationRatio;
     }
 
     @Override
-    public CarIndexState getIndexState() {
-        return carIndexState;
-    }
-
-    @Override
-    public Shitfer.ShiftPos getShiftValue() {
-        return shiftValue;
+    public double getMaxSteeringWheelRotation() {
+        return 1.0;
     }
 
     public static Builder newCruiseControlPacket() {
@@ -61,30 +44,21 @@ public final class CruiseControlPacket implements ICruiseControlPacket {
     }
 
     public static class Builder {
-        private Integer gasPedalValue;
-        private Integer breakPedalValue;
-        private Integer steeringWheelValue;
-        private CarIndexState indexState;
-        private Shitfer.ShiftPos shiftValue;
+        private Double gasPedalRatio;
+        private Double breakPedalRatio;
+        private Double steeringWheelRotationRatio;
 
-        public void withGasPedalValue(Integer gasPedalValue) {
-            this.gasPedalValue = gasPedalValue;
+        public void withGasPedalRatio(Double gasPedalRatio) {
+            this.gasPedalRatio = gasPedalRatio;
         }
 
-        public void withBreakPedalValue(Integer breakPedalValue) {
-            this.breakPedalValue = breakPedalValue;
+        public void withBreakPedalRatio(Double breakPedalRatio) {
+            this.breakPedalRatio = breakPedalRatio;
         }
 
-        public void withSteeringWheelValue(Integer steeringWheelValue) {
-            this.steeringWheelValue = steeringWheelValue;
-        }
-
-        public void withIndexState(CarIndexState indexState) {
-            this.indexState = indexState;
-        }
-
-        public void withShiftValue(Shitfer.ShiftPos getShiftValue) {
-            this.shiftValue = getShiftValue;
+        /**@param rotationRatio - between {@code -1.0} and {@code +1.0}.*/
+        public void withSteeringWheelRotationRatio(Double rotationRatio) {
+            this.steeringWheelRotationRatio = rotationRatio;
         }
 
         public Builder apply(Consumer<Builder> patch) {
@@ -94,11 +68,9 @@ public final class CruiseControlPacket implements ICruiseControlPacket {
 
         public CruiseControlPacket build() {
             return new CruiseControlPacket(
-                    requireNonNull(gasPedalValue, "Tempomat gas pedal value must be given."),
-                    requireNonNull(breakPedalValue, "Tempomat break pedal value must be given."),
-                    requireNonNull(steeringWheelValue, "Tempomat steering wheel value must be given."),
-                    requireNonNull(indexState, "Tempomat index state must be given."),
-                    requireNonNull(shiftValue, "Tempomat shift value must be given.")
+                    requireNonNull(gasPedalRatio, "Tempomat gas pedal value must be given."),
+                    requireNonNull(breakPedalRatio, "Tempomat break pedal value must be given."),
+                    requireNonNull(steeringWheelRotationRatio, "Tempomat steering wheel value must be given.")
             );
         }
     }

@@ -1,7 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets;
 
-import hu.oe.nik.szfmv.automatedcar.CarIndexState;
 import hu.oe.nik.szfmv.automatedcar.math.MathUtils;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index.IndexStatus;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ICarControlPacket;
 
@@ -37,8 +37,8 @@ public interface BaseInputPacket extends ICarControlPacket {
     @Deprecated(forRemoval = true /*please use getIndexState() instead in the future*/)
     int getIndexValue();
 
-    default CarIndexState getIndexState() {
-        return CarIndexState.fromValue(getIndexValue());
+    default IndexStatus getIndexState() {
+        return IndexStatus.fromValue(getIndexValue());
     }
 
     Shitfer.ShiftPos getShiftValue();
