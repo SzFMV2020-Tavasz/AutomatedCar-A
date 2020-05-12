@@ -2,8 +2,6 @@ package hu.oe.nik.szfmv.automatedcar.cruisecontrol;
 
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.cruisecontrol.ICruiseControlPacket;
 
-import java.util.function.Consumer;
-
 import static java.util.Objects.requireNonNull;
 
 /**@author Team 3 (Dávid Magyar | aether-fox | davidson996@gmail.com)*/
@@ -48,21 +46,19 @@ public final class CruiseControlPacket implements ICruiseControlPacket {
         private Double breakPedalRatio;
         private Double steeringWheelRotationRatio;
 
-        public void withGasPedalRatio(Double gasPedalRatio) {
+        public Builder withGasPedalRatio(Double gasPedalRatio) {
             this.gasPedalRatio = gasPedalRatio;
+            return this;
         }
 
-        public void withBreakPedalRatio(Double breakPedalRatio) {
+        public Builder withBreakPedalRatio(Double breakPedalRatio) {
             this.breakPedalRatio = breakPedalRatio;
+            return this;
         }
 
         /**@param rotationRatio - between {@code -1.0} and {@code +1.0}.*/
-        public void withSteeringWheelRotationRatio(Double rotationRatio) {
+        public Builder withSteeringWheelRotationRatio(Double rotationRatio) {
             this.steeringWheelRotationRatio = rotationRatio;
-        }
-
-        public Builder apply(Consumer<Builder> patch) {
-            patch.accept(this);
             return this;
         }
 
