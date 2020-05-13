@@ -5,10 +5,11 @@ import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 import static java.lang.Math.toRadians;
 
-//TODO Rename this class to ManualCarControlPacket
-public class ToPowerTrainPacket implements IManualCarControlPacket {
+public class ManualCarControlPacket implements IManualCarControlPacket {
 
-    /**The maximum absolute value given for setters of the {@link #gasPedalRatio} and {@link #breakPedalRatio} fields.*/
+    /**
+     * The maximum absolute value given for setters of the {@link #gasPedalRatio} and {@link #breakPedalRatio} fields.
+     */
     double MAX_PEDAL_VALUE = 100;
 
     private double gasPedalRatio;
@@ -53,7 +54,9 @@ public class ToPowerTrainPacket implements IManualCarControlPacket {
         return steeringWheelRotation;
     }
 
-    /**@param rotationDegrees rotation of the steering wheel in degrees.*/
+    /**
+     * @param rotationDegrees rotation of the steering wheel in degrees.
+     */
     @Deprecated(forRemoval = true)
     public void setSteeringWheelValue(double rotationDegrees) {
         this.steeringWheelRotation = toRadians(rotationDegrees);

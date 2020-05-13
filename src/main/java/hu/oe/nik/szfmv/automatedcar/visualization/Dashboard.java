@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
 import hu.oe.nik.szfmv.automatedcar.Main;
+import hu.oe.nik.szfmv.automatedcar.powertrain.SimpleTransmission;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
@@ -124,25 +125,25 @@ public class Dashboard extends JPanel {
         int rowTop = statusMarkersTop;
         // row 1
         referenceSpeedMarker = new StatusMarker(
-            padding, rowTop, statusMarkerSmall, statusMarkerHeight, "0.0");
+                padding, rowTop, statusMarkerSmall, statusMarkerHeight, "0.0");
         timeGapMarker = new StatusMarker(
-            statusMarkerSmallSecond, rowTop, statusMarkerSmall, statusMarkerHeight, "0.8");
+                statusMarkerSmallSecond, rowTop, statusMarkerSmall, statusMarkerHeight, "0.8");
         accMarker = new StatusMarker(
-            statusMarkerSmallThird, rowTop, statusMarkerSmall, statusMarkerHeight, "ACC");
+                statusMarkerSmallThird, rowTop, statusMarkerSmall, statusMarkerHeight, "ACC");
         ppmarker = new StatusMarker(
-            statusMarkerSmallFromRight, rowTop, statusMarkerSmall, statusMarkerHeight, "PP");
+                statusMarkerSmallFromRight, rowTop, statusMarkerSmall, statusMarkerHeight, "PP");
         rowTop += statusMarkerHeight + separator;
         // row 3
         lkamarker = new StatusMarker(
-            padding, rowTop, statusMarkerLarge, statusMarkerHeight, "LKA");
+                padding, rowTop, statusMarkerLarge, statusMarkerHeight, "LKA");
         aebwarnmarker = new StatusMarker(
-            statusMarkerLargeFromRight, rowTop, statusMarkerLarge, statusMarkerHeight, "AEB WARN");
+                statusMarkerLargeFromRight, rowTop, statusMarkerLarge, statusMarkerHeight, "AEB WARN");
         rowTop += statusMarkerHeight + separator;
         // row 4
         lkwarnmarker = new StatusMarker(
-            padding, rowTop, statusMarkerLarge, statusMarkerHeight, "LKA WARN");
+                padding, rowTop, statusMarkerLarge, statusMarkerHeight, "LKA WARN");
         rrwarnmarker = new StatusMarker(
-            statusMarkerLargeFromRight, rowTop, statusMarkerLarge, statusMarkerHeight, "RR WARN");
+                statusMarkerLargeFromRight, rowTop, statusMarkerLarge, statusMarkerHeight, "RR WARN");
 
         add(accMarker);
         add(ppmarker);
@@ -182,7 +183,7 @@ public class Dashboard extends JPanel {
         referenceSpeedExplainer.setBounds(10, 605, 220, 15);
 
         lastRoadSign.setBounds(padding + statusMarkerLarge + separator, 255,
-            width - 2 * (padding + statusMarkerLarge + separator), 110);
+                width - 2 * (padding + statusMarkerLarge + separator), 110);
 
         add(lastRoadSign);
         add(gearShiftText);
@@ -254,9 +255,9 @@ public class Dashboard extends JPanel {
         breakProgressBar.setValue((int) virtualFunctionBus.guiInputPacket.getBreakPedalValue());
         steeringWheelValueText.setText(Double.toString(virtualFunctionBus.guiInputPacket.getSteeringWheelValue()));
         currentGearText.setText(virtualFunctionBus.guiInputPacket.getShifterPos().toString());
-        speedoMeter.setPerfPercentage((int) virtualFunctionBus.guiInputPacket.getGasPedalValue());
-//        rpmometer.setPerfPercentage((int) virtualFunctionBus.engineStatusPacket.getRPM());
-        referenceSpeedMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccSpeedValue()));
+        speedoMeter.setPerfPercentage((int) virtualFunctionBus.powerTrain.getMovement().getSpeed());
+        rpmometer.setPerfPercentage((int) (virtualFunctionBus.powerTrain.getEngineStatus().getRPM() / SimpleTransmission.MAX_RPM * 100));
+        referenceSpeedMarker.setText(Double.toString(virtualFunctionBus.cruiseControl.getState().getTargetSpeed()));
         timeGapMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue()));
         accMarker.switchIt(virtualFunctionBus.guiInputPacket.getACCStatus());
         ppmarker.switchIt(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());

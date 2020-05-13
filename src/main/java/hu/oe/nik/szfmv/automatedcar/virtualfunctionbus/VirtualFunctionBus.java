@@ -5,7 +5,7 @@ import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.GuiInputPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ManualCarControlPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.*;
@@ -15,13 +15,19 @@ import java.util.List;
 
 public class VirtualFunctionBus {
 
-    /**@deprecated there is no need for a sample packet in production code.*/
+    public final CruiseControl.Packets cruiseControl = new CruiseControl.Packets();
+    public final PowerTrain.Packets powerTrain = new PowerTrain.Packets();
+    /**
+     * All registered components.
+     */
+    private final List<SystemComponent> components = new ArrayList<>();
+    /**
+     * @deprecated there is no need for a sample packet in production code.
+     */
     @Deprecated(forRemoval = true)
     public ReadOnlySamplePacket samplePacket;
-
-    public ToPowerTrainPacket toPowerTrainPacket = new ToPowerTrainPacket();
+    public ManualCarControlPacket manualCarControlPacket = new ManualCarControlPacket();
     public GuiInputPacket guiInputPacket = new GuiInputPacket();
-
     public IRadarVisualizationPacket radarVisualizationPacket;
     public ICameraVisualizationPacket cameraVisualizationPacket;
     public IUltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
@@ -35,19 +41,16 @@ public class VirtualFunctionBus {
     public IUltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
     public IParkingRadarDisplayStatePacket parkingRadarDisplayStatePacket;
     public ISelectedDebugListPacket selectedDebugListPacket;
-
-    public final CruiseControl.Packets cruiseControl = new CruiseControl.Packets();
-    public final PowerTrain.Packets powerTrain = new PowerTrain.Packets();
-
-    /**@deprecated use it via the {@link #powerTrain} field using {@link PowerTrain.Packets#getMovement()}.*/
+    /**
+     * @deprecated use it via the {@link #powerTrain} field using {@link PowerTrain.Packets#getMovement()}.
+     */
     @Deprecated(forRemoval = true)
     public ICarMovePacket carMovePacket;
-    /**@deprecated use it via the {@link #powerTrain} field using {@link PowerTrain.Packets#getEngineStatus()}.*/
+    /**
+     * @deprecated use it via the {@link #powerTrain} field using {@link PowerTrain.Packets#getEngineStatus()}.
+     */
     @Deprecated(forRemoval = true)
     public IEngineStatusPacket engineStatusPacket;
-
-    /**All registered components.*/
-    private final List<SystemComponent> components = new ArrayList<>();
 
     /**
      * Registers the provided {@link SystemComponent component}.
