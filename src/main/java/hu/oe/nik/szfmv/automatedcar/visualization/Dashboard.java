@@ -259,7 +259,7 @@ public class Dashboard extends JPanel {
         rpmometer.setPerfPercentage((int) (virtualFunctionBus.powerTrain.getEngineStatus().getRPM() / SimpleTransmission.MAX_RPM * 100));
         referenceSpeedMarker.setText(Double.toString(virtualFunctionBus.cruiseControl.getState().getTargetSpeed()));
         timeGapMarker.setText(Double.toString(virtualFunctionBus.guiInputPacket.getAccFollowingDistanceValue()));
-        accMarker.switchIt(virtualFunctionBus.guiInputPacket.getACCStatus());
+        accMarker.switchIt(virtualFunctionBus.cruiseControl.getState().isEnabled());
         ppmarker.switchIt(virtualFunctionBus.guiInputPacket.getParkingPilotStatus());
         lkamarker.switchIt(virtualFunctionBus.guiInputPacket.getLaneKeepingAssistant());
         leftTurn.setOn(leftIndex(virtualFunctionBus.guiInputPacket.getIndexStatus()));

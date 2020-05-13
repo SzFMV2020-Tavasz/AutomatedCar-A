@@ -1,6 +1,12 @@
-package hu.oe.nik.szfmv.automatedcar.systemcomponents;
+package hu.oe.nik.szfmv.automatedcar.input;
 
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.ACC;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.PedalPosition;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+
+import java.util.HashSet;
 
 public class KeyProcesser {
 
@@ -13,6 +19,8 @@ public class KeyProcesser {
     private boolean debugMode;
     private PedalPosition pedalPos = new PedalPosition();
     private ACC accManager = new ACC();
+
+    private final HashSet<Integer> pressedButtons = new HashSet<>();
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
@@ -88,25 +96,12 @@ public class KeyProcesser {
         pedalPos.steeringWheelReleased();
     }
 
-
-    public void turnAccSwitch() {
-        accManager.turnAccSwitch();
-    }
-
     public void turnLaneKeepingSwitch() {
         accManager.turnLaneKeepingAssistantSwitch();
     }
 
     public void turnParkingPilotSwitch() {
         accManager.turnParkingPilotSwitch();
-    }
-
-    public void increaseAccSpeed() {
-        accManager.increaseAccSpeed();
-    }
-
-    public void decreaseAccSpeed() {
-        accManager.decreaseAccSpeed();
     }
 
     public void turnAccDistance() {
@@ -131,4 +126,15 @@ public class KeyProcesser {
         index.setStatsLeft();
     }
 
+    public void setAccButtonPressed(boolean pressed) {
+        this.virtualFunctionBus.input.accInput.accButtonPressed = pressed;
+    }
+
+    public void setAccDecreaseSpeedButtonPressed(boolean pressed) {
+        this.virtualFunctionBus.input.accInput.accDecreaseSpeedButtonPressed = pressed;
+    }
+
+    public void setAccIncreaseSpeedButtonPressed(boolean pressed) {
+        this.virtualFunctionBus.input.accInput.accIncreaseSpeedButtonPressed = pressed;
+    }
 }

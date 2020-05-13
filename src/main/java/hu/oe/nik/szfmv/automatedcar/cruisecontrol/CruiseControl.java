@@ -25,6 +25,7 @@ import static java.lang.System.out;
 public final class CruiseControl extends SystemComponent {
 
     private boolean enabled = false;
+    private boolean enabledRequestIsInProgress = false;
     private double targetSpeed = 10;
 
     public CruiseControl(VirtualFunctionBus virtualFunctionBus) {
@@ -47,11 +48,29 @@ public final class CruiseControl extends SystemComponent {
             return;
         }
 
-        boolean toBeEnabled = virtualFunctionBus.guiInputPacket.getACCStatus() //TODO not really sensible packet naming
-                && engineStatus.getTransmissionMode() == CarTransmissionMode.D_DRIVE
-                && virtualFunctionBus.manualCarControlPacket.getBreakPedalRatio() < 0.0001;
-        if (enabled != toBeEnabled) {
-            enabled = toBeEnabled;
+        if (virtualFunctionBus.input.getAccInput().isAccButtonPressed()) {
+            if (!enabledRequestIsInProgress) {
+                enabledRequestIsInProgress = true;
+                setEnabled(!enabled);
+            }
+        } else {
+            enabledRequestIsInProgress = false;
+        }
+
+        if (enabled) {
+            boolean isNotInD = engineStatus.getTransmissionMode() != CarTransmissionMode.D_DRIVE;
+            boolean isBreakPedalPressed = virtualFunctionBus.manualCarControlPacket.getBreakPedalRatio() < 0.0001;
+            boolean parkingTooClose = this.virtualFunctionBus.leftParkingDistance.getDistance() < 10
+                    || this.virtualFunctionBus.rightParkingDistance.getDistance() < 10;
+            if (isNotInD || isBreakPedalPressed || parkingTooClose) {
+                setEnabled(false);
+            }
+        }
+    }
+
+    public void setEnabled(boolean state) {
+        if (enabled != state) {
+            this.enabled = state;
             out.println("Tempomat " + (enabled ? "ON" : "OFF"));
         }
     }

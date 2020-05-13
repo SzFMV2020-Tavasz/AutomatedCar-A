@@ -63,24 +63,6 @@ public class GuiInputPacket implements ReadOnlyGuiInputPacket {
         this.shiftChangeRequest = shiftChangeRequest;
     }
 
-    public void setAccSwitch(boolean accSwitch) {
-        this.accSwitch = accSwitch;
-    }
-
-    @Override
-    public boolean getACCStatus() {
-        return accSwitch;
-    }
-
-    @Override
-    public int getAccSpeedValue() {
-        return accSpeedValue;
-    }
-
-    public void setAccSpeedValue(int accSpeedValue) {
-        this.accSpeedValue = accSpeedValue;
-    }
-
     public void setAccFollowingDistance(double accFollowingDistance) {
         this.accFollowingDistance = accFollowingDistance;
     }

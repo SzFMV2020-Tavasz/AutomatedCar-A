@@ -1,6 +1,7 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus;
 
 import hu.oe.nik.szfmv.automatedcar.cruisecontrol.CruiseControl;
+import hu.oe.nik.szfmv.automatedcar.input.InputPackets;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
@@ -17,6 +18,7 @@ public class VirtualFunctionBus {
 
     public final CruiseControl.Packets cruiseControl = new CruiseControl.Packets();
     public final PowerTrain.Packets powerTrain = new PowerTrain.Packets();
+    public final InputPackets input = new InputPackets();
     /**
      * All registered components.
      */

@@ -1,6 +1,6 @@
 package hu.oe.nik.szfmv.automatedcar.visualization;
 
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.HMIKeyListener;
+import hu.oe.nik.szfmv.automatedcar.input.HMIKeyListener;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
