@@ -269,6 +269,7 @@ public class Dashboard extends JPanel {
         parkingRadarGui.setDistanceLeft(virtualFunctionBus.leftParkingDistance.getDistance());
         parkingRadarGui.setDistanceRight(virtualFunctionBus.rightParkingDistance.getDistance());
         parkingRadarGui.setState(virtualFunctionBus.parkingRadarGuiStatePacket.getParkingRadarGuiState());
+        aebwarnmarker.switchIt(virtualFunctionBus.ultrasonicAEB.isAlarming);
     }
 
     private boolean rightIndex(Index.IndexStatus status) {

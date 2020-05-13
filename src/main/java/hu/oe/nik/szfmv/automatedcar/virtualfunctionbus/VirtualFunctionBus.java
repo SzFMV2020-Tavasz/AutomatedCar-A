@@ -4,7 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.cruisecontrol.CruiseControl;
 import hu.oe.nik.szfmv.automatedcar.input.InputPackets;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.MutableUltrasonicAEBPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.GuiInputPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ManualCarControlPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
@@ -23,11 +23,7 @@ public class VirtualFunctionBus {
      * All registered components.
      */
     private final List<SystemComponent> components = new ArrayList<>();
-    /**
-     * @deprecated there is no need for a sample packet in production code.
-     */
-    @Deprecated(forRemoval = true)
-    public ReadOnlySamplePacket samplePacket;
+
     public ManualCarControlPacket manualCarControlPacket = new ManualCarControlPacket();
     public GuiInputPacket guiInputPacket = new GuiInputPacket();
     public IRadarVisualizationPacket radarVisualizationPacket;
@@ -43,6 +39,7 @@ public class VirtualFunctionBus {
     public IUltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
     public IParkingRadarDisplayStatePacket parkingRadarDisplayStatePacket;
     public ISelectedDebugListPacket selectedDebugListPacket;
+    public MutableUltrasonicAEBPacket ultrasonicAEB = new MutableUltrasonicAEBPacket();
     /**
      * @deprecated use it via the {@link #powerTrain} field using {@link PowerTrain.Packets#getMovement()}.
      */

@@ -4,7 +4,6 @@ import hu.oe.nik.szfmv.automatedcar.cruisecontrol.CruiseControl;
 import hu.oe.nik.szfmv.automatedcar.math.Axis;
 import hu.oe.nik.szfmv.automatedcar.math.IVector;
 import hu.oe.nik.szfmv.automatedcar.math.MathUtils;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Driver;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.DependsOn;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
@@ -23,7 +22,7 @@ import static java.lang.Math.*;
  *
  * @author Team 3
  */
-@DependsOn(components = {Driver.class, CruiseControl.class})
+@DependsOn(components = {/*MANUAL_INPUT_COMPONENT_PLACEHOLDER,*/ CruiseControl.class})
 public class PowerTrain extends SystemComponent {
 
     /**
