@@ -112,7 +112,7 @@ public class PedalPosition {
                 } else {
                     gasPedalValue = 100;
                 }
-                virtualFunctionBus.manualCarControlPacket.setGasPedalValue(gasPedalValue);
+                virtualFunctionBus.manualCarControlPacket.setGasPedalRatio(gasPedalValue / 100.0);
                 virtualFunctionBus.guiInputPacket.setGasPedalValue(gasPedalValue);
                 counter++;
                 sleep();
@@ -136,7 +136,7 @@ public class PedalPosition {
                 } else {
                     gasPedalValue = 0;
                 }
-                virtualFunctionBus.manualCarControlPacket.setGasPedalValue(gasPedalValue);
+                virtualFunctionBus.manualCarControlPacket.setGasPedalRatio(gasPedalValue / 100.0);
                 virtualFunctionBus.guiInputPacket.setGasPedalValue(gasPedalValue);
                 counter++;
                 sleep();
@@ -162,7 +162,7 @@ public class PedalPosition {
                 } else {
                     breakPedalValue = 100;
                 }
-                virtualFunctionBus.manualCarControlPacket.setBreakPedalValue(breakPedalValue);
+                virtualFunctionBus.manualCarControlPacket.setBreakPedalRatio(breakPedalValue / 100.0);
                 virtualFunctionBus.guiInputPacket.setBreakPedalValue(breakPedalValue);
                 counter++;
                 sleep();
@@ -186,7 +186,7 @@ public class PedalPosition {
                 } else {
                     breakPedalValue = 0;
                 }
-                virtualFunctionBus.manualCarControlPacket.setBreakPedalValue(breakPedalValue);
+                virtualFunctionBus.manualCarControlPacket.setBreakPedalRatio(breakPedalValue / 100.0);
                 virtualFunctionBus.guiInputPacket.setBreakPedalValue(breakPedalValue);
                 counter++;
                 sleep();

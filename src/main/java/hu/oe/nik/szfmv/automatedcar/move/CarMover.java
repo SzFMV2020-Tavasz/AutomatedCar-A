@@ -27,7 +27,7 @@ public final class CarMover extends SystemComponent {
 
     /**@author Team 3*/
     private void updatePositionAndOrientation(AutomatedCar car) {
-        this.carMoveStrategy.applyMovement(car, this.virtualFunctionBus.carMovePacket.getMoveVector());
+        this.carMoveStrategy.applyMovement(car, this.virtualFunctionBus.powerTrain.getMovement().getMoveVector());
     }
 
 }
