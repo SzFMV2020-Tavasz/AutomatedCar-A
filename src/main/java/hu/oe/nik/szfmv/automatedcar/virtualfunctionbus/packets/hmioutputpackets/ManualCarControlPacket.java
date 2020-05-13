@@ -68,7 +68,7 @@ public class ManualCarControlPacket implements IManualCarControlPacket {
     }
 
     public void setShiftChangeRequest(CarTransmissionMode requestedMode) {
-        this.shiftChangeRequest = shiftChangeRequest;
+        this.shiftChangeRequest = requestedMode;
     }
 
     @Deprecated(forRemoval = true)

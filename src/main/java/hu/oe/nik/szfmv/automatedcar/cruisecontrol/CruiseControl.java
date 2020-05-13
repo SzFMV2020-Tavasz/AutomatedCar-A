@@ -51,7 +51,8 @@ public final class CruiseControl extends SystemComponent {
         if (virtualFunctionBus.input.getAccInput().isAccButtonPressed()) {
             if (!enabledRequestIsInProgress) {
                 enabledRequestIsInProgress = true;
-                setEnabled(!enabled);
+                enabled = !enabled;
+                out.println("Toggle ACC to " + (enabled ? "ON" : "OFF"));
             }
         } else {
             enabledRequestIsInProgress = false;
@@ -59,11 +60,12 @@ public final class CruiseControl extends SystemComponent {
 
         if (enabled) {
             boolean isNotInD = engineStatus.getTransmissionMode() != CarTransmissionMode.D_DRIVE;
-            boolean isBreakPedalPressed = virtualFunctionBus.manualCarControlPacket.getBreakPedalRatio() < 0.0001;
+            boolean isBreakPedalPressed = virtualFunctionBus.manualCarControlPacket.getBreakPedalRatio() > 0.0001;
             boolean parkingTooClose = this.virtualFunctionBus.leftParkingDistance.getDistance() < 10
                     || this.virtualFunctionBus.rightParkingDistance.getDistance() < 10;
             if (isNotInD || isBreakPedalPressed || parkingTooClose) {
-                setEnabled(false);
+                enabled = false;
+                out.println("Turn ACC OFF (because hazard)");
             }
         }
     }
@@ -71,7 +73,7 @@ public final class CruiseControl extends SystemComponent {
     public void setEnabled(boolean state) {
         if (enabled != state) {
             this.enabled = state;
-            out.println("Tempomat " + (enabled ? "ON" : "OFF"));
+            out.println("Tempomat " + (enabled ? "ON" : "OFF") + " (code call)");
         }
     }
 
