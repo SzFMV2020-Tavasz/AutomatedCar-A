@@ -5,12 +5,10 @@ import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 public class ACC {
 
     private VirtualFunctionBus virtualFunctionBus;
-    private boolean accSwitch;
     private boolean parkingPilotSwitch;
     private boolean laneKeepingAssistantSwitch;
-    private int accSpeed = 30;
     private int accDistanceIndex;
-    private double[] accDistance = new double[]{0.8, 1.0, 1.2, 1.4};
+    private final double[] accDistance = { 0.8, 1.0, 1.2, 1.4 };
 
     public void setVirtualFunctionBus(VirtualFunctionBus virtualFunctionBus) {
         this.virtualFunctionBus = virtualFunctionBus;
@@ -19,11 +17,6 @@ public class ACC {
     public void turnParkingPilotSwitchOff() {
         parkingPilotSwitch = false;
         virtualFunctionBus.guiInputPacket.setParkingPilotStatus(parkingPilotSwitch);
-    }
-
-    public void turnAccSwitch() {
-        accSwitch = !accSwitch;
-        virtualFunctionBus.guiInputPacket.setAccSwitch(accSwitch);
     }
 
 
@@ -36,21 +29,6 @@ public class ACC {
     public void turnLaneKeepingAssistantSwitch() {
         laneKeepingAssistantSwitch = !laneKeepingAssistantSwitch;
         virtualFunctionBus.guiInputPacket.setLaneKeepingAssistantStatus(laneKeepingAssistantSwitch);
-    }
-
-
-    public void increaseAccSpeed() {
-        if (accSpeed <= 150) {
-            accSpeed += 10;
-        }
-        virtualFunctionBus.guiInputPacket.setAccSpeedValue(accSpeed);
-    }
-
-    public void decreaseAccSpeed() {
-        if (accSpeed >= 40) {
-            accSpeed -= 10;
-        }
-        virtualFunctionBus.guiInputPacket.setAccSpeedValue(accSpeed);
     }
 
 

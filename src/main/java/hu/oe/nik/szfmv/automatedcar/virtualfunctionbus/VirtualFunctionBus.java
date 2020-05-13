@@ -1,11 +1,12 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus;
 
 import hu.oe.nik.szfmv.automatedcar.cruisecontrol.CruiseControl;
+import hu.oe.nik.szfmv.automatedcar.input.InputPackets;
 import hu.oe.nik.szfmv.automatedcar.powertrain.PowerTrain;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.SystemComponent;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.ReadOnlySamplePacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.MutableUltrasonicAEBPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.GuiInputPacket;
-import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ToPowerTrainPacket;
+import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets.ManualCarControlPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.ICarMovePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.powertrain.IEngineStatusPacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.*;
@@ -15,13 +16,16 @@ import java.util.List;
 
 public class VirtualFunctionBus {
 
-    /**@deprecated there is no need for a sample packet in production code.*/
-    @Deprecated(forRemoval = true)
-    public ReadOnlySamplePacket samplePacket;
+    public final CruiseControl.Packets cruiseControl = new CruiseControl.Packets();
+    public final PowerTrain.Packets powerTrain = new PowerTrain.Packets();
+    public final InputPackets input = new InputPackets();
+    /**
+     * All registered components.
+     */
+    private final List<SystemComponent> components = new ArrayList<>();
 
-    public ToPowerTrainPacket toPowerTrainPacket = new ToPowerTrainPacket();
+    public ManualCarControlPacket manualCarControlPacket = new ManualCarControlPacket();
     public GuiInputPacket guiInputPacket = new GuiInputPacket();
-
     public IRadarVisualizationPacket radarVisualizationPacket;
     public ICameraVisualizationPacket cameraVisualizationPacket;
     public IUltrasoundsVisualizationPacket ultrasoundsVisualizationPacket;
@@ -35,19 +39,17 @@ public class VirtualFunctionBus {
     public IUltrasoundDisplayStatePacket ultrasoundDisplayStatePacket;
     public IParkingRadarDisplayStatePacket parkingRadarDisplayStatePacket;
     public ISelectedDebugListPacket selectedDebugListPacket;
-
-    public final CruiseControl.Packets cruiseControl = new CruiseControl.Packets();
-    public final PowerTrain.Packets powerTrain = new PowerTrain.Packets();
-
-    /**@deprecated use it via the {@link #powerTrain} field using {@link PowerTrain.Packets#getMovement()}.*/
+    public MutableUltrasonicAEBPacket ultrasonicAEB = new MutableUltrasonicAEBPacket();
+    /**
+     * @deprecated use it via the {@link #powerTrain} field using {@link PowerTrain.Packets#getMovement()}.
+     */
     @Deprecated(forRemoval = true)
     public ICarMovePacket carMovePacket;
-    /**@deprecated use it via the {@link #powerTrain} field using {@link PowerTrain.Packets#getEngineStatus()}.*/
+    /**
+     * @deprecated use it via the {@link #powerTrain} field using {@link PowerTrain.Packets#getEngineStatus()}.
+     */
     @Deprecated(forRemoval = true)
     public IEngineStatusPacket engineStatusPacket;
-
-    /**All registered components.*/
-    private final List<SystemComponent> components = new ArrayList<>();
 
     /**
      * Registers the provided {@link SystemComponent component}.

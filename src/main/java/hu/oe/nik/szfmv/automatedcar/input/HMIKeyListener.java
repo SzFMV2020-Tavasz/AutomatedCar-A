@@ -1,4 +1,4 @@
-package hu.oe.nik.szfmv.automatedcar.systemcomponents;
+package hu.oe.nik.szfmv.automatedcar.input;
 
 
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
@@ -45,6 +45,18 @@ public class HMIKeyListener {
 
                 case KeyEvent.VK_CONTROL:
                     keyProcesser.controlReleased();
+                    break;
+
+                case KeyEvent.VK_I:
+                    keyProcesser.setAccDecreaseSpeedButtonPressed(false);
+                    break;
+
+                case KeyEvent.VK_O:
+                    keyProcesser.setAccIncreaseSpeedButtonPressed(false);
+                    break;
+
+                case KeyEvent.VK_R:
+                    keyProcesser.setAccButtonPressed(false);
                     break;
 
                 default:
@@ -94,15 +106,15 @@ public class HMIKeyListener {
                     break;
 
                 case KeyEvent.VK_I:
-                    keyProcesser.decreaseAccSpeed();
+                    keyProcesser.setAccDecreaseSpeedButtonPressed(true);
                     break;
 
                 case KeyEvent.VK_O:
-                    keyProcesser.increaseAccSpeed();
+                    keyProcesser.setAccIncreaseSpeedButtonPressed(true);
                     break;
 
                 case KeyEvent.VK_R:
-                    keyProcesser.turnAccSwitch();
+                    keyProcesser.setAccButtonPressed(true);
                     break;
 
                 case KeyEvent.VK_J:
