@@ -1,55 +1,76 @@
 package hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.hmioutputpackets;
 
+import hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
-public class ToPowerTrainPacket implements ReadOnlyToPowerTrainPacket {
+import static java.lang.Math.toRadians;
 
-    /**The maximum absolute value returned by the {@link #getSteeringWheelValue()} method.*/
-    public static final double MAX_STEERING_ROTATION = 180.0;
+//TODO Rename this class to ManualCarControlPacket
+public class ToPowerTrainPacket implements IManualCarControlPacket {
 
-    private double gasPedalValue;
-    private double breakPedalValue;
-    private double steeringWheelValue;
-    private Shitfer.ShiftPos shiftChangeRequest;
+    /**The maximum absolute value given for setters of the {@link #gasPedalRatio} and {@link #breakPedalRatio} fields.*/
+    double MAX_PEDAL_VALUE = 100;
+
+    private double gasPedalRatio;
+    private double breakPedalRatio;
+    private double steeringWheelRotation;
+    private CarTransmissionMode shiftChangeRequest;
     private int tempomatValue;
     private boolean tempomatSwitch;
     private double trackingDistanceValue;
     private boolean trackingDistanceSwitch;
 
     @Override
-    public double getGasPedalValue() {
-        return gasPedalValue;
+    public double getGasPedalRatio() {
+        return gasPedalRatio;
     }
 
+    public void setGasPedalRatio(double ratio) {
+        this.gasPedalRatio = ratio;
+    }
+
+    @Deprecated(forRemoval = true)
     public void setGasPedalValue(double gasPedalValue) {
-        this.gasPedalValue = gasPedalValue;
+        this.gasPedalRatio = gasPedalValue / MAX_PEDAL_VALUE;
     }
 
     @Override
-    public double getBreakPedalValue() {
-        return breakPedalValue;
+    public double getBreakPedalRatio() {
+        return breakPedalRatio;
     }
 
+    public void setBreakPedalRatio(double ratio) {
+        this.breakPedalRatio = ratio;
+    }
+
+    @Deprecated(forRemoval = true)
     public void setBreakPedalValue(double breakPedalValue) {
-        this.breakPedalValue = breakPedalValue;
+        this.breakPedalRatio = breakPedalValue / MAX_PEDAL_VALUE;
     }
 
     @Override
-    public double getSteeringWheelValue() {
-        return steeringWheelValue;
+    public double getSteeringWheelRotation() {
+        return steeringWheelRotation;
     }
 
-    public void setSteeringWheelValue(double steeringWheelValue) {
-        this.steeringWheelValue = steeringWheelValue;
+    /**@param rotationDegrees rotation of the steering wheel in degrees.*/
+    @Deprecated(forRemoval = true)
+    public void setSteeringWheelValue(double rotationDegrees) {
+        this.steeringWheelRotation = toRadians(rotationDegrees);
     }
 
     @Override
-    public Shitfer.ShiftPos getShiftChangeRequest() {
+    public CarTransmissionMode getShiftChangeRequest() {
         return shiftChangeRequest;
     }
 
-    public void setShiftChangeRequest(Shitfer.ShiftPos shiftChangeRequest) {
+    public void setShiftChangeRequest(CarTransmissionMode requestedMode) {
         this.shiftChangeRequest = shiftChangeRequest;
+    }
+
+    @Deprecated(forRemoval = true)
+    public void setShiftChangeRequest(Shitfer.ShiftPos shiftChangeRequest) {
+        this.shiftChangeRequest = CarTransmissionMode.fromShiftPos(shiftChangeRequest);
     }
 
     @Override
