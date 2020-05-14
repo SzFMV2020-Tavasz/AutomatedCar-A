@@ -11,8 +11,10 @@ import static java.lang.System.out;
  */
 public class SimpleTransmission implements ITransmission {
 
-    /**The absolute maximum RPM. The engine is limited to has it as maximum possible RPM.*/
-    private static final long MAX_RPM = 5000;
+    /**
+     * The absolute maximum RPM. The engine is limited to has it as maximum possible RPM.
+     */
+    public static final long MAX_RPM = 5000;
     private static final double RATIO_2_TO_1 = 1.5;
     private static final double RATIO_3_TO_2 = 1.5;
     private static final double RATIO_4_TO_3 = 1.5;
@@ -21,11 +23,15 @@ public class SimpleTransmission implements ITransmission {
     private static final double RATIO_4_TO_1 = RATIO_4_TO_3 * RATIO_3_TO_2 * RATIO_2_TO_1;
     private static final double RATIO_5_TO_1 = RATIO_5_TO_4 * RATIO_4_TO_3 * RATIO_3_TO_2 * RATIO_2_TO_1;
 
-    /**So the motor automatically slows down when the gas is not pressed.*/
+    /**
+     * So the motor automatically slows down when the gas is not pressed.
+     */
     private static final double MOTOR_BREAK_RATIO = 0.7;
     private static final int BASE_RPM_PER_SEC = 1500;
 
-    /**A component to help automatic transmission level shifting.*/
+    /**
+     * A component to help automatic transmission level shifting.
+     */
     private final ITransmissionLevelSuggester levelHandler = new TransmissionLevelSuggester();
 
     private CarTransmissionMode currentTransmissionMode = CarTransmissionMode.P_PARKING;
@@ -39,6 +45,7 @@ public class SimpleTransmission implements ITransmission {
 
     /**
      * Gets the current transmission mode.
+     *
      * @return The actual value of the gearMode field.
      */
     @Override
@@ -97,7 +104,7 @@ public class SimpleTransmission implements ITransmission {
         double elapsedSeconds = (elapsedMillis / 1000.0);
         double gasPedalEffect = gasPedalPressRatio == 0 ? -MOTOR_BREAK_RATIO : gasPedalPressRatio;
 
-        long newTargetRPM = this.currentRPM + (long)(elapsedSeconds * currentRPMPerSec * gasPedalEffect);
+        long newTargetRPM = this.currentRPM + (long) (elapsedSeconds * currentRPMPerSec * gasPedalEffect);
         this.currentRPM = max(0, min(newTargetRPM, MAX_RPM));
     }
 
@@ -134,13 +141,13 @@ public class SimpleTransmission implements ITransmission {
                     case 1:
                         return BASE_RPM_PER_SEC;
                     case 2:
-                        return (long)(BASE_RPM_PER_SEC / RATIO_2_TO_1);
+                        return (long) (BASE_RPM_PER_SEC / RATIO_2_TO_1);
                     case 3:
-                        return (long)(BASE_RPM_PER_SEC / RATIO_3_TO_1);
+                        return (long) (BASE_RPM_PER_SEC / RATIO_3_TO_1);
                     case 4:
-                        return (long)(BASE_RPM_PER_SEC / RATIO_4_TO_1);
+                        return (long) (BASE_RPM_PER_SEC / RATIO_4_TO_1);
                     case 5:
-                        return (long)(BASE_RPM_PER_SEC / RATIO_5_TO_1);
+                        return (long) (BASE_RPM_PER_SEC / RATIO_5_TO_1);
                     default:
                         if (mode.supportsLevel(level)) {
                             throw new IllegalStateException("Missing implementation of level "
@@ -211,7 +218,7 @@ public class SimpleTransmission implements ITransmission {
             throw new UnsupportedOperationException("Min transmission level is 1.");
         }
 
-        for (;levelDiff < 0; ++levelDiff) {
+        for (; levelDiff < 0; ++levelDiff) {
             currentRPM *= 1.5;
         }
     }
@@ -221,7 +228,7 @@ public class SimpleTransmission implements ITransmission {
             throw new UnsupportedOperationException("Max transmission level is 5.");
         }
 
-        for (;levelDiff > 0; --levelDiff) {
+        for (; levelDiff > 0; --levelDiff) {
             currentRPM /= 1.5;
         }
     }
@@ -246,7 +253,9 @@ public class SimpleTransmission implements ITransmission {
         }
     }
 
-    /**Converts RPM value to raw force (like Newton) in the given transmission level in mode {@link CarTransmissionMode#D_DRIVE D}.*/
+    /**
+     * Converts RPM value to raw force (like Newton) in the given transmission level in mode {@link CarTransmissionMode#D_DRIVE D}.
+     */
     private double rpmToForceInD(long rpm, int level) {
         switch (level) {
             case 1:

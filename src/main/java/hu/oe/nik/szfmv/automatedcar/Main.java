@@ -3,7 +3,7 @@ package hu.oe.nik.szfmv.automatedcar;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.sensors.ParkingRadar;
 import hu.oe.nik.szfmv.automatedcar.sensors.Radar;
-import hu.oe.nik.szfmv.automatedcar.systemcomponents.Ultrasonic;
+import hu.oe.nik.szfmv.automatedcar.sensors.Ultrasonic;
 import hu.oe.nik.szfmv.automatedcar.visualization.DisplayWorld;
 import hu.oe.nik.szfmv.automatedcar.visualization.Gui;
 import org.apache.logging.log4j.LogManager;

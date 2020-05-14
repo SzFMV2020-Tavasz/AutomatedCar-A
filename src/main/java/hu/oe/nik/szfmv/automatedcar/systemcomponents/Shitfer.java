@@ -1,6 +1,9 @@
 package hu.oe.nik.szfmv.automatedcar.systemcomponents;
 
+import hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
+
+import static hu.oe.nik.szfmv.automatedcar.powertrain.CarTransmissionMode.fromShiftPos;
 
 public class Shitfer {
     private int acttuallyValue = 0;
@@ -14,7 +17,7 @@ public class Shitfer {
         ShiftPos[] pos = ShiftPos.values();
         if (acttuallyValue < pos.length - 1) {
             acttuallyValue++;
-            virtualFunctionBus.toPowerTrainPacket.setShiftChangeRequest(pos[acttuallyValue]);
+            virtualFunctionBus.manualCarControlPacket.setShiftChangeRequest(fromShiftPos(pos[acttuallyValue]));
             virtualFunctionBus.guiInputPacket.setShifterPos(pos[acttuallyValue]);
         }
     }
@@ -22,7 +25,8 @@ public class Shitfer {
     public void decrement() {
         if (acttuallyValue > 0) {
             acttuallyValue--;
-            virtualFunctionBus.toPowerTrainPacket.setShiftChangeRequest(ShiftPos.values()[acttuallyValue]);
+            CarTransmissionMode requestedMode = fromShiftPos(ShiftPos.values()[acttuallyValue]);
+            virtualFunctionBus.manualCarControlPacket.setShiftChangeRequest(requestedMode);
             virtualFunctionBus.guiInputPacket.setShifterPos(ShiftPos.values()[acttuallyValue]);
         }
     }

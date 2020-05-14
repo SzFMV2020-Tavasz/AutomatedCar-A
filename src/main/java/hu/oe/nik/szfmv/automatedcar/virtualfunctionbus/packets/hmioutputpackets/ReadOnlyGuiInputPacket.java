@@ -4,6 +4,7 @@ import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
 import hu.oe.nik.szfmv.automatedcar.systemcomponents.Shitfer;
 
 public interface ReadOnlyGuiInputPacket {
+
     Shitfer.ShiftPos getShifterPos();
 
     Index.IndexStatus getIndexStatus();
@@ -14,10 +15,6 @@ public interface ReadOnlyGuiInputPacket {
 
     double getSteeringWheelValue();
 
-    boolean getACCStatus();
-
-    int getAccSpeedValue();
-
     double getAccFollowingDistanceValue();
 
     boolean getParkingPilotStatus();
@@ -27,4 +24,5 @@ public interface ReadOnlyGuiInputPacket {
     boolean getDebugSwitch();
 
     boolean getHelpMenuSwitch();
+
 }

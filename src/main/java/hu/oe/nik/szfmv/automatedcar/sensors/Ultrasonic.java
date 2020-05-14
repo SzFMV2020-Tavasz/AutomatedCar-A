@@ -1,8 +1,10 @@
-package hu.oe.nik.szfmv.automatedcar.systemcomponents;
+package hu.oe.nik.szfmv.automatedcar.sensors;
 
 import hu.oe.nik.szfmv.automatedcar.AutomatedCar;
 import hu.oe.nik.szfmv.automatedcar.model.World;
 import hu.oe.nik.szfmv.automatedcar.model.WorldObject;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Index;
+import hu.oe.nik.szfmv.automatedcar.systemcomponents.Sensor;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.VirtualFunctionBus;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundDisplayStatePacket;
 import hu.oe.nik.szfmv.automatedcar.virtualfunctionbus.packets.visualization.UltrasoundsVisualizationPacket;
@@ -100,6 +102,7 @@ public class Ultrasonic {
             }
         }
 
+        this.virtualFunctionBus.ultrasonicAEB.isAlarming = !collidableObjectsInRange.isEmpty();
     }
 
 
@@ -108,40 +111,43 @@ public class Ultrasonic {
         return collidableObjectsInRange;
     }
 
-    public void searchParkingSpanceBasedonIndex(){
-        String indexStatus =  virtualFunctionBus.guiInputPacket.getIndexStatus().toString();
+    public void searchParkingSpaceBasedOnIndex() {
+        Index.IndexStatus indexStatus = virtualFunctionBus.guiInputPacket.getIndexStatus();
 
-        if (indexStatus == "LEFT")
-        {
-            //parkolohely kereésé
-            for (Sensor sensor : sensors) {
-                if (sensor.getSensorPosition() == UltrasoundPositions.REAR_LEFT_SIDE || sensor.getSensorPosition() == UltrasoundPositions.FRONT_LEFT_SIDE)
-                {
-                    for (WorldObject object : world.getObjectsInsideTriangle(sensor.getTriangleSource(),
-                            sensor.getTriangleCorner1(), sensor.getTriangleCorner2())) {
+        switch (indexStatus) {
+            case LEFT:
+                //parkolohely kereésé
+                for (Sensor sensor : sensors) {
+                    if (sensor.getSensorPosition() == UltrasoundPositions.REAR_LEFT_SIDE || sensor.getSensorPosition() == UltrasoundPositions.FRONT_LEFT_SIDE)
+                    {
+                        for (WorldObject object : world.getObjectsInsideTriangle(sensor.getTriangleSource(),
+                                sensor.getTriangleCorner1(), sensor.getTriangleCorner2())) {
 
-                        if(object.getType() == "parking_space_parallel"){
+                            if(object.getType() == "parking_space_parallel"){
 
-                            //hely hosszát néző metodus NFC osztaly kell
+                                //hely hosszát néző metodus NFC osztaly kell
+                            }
                         }
                     }
                 }
-            }
+                break;
+            case RIGHT:
+                //parkolohely kereésé
+                for (Sensor sensor : sensors) {
+                    if (sensor.getSensorPosition() == UltrasoundPositions.REAR_RIGHT_SIDE || sensor.getSensorPosition() == UltrasoundPositions.FRONT_RIGHT_SIDE)
+                    {
+                        for (WorldObject object : world.getObjectsInsideTriangle(sensor.getTriangleSource(),
+                                sensor.getTriangleCorner1(), sensor.getTriangleCorner2())) {
+
+                            if(object.getType() == "parking_space_parallel"){
+
+                                //hely hosszát néző metodus NFC kell
+                            }
+                        }
+                    }
+                }
+                break;
         }
-        else if (indexStatus == "RIGHT")
-            //parkolohely kereésé
-            for (Sensor sensor : sensors) {
-                if (sensor.getSensorPosition() == UltrasoundPositions.REAR_RIGHT_SIDE || sensor.getSensorPosition() == UltrasoundPositions.FRONT_RIGHT_SIDE)
-                {
-                    for (WorldObject object : world.getObjectsInsideTriangle(sensor.getTriangleSource(),
-                            sensor.getTriangleCorner1(), sensor.getTriangleCorner2())) {
 
-                        if(object.getType() == "parking_space_parallel"){
-
-                            //hely hosszát néző metodus NFC kell
-                        }
-                    }
-                }
-            }
     }
 }
