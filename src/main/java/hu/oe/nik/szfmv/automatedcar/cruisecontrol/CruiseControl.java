@@ -24,6 +24,10 @@ public final class CruiseControl extends SystemComponent {
 
     private boolean enabled = false;
     private boolean enabledRequestIsInProgress = false;
+
+    private static final double MIN_TARGET_SPEED = 10;
+    private static final double MAX_TARGET_SPEED = 80;
+    private boolean targetSpeedChangeInProgress = false;
     private double targetSpeed = 10;
 
     public CruiseControl(VirtualFunctionBus virtualFunctionBus) {
@@ -38,6 +42,36 @@ public final class CruiseControl extends SystemComponent {
 
     private void update() {
         updateWhetherEnabled();
+        updateSpeed();
+    }
+
+    private void updateSpeed() {
+        boolean increaseRequest = this.virtualFunctionBus.input.getAccInput().isAccIncreaseSpeedButtonPressed();
+        boolean decreaseRequest = this.virtualFunctionBus.input.getAccInput().isAccDecreaseSpeedButtonPressed();
+
+        if (increaseRequest) {
+            if (!targetSpeedChangeInProgress) {
+                targetSpeedChangeInProgress = true;
+                targetSpeed += 10;
+                if (targetSpeed > MAX_TARGET_SPEED) {
+                    targetSpeed = MAX_TARGET_SPEED;
+                }
+            }
+        }
+
+        if (decreaseRequest) {
+            if (!targetSpeedChangeInProgress) {
+                targetSpeedChangeInProgress = true;
+                targetSpeed -= 10;
+                if (targetSpeed < MIN_TARGET_SPEED) {
+                    targetSpeed = MIN_TARGET_SPEED;
+                }
+            }
+        }
+
+        if (!increaseRequest && !decreaseRequest) {
+            targetSpeedChangeInProgress = false;
+        }
     }
 
     private void updateWhetherEnabled() {
